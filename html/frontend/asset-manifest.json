@@ -1,0 +1,41 @@
+{
+  "files": {
+    "main.css": "/static/css/main.14d60e31.chunk.css",
+    "main.js": "/static/js/main.e524c6f2.chunk.js",
+    "main.js.map": "/static/js/main.e524c6f2.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.4406b956.js",
+    "runtime-main.js.map": "/static/js/runtime-main.4406b956.js.map",
+    "static/css/2.19627560.chunk.css": "/static/css/2.19627560.chunk.css",
+    "static/js/2.991f6386.chunk.js": "/static/js/2.991f6386.chunk.js",
+    "static/js/2.991f6386.chunk.js.map": "/static/js/2.991f6386.chunk.js.map",
+    "static/js/3.6fa18e2a.chunk.js": "/static/js/3.6fa18e2a.chunk.js",
+    "static/js/3.6fa18e2a.chunk.js.map": "/static/js/3.6fa18e2a.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.19627560.chunk.css.map": "/static/css/2.19627560.chunk.css.map",
+    "static/css/main.14d60e31.chunk.css.map": "/static/css/main.14d60e31.chunk.css.map",
+    "static/js/2.991f6386.chunk.js.LICENSE.txt": "/static/js/2.991f6386.chunk.js.LICENSE.txt",
+    "static/media/background.18260a2b.svg": "/static/media/background.18260a2b.svg",
+    "static/media/diversidade.32fdae00.jpg": "/static/media/diversidade.32fdae00.jpg",
+    "static/media/diversidade@2x.5941b16e.jpg": "/static/media/diversidade@2x.5941b16e.jpg",
+    "static/media/diversidade@3x.8b1b0915.jpg": "/static/media/diversidade@3x.8b1b0915.jpg",
+    "static/media/dropdown-icon.9aecc372.svg": "/static/media/dropdown-icon.9aecc372.svg",
+    "static/media/home-slider-01@2x.ea1422cf.png": "/static/media/home-slider-01@2x.ea1422cf.png",
+    "static/media/inklua-background-stamp.0e992062.svg": "/static/media/inklua-background-stamp.0e992062.svg",
+    "static/media/logo-inklua-color.cfee9976.svg": "/static/media/logo-inklua-color.cfee9976.svg",
+    "static/media/logo-inklua-white.45f2960c.svg": "/static/media/logo-inklua-white.45f2960c.svg",
+    "static/media/mulher-cadeira-de-roda.02f478bd.png": "/static/media/mulher-cadeira-de-roda.02f478bd.png",
+    "static/media/mulher-cadeira-de-roda@2x.8601fe56.png": "/static/media/mulher-cadeira-de-roda@2x.8601fe56.png",
+    "static/media/mulher-cadeira-de-roda@3x.d70492c6.png": "/static/media/mulher-cadeira-de-roda@3x.d70492c6.png",
+    "static/media/pin-icon.6efb9586.svg": "/static/media/pin-icon.6efb9586.svg",
+    "static/media/shutterstock_1776687221.f01d2b26.jpg": "/static/media/shutterstock_1776687221.f01d2b26.jpg",
+    "static/media/slick-theme.css": "/static/media/slick.c94f7671.ttf",
+    "static/media/warning-icon.b26180cb.svg": "/static/media/warning-icon.b26180cb.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4406b956.js",
+    "static/css/2.19627560.chunk.css",
+    "static/js/2.991f6386.chunk.js",
+    "static/css/main.14d60e31.chunk.css",
+    "static/js/main.e524c6f2.chunk.js"
+  ]
+}
