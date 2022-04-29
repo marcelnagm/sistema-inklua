@@ -41,25 +41,25 @@ class ApiController extends Controller
         return response()->json($result);
     }
 
-    public function search(Request $request){
+   public function search(Request $request){
         
         $search = $request->input("q");
-        $city = $request->input("cidade");
+        $city = $request->input("city");
+        $state = $request->input("state");
+        $contract = $request->input("contract_type");
         $page = $request->input("page");
 
-        $cacheName = "SEARCH_{$search}_{$city}_{$page}";
+        $cacheName = "SEARCH_{$search}_{$city}_{$state}_{$contract}_{$page}";
         // if (Cache::has($cacheName)) {
         //     return response()->json(Cache::get($cacheName));
         // }
 
-        $cities = Content::getCities($search);
-        $content = Content::searchPositions();
+        $counters = Content::getCounters($search, $state, $city, $contract);
+        $content = Content::searchPositions($search, $state, $city, $contract);
 
-
-        
-        $cities = collect(['cidades' => $cities->all()]);
-        $data = $cities->merge($content);
-
+        $data = $counters->merge($content);
+//echo 'pega';
+//                dd('pega');
         $result = $data->all();
 
         $result = $this->clearData($result);
@@ -68,7 +68,6 @@ class ApiController extends Controller
 
         return response()->json($result);
     }
-
     public function position(Request $request, $id){
         $user = auth()->guard('api')->user();
 
