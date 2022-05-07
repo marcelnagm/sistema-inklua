@@ -55,9 +55,10 @@ class Content extends Model
         $user = auth()->guard('api')->user();
         
 
-        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
-                            ->selectRaw("(
+        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")                        
+                        ->selectRaw("(
                                 CASE 
+                                group ip 
                                     WHEN type = 1 AND group_id IS NOT NULL THEN 1
                                     WHEN type = 1 THEN 2
                                     WHEN type = 3 THEN 3
@@ -76,7 +77,8 @@ class Content extends Model
                             ->orderBy('row_n')
                             ->orderBy('order_type')
                             ->orderBy('ordenation')
-                            ->paginate(12);
+                            ->paginate(12)
+                                    ;
 
         // $content->data = Content::hideFields($content);
         return $content;
@@ -205,13 +207,14 @@ class Content extends Model
         $city = request()->input("city");
 
         $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
+                                ->where("type", 1)
                                ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
                                 + match (description) against ('{$searchEscaped}' in boolean mode)
                                 - (ABS(DATEDIFF(`date`, NOW())) / 10)
                             ) as score")
                             
-                            ->where("type", 1)
+                            
 
                               ->when($search, function ($query) use ($search) {
                                 return $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
@@ -262,9 +265,10 @@ class Content extends Model
                             ->orderBy('score', 'desc')
                             ->orderBy('id', 'desc')
                             ->orderBy('ordenation')
-                            ->paginate(12);
+                            ->paginate(12)
+                                    ;
 
-                            
+//        dd(\App\Http\Controllers\Controller::getEloquentSqlWithBindings($content));                            
         $content->data = Content::hideFields($content);
         return $content;
     }

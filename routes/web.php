@@ -52,3 +52,40 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('notification', [VerificationController::class, 'show'])->name('verification.notice');
+
+//mepeamento tech
+
+
+$router->group(['middleware' => ['auth']], function ($router) {
+//    $router->post('/admin/candidate', 'App\Http\Controllers\MapeamentoTech\CandidateController@index');
+//    $router->post('/admin/candidate/store/', 'App\Http\Controllers\MapeamentoTech\CandidateControler@store');
+//    $router->post('/admin//candidate/search', 'App\Http\Controllers\MapeamentoTech\CandidateControler@search');
+//    $router->post('/admin/candidate/{id}', 'App\Http\Controllers\MapeamentoTech\CandidateControler@show');
+//    $router->post('/admin/candidate/{id}/publish', 'App\Http\Controllers\MapeamentoTech\CandidateControler@publish');
+//    $router->put('/admin/candidate/{id}/update', 'App\Http\Controllers\MapeamentoTech\CandidateControler@update');
+//    $router->delete('/admin/candidate/{id}', 'App\Http\Controllers\MapeamentoTech\CandidateControler@destroy');
+
+    $router->get('/admin/candidate/clear', 'App\Http\Controllers\MapeamentoTech\CandidateController@clear')->name('candidate.clear');
+    $router->get('/admin/candidate/search', 'App\Http\Controllers\MapeamentoTech\CandidateController@search')->name('candidate.search');
+    $router->post('/admin/candidate/search/', 'App\Http\Controllers\MapeamentoTech\CandidateController@search')->name('candidate.search');
+    $router->get('/admin/candidate/{id}/publish', 'App\Http\Controllers\MapeamentoTech\CandidateController@publish')->name('candidate.publish');
+    $router->get('/admin/candidate/{id}/unpublish', 'App\Http\Controllers\MapeamentoTech\CandidateController@unpublish')->name('candidate.unpublish');
+    $router->get('/admin/candidate/{gid}/delete', 'App\Http\Controllers\MapeamentoTech\CandidateController@destroy')->name('candidate.destroy-me');
+    Route::resource('/admin/states', 'App\Http\Controllers\MapeamentoTech\StateController');
+    Route::resource('/admin/status', 'App\Http\Controllers\MapeamentoTech\CandidateStatusController');
+    Route::resource('/admin/candidate', 'App\Http\Controllers\MapeamentoTech\CandidateController');
+
+    $router->post('/candidate/detail/', 'App\Http\Controllers\MapeamentoTech\CandidateController@detail')->name('candidate.detail');
+    Route::resource('/admin/english_level', 'App\Http\Controllers\MapeamentoTech\CandidateEnglishLevelController');
+    Route::resource('/admin/role', 'App\Http\Controllers\MapeamentoTech\CandidateRoleController');
+    
+});
+
+
+Route::post('/city', 'App\Http\Controllers\MapeamentoTech\CityControler@index');
+Route::post('/city/uf/', 'App\Http\Controllers\MapeamentoTech\CityControler@uf');
+Route::post('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_name');
+
+Route::post('/pcd_type', function () use ($router) {
+    return PcdType::all();
+});

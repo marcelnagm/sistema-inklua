@@ -56,16 +56,18 @@ class ApiController extends Controller
 
         $counters = Content::getCounters($search, $state, $city, $contract);
         $content = Content::searchPositions($search, $state, $city, $contract);
-
+        
         $data = $counters->merge($content);
 //echo 'pega';
+        
 //                dd('pega');
         $result = $data->all();
-
-        $result = $this->clearData($result);
         
+        
+//        $result = $this->clearData($result);
+        dd($result);
         // Cache::put($cacheName, $result, 600);
-
+       
         return response()->json($result);
     }
     public function position(Request $request, $id){
