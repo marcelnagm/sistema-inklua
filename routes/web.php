@@ -59,7 +59,7 @@ Route::get('notification', [VerificationController::class, 'show'])->name('verif
 $router->group(['middleware' => ['auth']], function ($router) {
 //    $router->post('/admin/candidate', 'App\Http\Controllers\MapeamentoTech\CandidateController@index');
 //    $router->post('/admin/candidate/store/', 'App\Http\Controllers\MapeamentoTech\CandidateControler@store');
-//    $router->post('/admin//candidate/search', 'App\Http\Controllers\MapeamentoTech\CandidateControler@search');
+//    $router->post('/admin/candidate/search', 'App\Http\Controllers\MapeamentoTech\CandidateControler@search');
 //    $router->post('/admin/candidate/{id}', 'App\Http\Controllers\MapeamentoTech\CandidateControler@show');
 //    $router->post('/admin/candidate/{id}/publish', 'App\Http\Controllers\MapeamentoTech\CandidateControler@publish');
 //    $router->put('/admin/candidate/{id}/update', 'App\Http\Controllers\MapeamentoTech\CandidateControler@update');
@@ -79,13 +79,4 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::resource('/admin/english_level', 'App\Http\Controllers\MapeamentoTech\CandidateEnglishLevelController');
     Route::resource('/admin/role', 'App\Http\Controllers\MapeamentoTech\CandidateRoleController');
     
-});
-
-
-Route::post('/city', 'App\Http\Controllers\MapeamentoTech\CityControler@index');
-Route::post('/city/uf/', 'App\Http\Controllers\MapeamentoTech\CityControler@uf');
-Route::post('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_name');
-
-Route::post('/pcd_type', function () use ($router) {
-    return PcdType::all();
 });

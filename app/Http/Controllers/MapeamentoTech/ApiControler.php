@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MapeamentoTech;
 
 use App\Models\Candidate;
 use Illuminate\Http\Request;

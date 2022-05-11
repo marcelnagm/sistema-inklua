@@ -20,6 +20,7 @@ class CreateCandidate extends Migration
             $table->text('title')->nullable(false);            
             $table->float('payment')->nullable(false)->defaul(0);
             $table->unsignedBigInteger('state_id')->nullable(false);
+            $table->string('CID')->nullable(false);                         
             $table->string('city')->nullable(false);                         
             $table->boolean('remote')->defaul(0)->nullable(false);            
             $table->boolean('move_out')->defaul(0)->nullable(false);                        
