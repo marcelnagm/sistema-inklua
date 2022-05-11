@@ -21,7 +21,7 @@ class CandidateEnglishLevelController extends Controller
     {
         $candidateEnglishLevels = CandidateEnglishLevel::paginate();
 
-        return view('cms.candidate-english-level.index', compact('candidateEnglishLevels'))
+        return view('cms.mapeamento-tech.candidate-english-level.index', compact('candidateEnglishLevels'))
             ->with('i', (request()->input('page', 1) - 1) * $candidateEnglishLevels->perPage());
     }
 
@@ -33,7 +33,7 @@ class CandidateEnglishLevelController extends Controller
     public function create()
     {
         $candidateEnglishLevel = new CandidateEnglishLevel();
-        return view('cms.candidate-english-level.create', compact('candidateEnglishLevel'));
+        return view('cms.mapeamento-tech.candidate-english-level.create', compact('candidateEnglishLevel'));
     }
 
     /**
@@ -62,7 +62,7 @@ class CandidateEnglishLevelController extends Controller
     {
         $candidateEnglishLevel = CandidateEnglishLevel::find($id);
 
-        return view('cms.candidate-english-level.show', compact('candidateEnglishLevel'));
+        return view('cms.mapeamento-tech.candidate-english-level.show', compact('candidateEnglishLevel'));
     }
 
     /**
@@ -75,7 +75,7 @@ class CandidateEnglishLevelController extends Controller
     {
         $candidateEnglishLevel = CandidateEnglishLevel::find($id);
 
-        return view('cms.candidate-english-level.edit', compact('candidateEnglishLevel'));
+        return view('cms.mapeamento-tech.candidate-english-level.edit', compact('candidateEnglishLevel'));
     }
 
     /**

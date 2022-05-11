@@ -21,7 +21,7 @@ class StateController extends Controller
     {
         $states = State::paginate();
 
-        return view('cms.state.index', compact('states'))
+        return view('cms.mapeamento-tech.state.index', compact('states'))
             ->with('i', (request()->input('page', 1) - 1) * $states->perPage());
     }
 

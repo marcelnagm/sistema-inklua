@@ -21,7 +21,7 @@ class CandidateRoleController extends Controller
     {
         $candidateRoles = CandidateRole::paginate();
 
-        return view('cms.candidate-role.index', compact('candidateRoles'))
+        return view('cms.mapeamento-tech.candidate-role.index', compact('candidateRoles'))
             ->with('i', (request()->input('page', 1) - 1) * $candidateRoles->perPage());
     }
 
@@ -33,7 +33,7 @@ class CandidateRoleController extends Controller
     public function create()
     {
         $candidateRole = new CandidateRole();
-        return view('cms.candidate-role.create', compact('candidateRole'));
+        return view('cms.mapeamento-tech.candidate-role.create', compact('candidateRole'));
     }
 
     /**
@@ -62,7 +62,7 @@ class CandidateRoleController extends Controller
     {
         $candidateRole = CandidateRole::find($id);
 
-        return view('cms.candidate-role.show', compact('candidateRole'));
+        return view('cms.mapeamento-tech.candidate-role.show', compact('candidateRole'));
     }
 
     /**
@@ -75,7 +75,7 @@ class CandidateRoleController extends Controller
     {
         $candidateRole = CandidateRole::find($id);
 
-        return view('cms.candidate-role.edit', compact('candidateRole'));
+        return view('cms.mapeamento-tech.candidate-role.edit', compact('candidateRole'));
     }
 
     /**

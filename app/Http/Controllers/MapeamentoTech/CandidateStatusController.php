@@ -21,7 +21,7 @@ class CandidateStatusController extends Controller
     {
         $candidateStatuses = CandidateStatus::paginate();
 
-        return view('cms.candidate-status.index', compact('candidateStatuses'))
+        return view('cms.mapeamento-tech.candidate-status.index', compact('candidateStatuses'))
             ->with('i', (request()->input('page', 1) - 1) * $candidateStatuses->perPage());
     }
 
@@ -33,7 +33,7 @@ class CandidateStatusController extends Controller
     public function create()
     {
         $candidateStatus = new CandidateStatus();
-        return view('cms.candidate-status.create', compact('candidateStatus'));
+        return view('cms.mapeamento-tech.candidate-status.create', compact('candidateStatus'));
     }
 
     /**
@@ -62,7 +62,7 @@ class CandidateStatusController extends Controller
     {
         $candidateStatus = CandidateStatus::find($id);
 
-        return view('cms.candidate-status.show', compact('candidateStatus'));
+        return view('cms.mapeamento-tech.candidate-status.show', compact('candidateStatus'));
     }
 
     /**
@@ -75,7 +75,7 @@ class CandidateStatusController extends Controller
     {
         $candidateStatus = CandidateStatus::find($id);
 
-        return view('cms.candidate-status.edit', compact('candidateStatus'));
+        return view('cms.mapeamento-tech.candidate-status.edit', compact('candidateStatus'));
     }
 
     /**

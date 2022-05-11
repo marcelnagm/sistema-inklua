@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Recruiter;
+namespace App\Http\Controllers\Hunting\Recruiter;
 
 use App\Models\CandidateEducation;
 use Illuminate\Http\Request;

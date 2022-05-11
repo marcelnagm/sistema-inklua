@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\MapeamentoTech;
+namespace App\Http\Controllers\HuntingAdmin;
 
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 use Illuminate\Http\Request;
 use App\Models\CandidateEnglishLevel;
 use App\Models\CandidateRole;
@@ -27,8 +27,8 @@ class CandidateController extends Controller
     public function index(Request $request)
     {
         
-        session(['key' => 'teste de sesao']);
-        $value = $request->session()->pull('key', 'default');
+//        session(['key' => 'teste de sesao']);
+//        $value = $request->session()->pull('key', 'default');
 //        dd($value);
         $candidates = Candidate::orderby('created_at','DESC')->paginate();
         
@@ -39,7 +39,7 @@ class CandidateController extends Controller
         $status[0] = 'Todos os status';
         ksort($status,SORT_NUMERIC);
 //        dd($status);
-            return view('cms.mapeamento-tech.candidate.index', compact('candidates','status','race','gender'))
+            return view('cms.hunting-admin.candidate.index', compact('candidates','status','race','gender'))
             ->with('i', (request()->input('page',1) - 1) * $candidates->perPage());
     }
     
@@ -107,7 +107,7 @@ class CandidateController extends Controller
           $races = CandidateRace::orderBy('id')->get();
         $genders = CandidateGender::orderBy('id')->get();
       
-        return view('cms.mapeamento-tech.candidate.index', compact('candidates','status','races','genders'))
+        return view('cms.candidate.index', compact('candidates','status','races','genders'))
             ->with('i', (request()->input('page', 1) - 1) * $candidates->perPage());
     }
 
@@ -119,7 +119,7 @@ class CandidateController extends Controller
     public function create()
     {
         $candidate = new Candidate();
-        return view('cms.mapeamento-tech.candidate.create', array(
+        return view('cms.candidate.create', array(
             'candidate' => $candidate,
              'english_levels' => CandidateEnglishLevel::all(),
             'states' => State::all(),
@@ -155,7 +155,7 @@ class CandidateController extends Controller
     {
         $candidate = Candidate::find($id);
 
-        return view('cms.mapeamento-tech.candidate.show', compact('candidate'));
+        return view('cms.candidate.show', compact('candidate'));
     }
 
     /**
@@ -168,7 +168,7 @@ class CandidateController extends Controller
     {
         $candidate = Candidate::find($id);
 
-        return view('cms.mapeamento-tech.candidate.edit',  array(
+        return view('cms.candidate.edit',  array(
             'candidate' => $candidate,
              'english_levels' => CandidateEnglishLevel::all(),
             'states' => State::all(),
@@ -238,7 +238,7 @@ class CandidateController extends Controller
 //        $candidate = Candidate::find($id);
  $candidate = Candidate::where('id', str_replace('KUNLA#', '', $request->input('GID')))->first();
 // dd($candidate);
-        return view('cms.mapeamento-tech.candidate.show', compact('cms.mapeamento-tech.candidate'));
+        return view('cms.candidate.show', compact('cms.candidate'));
     }
 
 

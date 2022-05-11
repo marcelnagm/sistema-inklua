@@ -52,9 +52,13 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $data = request()->only('email','name', 'lastname', 'password', 'password_confirmation', 'accepted_terms');
+        $data = request()->only('email','name','lastname','password','password_confirmation','accepted_terms');
         $data['accepted_terms'] = $data['accepted_terms'] === true ? "true" : false;
-
+        $data['type'] = ($request->input('type') && strtoupper($request->input('type')) === 'PJ') ? 'PJ' : 'PF';
+        $data['cnpj'] = $request->input('cnpj') ? $request->input('cnpj') : '';
+        $data['fantasy_name'] = $request->input('fantasy_name') ? $request->input('fantasy_name') : '';
+        $data['phone'] = $request->input('phone') ? $request->input('phone') : '';
+ 
         $validator = $this->validator($data);
 
         if ($validator->fails()) {
@@ -66,12 +70,15 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
+            'cnpj' => $data['cnpj'],
+            'fantasy_name' => $data['fantasy_name'],
             'name' => $data['name'],
             'lastname' => $data['lastname'],
+            'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'accepted_terms' => 1,
-            'has_password' => 1
+            'type' => $data['type'],
+            'accepted_terms' => 1
         ]);
 
         $user->email_verified_at = NULL;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Candidate;
+namespace App\Http\Controllers\Hunting\Candidate;
 
 use App\Models\CandidateExperience;
 use Illuminate\Http\Request;

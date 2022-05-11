@@ -26,14 +26,17 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
+        'cnpj',
+        'fantasy_name',
         'name',
         'lastname',
+        'phone',
         'email',
         'password',
-        'has_password',
         'accepted_terms',
         'facebook_id',
         'google_id',
+        'type',
     ];
 
     /**
@@ -75,9 +78,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    public function wallet()
-    {
-        return $this->hasOne(\App\Models\Wallet::class);
+    public function wallet(){
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function contents(){
+        return $this->hasMany(Content::class);
+    }
+
+    public function notifications(){
+        return $this->hasMany(Notification::class);
     }
 
 
@@ -111,12 +121,59 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
-    protected static function booted()
-    {
+    protected static function booted() {
         static::deleting(function ($user) {
-            $wallet = $user->wallet()->first();
-            if($wallet)
-                $wallet->delete();
+            $wallet = $user->wallet()->delete();
+
+            $contents = $user->contents()->get();
+            foreach($contents as $content) {
+                $content->delete();
+            }
+
+            $notifications = $user->notifications()->get();
+            foreach($notifications as $notification) {
+                $notification->delete();
+            }            
         });
+    }
+
+    public function getMyContents($search = FALSE, $status = FALSE){
+        
+        $searchEscaped = addslashes($search);
+ 
+        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source, created_at")
+                            ->selectRaw("(
+                                (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
+                                + match (description) against ('{$searchEscaped}' in boolean mode)
+                                - (ABS(DATEDIFF(`date`, NOW())) / 10)
+                            ) as score")
+                            ->where("type", Content::getType('position'))
+                            ->where('user_id', $this->id)
+
+                            // Filtro apenas por query
+                            ->when(($search != ''), function ($query) use ($search) {
+                                return $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
+                            })
+
+                            //Filtro por status
+                            ->when($status, function ($query) use($status) {
+                                return $query->where('status', $status);
+                            })
+                            ->orderBy('score', 'desc')
+                            ->orderBy('id', 'desc')
+                            ->orderBy('ordenation')
+                            ->paginate(12);
+
+                            
+        $content->data = Content::hideFields($content);
+        return $content;
+    }
+
+    public function checkExistenceOfPositionByCnpj() {
+
+        return Content::whereHas('user', function($q) 
+                            {
+                                $q->where('users.cnpj', $this->cnpj);
+                            })->exists();
     }
 }
