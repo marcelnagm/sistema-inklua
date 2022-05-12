@@ -39,6 +39,7 @@ class CandidateHunting extends Model {
         'state_id',
         'city_id',
         'remote', 'move_out',
+        ,'race_id','gender_id',
         'english_level'
     ];
     protected $required = array(
@@ -59,7 +60,7 @@ class CandidateHunting extends Model {
         'state_id' => 'required|max:255',
         'city_id' => 'required|max:255',
         'remote' => 'required|max:1',
-        'move_out' => 'required|max:1',
+        'move_out' => 'required|max:1',        
     );
     protected $dates = [
         'created_at',
@@ -85,6 +86,8 @@ class CandidateHunting extends Model {
         'english_level' => 'required|max:1',
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
+        'race_id' => 'required|max:1',
+        'gender_id'v=> 'required|max:1'
     );
 
 //    protected $hidden = [ ‘password’ ];
