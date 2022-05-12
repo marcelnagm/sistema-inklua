@@ -113,12 +113,11 @@ Candidatos
                                 <tr>
                                     <td>KUNLA#{{ $candidate->id}}</td>
                                     <td>{{ $candidate->title }}</td>
-                                    <td>{{ $candidate->city }} - {{ $candidate->state()->UF }}</td>
+                                    <td>{{ $candidate->city_id }} - {{ $candidate->state()->UF }}</td>
                                     <td>R${{ $candidate->payment_formatted() }}</td>                                    
                                     <td>{{$candidate->published_at != null ?$candidate->published_at->format('d/m/Y H:i') : 'Não publicado'}}</td>
                                     <td>{{ $candidate->full_name }}</td>
-                                    <td>{{ $candidate->phone() }}</td>
-                                    <td>{{ $candidate->status() }}</td>
+                                    <td>{{ $candidate->phone() }}</td> 
                                     <td>
                                         <form action="{{ route('candidate.destroy',$candidate->id) }}" method="DELETE">
                                             <a class="btn btn-sm btn-primary " href="{{ route('candidate.show',$candidate->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>

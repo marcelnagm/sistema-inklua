@@ -202,13 +202,6 @@ class CandidateController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy($gid)
-    {
-        $candidate =Candidate::where('gid', $gid)->first();
-        $candidate->delete();
-        return redirect()->route('candidate.index')
-            ->with('success', 'Candidato removido com sucesso');
-    }
     
     
     public function publish(Request $request, $id) {
