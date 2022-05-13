@@ -95,11 +95,11 @@
             </div>
         </div>
     </li>
-     <li class="nav-item">
+<!--     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#tech"
             aria-expanded="true" aria-controls="report">
             <i class="fas fa-clipboard"></i>
-            <span>Mapeamento Tech</span>huntin
+            <span>Mapeamento Tech</span>
         </a>
         <div id="tech" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -111,6 +111,22 @@
             </div>
         </div>
     </li>
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#hunt"
+            aria-expanded="true" aria-controls="hunt">
+            <i class="fas fa-clipboard"></i>
+            <span>Sistema Hunting</span>
+        </a>
+        <div id="hunt" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Adminstrador :</h6>
+                <a class="collapse-item" href="{{ url('') }}/admin/hunting/candidate">Candidatos</a>
+                <a class="collapse-item" href="{{ url('') }}/admin/role">Funções</a>
+                <a class="collapse-item" href="{{ url('') }}/admin/english_level">Nível de Inglês</a>
+                <a class="collapse-item" href="{{ url('') }}/admin/status">Status</a>
+            </div>
+        </div>
+    </li>-->
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report"
             aria-expanded="true" aria-controls="report">
