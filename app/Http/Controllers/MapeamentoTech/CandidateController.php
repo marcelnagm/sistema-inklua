@@ -8,7 +8,7 @@ use App\Models\CandidateEnglishLevel;
 use App\Models\CandidateRole;
 use App\Models\CandidateStatus;
 use App\Models\State;
-use App\Http\Controllers\ApiControler;
+use App\Http\Controllers\MapeamentoTech\ApiControler;
 use App\Models\CandidateRace;
 use App\Models\CandidateGender;
 use App\Http\Controllers\Controller; 
@@ -193,7 +193,7 @@ class CandidateController extends Controller
         $result = (new ApiControler)->update($request,$request->input('gid'));
           
 //        dd($result);
-        return redirect()->route('candidate.index')
+        return redirect()->route('candidate.edit',$candidate)
             ->with('success', 'Candidato editado com sucesso');
     }
 
@@ -218,7 +218,7 @@ class CandidateController extends Controller
         $candidate->update();
 
         
-        return redirect()->route('candidate.index')
+        return redirect()->route('candidate.edit',$candidate)            
             ->with('success', 'Candidato publicado');
     }
     
@@ -229,7 +229,7 @@ class CandidateController extends Controller
         $candidate->update();
 
         
-        return redirect()->route('candidate.index')
+        return redirect()->route('candidate.edit',$candidate)                        
             ->with('success', 'Candidato arquivado');
     }
     

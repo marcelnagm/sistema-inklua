@@ -1,33 +1,25 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    {{ $candidateRole->name ?? 'Show Candidate Role' }}
+{{ $candidateRole->name ?? 'Show Candidate Role' }}
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="float-left">
-                            <span class="card-title">Show Candidate Role</span>
-                        </div>
-                        <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('role.index') }}"> Back</a>
-                        </div>
-                    </div>
+<div class="col-xl-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h5 class="m-0 font-weight-bold text-primary">Exibindo Função - Mapeamento Tech
+            </h5>
+        </div>                
+        <div class="card-body">
 
-                    <div class="card-body">
-                        
-                        <div class="form-group">
-                            <strong>Role:</strong>
-                            {{ $candidateRole->role }}
-                        </div>
-
-                    </div>
-                </div>
+            <div class="form-group">
+                <strong>Role:</strong>
+                {{ $candidateRole->role }}
             </div>
+
         </div>
-    </section>
+    </div>
+</div>
 @endsection

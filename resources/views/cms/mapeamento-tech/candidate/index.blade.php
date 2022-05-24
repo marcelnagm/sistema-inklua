@@ -5,13 +5,14 @@ Candidatos
 @endsection
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h1 class="h3 mb-2 text-gray-800">Candidatos</h1>                            
+<div class="col-xl-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h5 class="m-0 font-weight-bold text-primary">Lista de Candidato - Mapeamento Tech
+            </h5>
+        </div>                
+        <div class="card-body">
 
                         <div class="float-right">
                             <a href="{{ route('candidate.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
@@ -19,12 +20,7 @@ Candidatos
                             </a>
                         </div>
                     </div>
-                </div>
-                @if ($message = Session::get('success'))
-                <div class="alert alert-success">
-                    <p>{{ $message }}</p>
-                </div>
-                @endif
+                
                 <div class="float-right">
                     <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>
                     @if(Session::has('search'))
@@ -56,16 +52,16 @@ Candidatos
                                         </td>
                                         @if(Session::has('search'))
                                         <td>
-                                            {{ Form::text('search', Session::get('search')['param'],['class' => '','placeholder' => 'Nome, telefone ou código' ]) }}                            
+                                            {{ Form::text('search', Session::get('search')['param'],['class' => 'form-control','placeholder' => 'Nome, telefone ou código' ]) }}                            
                                         </td>
                                         <td>
-                                            {{ Form::select('status_id',$status,Session::get('search')['status'],['class' => '' ]) }}
+                                            {{ Form::select('status_id',$status,Session::get('search')['status'],['class' => 'form-control form-control-sm' ]) }}
                                         </td>
                                         <td>
-                                            {{ Form::select('race_id',isset($races) ? $races : $race,Session::get('search')['race'],['class' => '' ]) }}
+                                            {{ Form::select('race_id',isset($races) ? $races : $race,Session::get('search')['race'],['class' => 'form-control' ]) }}
                                         </td>
                                         <td>
-                                            {{ Form::select('gender_id',isset($genders) ? $genders : $gender,Session::get('search')['gender'],['class' => '' ]) }}
+                                            {{ Form::select('gender_id',isset($genders) ? $genders : $gender,Session::get('search')['gender'],['class' => 'form-control' ]) }}
                                         </td>
                                         @else
                                         <td>
@@ -92,7 +88,6 @@ Candidatos
                 </div>
 
 
-                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="thead">
@@ -111,7 +106,7 @@ Candidatos
                             <tbody>
                                 @foreach ($candidates as $candidate)
                                 <tr>
-                                    <td>KUNLA#{{ $candidate->id}}</td>
+                                    <td>INKLUA#{{ $candidate->id}}</td>
                                     <td>{{ $candidate->title }}</td>
                                     <td>{{ $candidate->city }} - {{ $candidate->state()->UF }}</td>
                                     <td>R${{ $candidate->payment_formatted() }}</td>                                    
@@ -119,19 +114,8 @@ Candidatos
                                     <td>{{ $candidate->full_name }}</td>
                                     <td>{{ $candidate->phone() }}</td>
                                     <td>{{ $candidate->status() }}</td>
-                                    <td>
-                                        <form action="{{ route('candidate.destroy',$candidate->id) }}" method="DELETE">
-                                            <a class="btn btn-sm btn-primary " href="{{ route('candidate.show',$candidate->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
-                                            <a class="btn btn-sm btn-success" href="{{ route('candidate.edit',$candidate->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
-                                            <a class="btn btn-sm btn-primary " href="@if ($candidate->published_at == null)  {{  route('candidate.publish',$candidate->id) }} @else {{  route('candidate.unpublish',$candidate->id) }} @endif"><i class="fa fa-fw fa-eye"></i> 
-                                                @if($candidate->published_at == null)                                            
-                                                Publicar
-                                                @else
-                                                Arquivar
-                                                @endif
-                                            </a>
-                                            <a class="btn btn-sm btn-danger" href="{{ route('candidate.destroy-me',$candidate->gid) }}"><i class="fa fa-fw fa-edit"></i> Remover</a>
-
+                                    <td>                                        
+                                            <a class="btn btn-sm btn-success" href="{{ route('tech.edit',$candidate->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>                                         
                                     </td>
                                 </tr>
                                 @endforeach
