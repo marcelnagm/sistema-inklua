@@ -14,7 +14,10 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\MyContentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +62,9 @@ Route::post('/actions/clear', [ActionsController::class, 'clear']);
 /* Wallet */
 Route::get('/wallet', [WalletController::class, 'wallet']);
 
+/* Notification */
+Route::get('/notifications', [NotificationController::class, 'index']);
+Route::get('/notifications/{id}', [NotificationController::class, 'update']);
 
 Route::get('/home', [ApiController::class, 'home']);
 Route::get('/busca', [ApiController::class, 'search']);
@@ -70,11 +76,10 @@ Route::get('/minhas-vagas/{id}/edit', [MyContentController::class, 'edit']);
 Route::post('/minhas-vagas/{id}', [MyContentController::class, 'update']);
 
 // Route::get('/contato', [ApiController::class, 'contact']);
-Route::post('/contato', [ApiController::class, 'contact']);
+ Route::post('/contato', [ApiController::class, 'contact']);
 
 Route::post('/transaction', [TransactionController::class, 'create']);
 Route::get('/transaction/order', [TransactionController::class, 'order']);
-
 
 //rotas sistema hunting
 

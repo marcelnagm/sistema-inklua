@@ -84,30 +84,16 @@
                 @endif    
             </div>
 
-            @if( isset($article->image) && $article->image != '' )
             <div id="img-preview-wrapper">
-                <div class="form-row mb-3">
-                    <div class="col-lg-12">
-                        <img id="image-output" src="/storage/articles/{{$article->image}}" alt="" class="show-image">                                
+                @if( isset($article->image) && $article->image != '' )
+                    <div class="form-row mb-3">
+                        <div class="col-lg-12">
+                            <img id="image-output" src="/storage/articles/{{$article->image}}" alt="" class="show-image">                                
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
-            @endif
-
-
-            {{-- <div class="form-row mb-3" id="image_caption" @if( !$article->image ) hidden @endif>
-                <div class="col-lg-12">
-                    <div class="form-group" >
-                        <label for="image_caption" class="form-label">{{ __('Legenda') }}</label>
-                        <input id="image_caption" type="text" class="form-control @error('image_caption') is-invalid @enderror" name="image_caption" value="{{ $article->image_caption }}" autocomplete="image_caption" >
-                        @error('image_caption')
-                            <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                        @enderror
-                    </div> 
-                </div>
-            </div> --}}
-
-
+            
             {{-- Fim upload de imagem--}}
 
             <div class="form-row mb-3">

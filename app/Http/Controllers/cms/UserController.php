@@ -76,7 +76,7 @@ class UserController extends Controller
             'user'    => $user,
         ];
 
-        return view('cms.userForm', $data);
+        return view('cms.user_form', $data);
     }
 
     /**

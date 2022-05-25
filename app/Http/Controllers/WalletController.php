@@ -13,7 +13,7 @@ class WalletController extends Controller
 
     public function wallet(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $wallet = $user->getWallet();
 
         $actions = $wallet->actions()

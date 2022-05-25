@@ -61,7 +61,7 @@ class ApiController extends Controller
         
         $result = $data->all();
 
-        
+            $result = $this->clearData($result);
 //        $result = $this->clearData($result);
         //dd($result);
         // Cache::put($cacheName, $result, 600);
@@ -266,6 +266,7 @@ class ApiController extends Controller
                     unset($content["category"]);
 
                     $content["description"] = $this->clearHtml($content["description"]);
+                    $content["description"] = $this->clearHtml($content["description"]);
                     
                     if($content["image"] != ''){
                         $content["image"] = url("storage/ads/{$content["image"]}");
@@ -275,7 +276,7 @@ class ApiController extends Controller
                 }else if($content["type"] == 3){
                     $content["type"] = "article";
                     $content["date"] = substr($content["created_at"], 0, 10);
-                    $content["description"] = $this->clearHtml($content["description"]);
+                    $content["description"] = $this->clearHtml($content["description"],1000);
 
                     if($content["image"] != ''){
                         $content["image"] = url("storage/articles/{$content["image"]}");
@@ -290,7 +291,7 @@ class ApiController extends Controller
     }
 
     private function clearHtml($string, $limit = FALSE){
-        $string = html_entity_decode(strip_tags($string,'<br></div><div><p></p>'));
+        $string = html_entity_decode(strip_tags($string));
 
         if($limit)
             $string = substr($string, 0, $limit);

@@ -22,7 +22,7 @@ class UserController extends Controller
         ]);
     }
 
-    protected function validatorChangePasswordWithHasPassword(array $data)
+    protected function validatorChangePassword(array $data)
     {
         return Validator::make($data, [
             'current_password' => ['required'],
@@ -30,16 +30,9 @@ class UserController extends Controller
         ]);
     }
 
-    protected function validatorChangePasswordWithoutHasPassword(array $data)
-    {
-        return Validator::make($data, [
-            'password' => ['required', 'confirmed','min:6']
-        ]);
-    }
-
     public function update(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $data = $request->only(['name', 'lastname']);
 
         $validator = $this->validatorUpdate($data);
@@ -62,14 +55,10 @@ class UserController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $data = $request->only(['current_password', 'password', 'password_confirmation']);
 
-        if($user->has_password){
-            $validator = $this->validatorChangePasswordWithHasPassword($data);
-        }else{
-            $validator = $this->validatorChangePasswordWithoutHasPassword($data);
-        }
+        $validator = $this->validatorChangePassword($data);
 
         if( $validator->fails() ){
             return response()->json(
@@ -79,7 +68,7 @@ class UserController extends Controller
             );
         }
 
-        if($user->has_password && !Hash::check($request->current_password, $user->password)){
+        if(!Hash::check($request->current_password, $user->password)){
             return response()->json(
                 [
                     "errors" => ["Sua senha atual está errada"]
@@ -88,18 +77,16 @@ class UserController extends Controller
         }
 
         $user->password = Hash::make($request->password);
-        $user->has_password = 1;
         $user->save();
 
         return response()->json([
-            'message' => "Senha atualizada",
-            'data' => $user
+            'message' => "Senha atualizada"
         ]);
     }
 
     public function acceptTerms(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $data = array(
             'accepted_terms' => $request->accepted_terms
         );
@@ -126,7 +113,7 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
 
         if(!Hash::check($request->password, $user->password)) {
             return response()->json(

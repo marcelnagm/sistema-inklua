@@ -45,7 +45,7 @@ class ArticleController extends Controller
             'search_article' => $search_article,
         ];
 
-        return view('cms.article.articleList', $data);
+        return view('cms.article.article_list', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('cms.article.articleForm');
+        return view('cms.article.article_form');
     }
 
     /**
@@ -122,7 +122,7 @@ class ArticleController extends Controller
             'article'    => $article,
         ];
 
-        return view('cms.article.articleForm', $data);
+        return view('cms.article.article_form', $data);
     }
 
     /**

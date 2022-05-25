@@ -55,27 +55,46 @@
         </div>
     </li>
 
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#group"
             aria-expanded="true" aria-controls="group">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Vagas</span>
+            <i class="fas fa-fw fa-layer-group"></i>
+            <span>Grupos de vagas</span>
         </a>
         <div id="group" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ url('') }}/admin/vagas">Gerenciar</a>
-                <h6 class="collapse-header">Agrupamentos</h6>
                 <a class="collapse-item" href="{{ url('') }}/admin/grupo/vagas">Gerenciar</a>
                 <a class="collapse-item" href="{{ url('') }}/admin/grupo/vagas/create">Agrupar</a>
             </div>
         </div>
-        <div id="group" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#internal-positions"
+            aria-expanded="true" aria-controls="group">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Vagas Internas</span>
+        </a>
+        <div id="internal-positions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Importação manual</h6>
-                <a class="collapse-item" href="{{ url('') }}/admin/grupo/vagas">Gerenciar</a>
-                <a class="collapse-item" href="{{ url('') }}/admin/grupo/vagas/create">Agrupar</a>
+                <a class="collapse-item" href="{{ url('') }}/admin/vagas">Gerenciar</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#external-positions"
+            aria-expanded="true" aria-controls="group">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Vagas Externas</span>
+        </a>
+        <div id="external-positions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ url('') }}/admin/usuarios/vagas">Gerenciar</a>
+                <a class="collapse-item" href="{{ url('') }}/admin/usuarios/vagas?status=aguardando_aprovacao">Aprovar</a>
             </div>
         </div>
     </li>
@@ -124,6 +143,7 @@
             </div>
         </div>
     </li>
+     <!-- Nav Item - Pages Collapse Menu -->
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report"
             aria-expanded="true" aria-controls="report">

@@ -45,7 +45,7 @@ class AdController extends Controller
             'search_content_ad' => $search_content_ad,
         ];
 
-        return view('cms.ad.adList', $data);
+        return view('cms.ad.ad_list', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class AdController extends Controller
      */
     public function create()
     {
-        return view('cms.ad.adForm');
+        return view('cms.ad.ad_form');
     }
 
     /**
@@ -128,7 +128,7 @@ class AdController extends Controller
             'ad'    => $ad,
         ];
 
-        return view('cms.ad.adForm', $data);
+        return view('cms.ad.ad_form', $data);
     }
 
     /**

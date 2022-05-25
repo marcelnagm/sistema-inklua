@@ -38,7 +38,7 @@ class ActionsController extends Controller
 
     public function share(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $data = $request->only(['action', 'media', 'content_id']);
 
         $validator = $this->validateShare($data);
@@ -98,7 +98,7 @@ class ActionsController extends Controller
 
     public function click(Request $request)
     {
-        $user = request()->user();
+        $user = $request->user();
         $data = $request->only(['action', 'media', 'content_id']);
 
         $validator = $this->validateClick($data);
@@ -156,7 +156,7 @@ class ActionsController extends Controller
 
 
     public function donate(Request $request){
-        $user = request()->user();
+        $user = $request->user();
         $wallet = $user->getWallet();
 
         if($wallet->coins <= 0){
@@ -191,7 +191,7 @@ class ActionsController extends Controller
             ], 400);
         }
 
-        $user = request()->user();
+        $user = $request->user();
         $wallet = $user->getWallet();
 
         $wallet->actions()->delete();

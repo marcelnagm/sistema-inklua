@@ -42,7 +42,7 @@ class GroupController extends Controller
             'search_group' => $search_group,
         ];
 
-        return view('cms.group.groupList', $data);
+        return view('cms.group.group_list', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class GroupController extends Controller
         $data = [
             'positionItens' => Content::where('type', 1)->orderBy('title', 'asc')->get(),
         ];
-        return view('cms.group.groupForm', $data);
+        return view('cms.group.group_form', $data);
     }
 
     /**
@@ -122,7 +122,7 @@ class GroupController extends Controller
         ]; 
 
         // dd($data);
-        return view('cms.group.groupForm', $data);
+        return view('cms.group.group_form', $data);
     }
 
     /**

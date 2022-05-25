@@ -7,6 +7,7 @@ use App\Http\Controllers\cms\AdController;
 use App\Http\Controllers\cms\PositionController;
 use App\Http\Controllers\cms\GroupController;
 use App\Http\Controllers\cms\ReportController;
+use App\Http\Controllers\cms\UserPositionController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\VerificationController;
 /*
@@ -24,16 +25,18 @@ Route::get('/', function () {
     return redirect('admin');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/admin', function () {
+Route::middleware(checkAdminPermission::class)->get('/admin', function () {
     return view('cms.dashboard');
 })->name('dashboard');
 
 Route::get('admin/vagas/importar', [PositionController::class, 'importPositions']);
+Route::resource('admin/usuarios/vagas', UserPositionController::class);
 Route::resource('admin/usuarios', UserController::class);
 Route::resource('admin/artigos', ArticleController::class);
 Route::resource('admin/anuncios', AdController::class);
 Route::resource('admin/vagas', PositionController::class);
 Route::resource('admin/grupo/vagas', GroupController::class);
+
 
 Route::get('admin/report/inkoins/donation', [ReportController::class, 'searchDonateReport']);
 Route::get('admin/report/inkoins/donation/show', [ReportController::class, 'donateReport']);
@@ -52,7 +55,6 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('notification', [VerificationController::class, 'show'])->name('verification.notice');
-
 //mepeamento tech
 
 

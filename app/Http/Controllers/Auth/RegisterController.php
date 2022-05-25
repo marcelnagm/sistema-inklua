@@ -77,8 +77,8 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'has_password' => $data['password'] != '' ? 1 :NULL,
             'type' => $data['type'],
-             'has_password' => $data['password'] != '' ? 1 :NULL,
             'accepted_terms' => 1
         ]);
 

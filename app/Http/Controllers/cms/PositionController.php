@@ -30,6 +30,7 @@ class PositionController extends Controller
         $search_position = $request->input("search_position");
 
         $positions = Content::where('type', 1)
+                                ->whereNull('user_id')
                                 ->when($search_position, function ($query, $search_position) {
                                     
                                     $query->where(function($query) use($search_position) {
@@ -47,7 +48,7 @@ class PositionController extends Controller
             'search_position' => $search_position,
         ];
 
-        return view('cms.position.positionList', $data);
+        return view('cms.position.position_list', $data);
     }
 
     /**
@@ -105,7 +106,7 @@ class PositionController extends Controller
             'groups' => $groups,
         ];
 
-        return view('cms.position.positionForm', $data);
+        return view('cms.position.position_form', $data);
     }
 
     /**
