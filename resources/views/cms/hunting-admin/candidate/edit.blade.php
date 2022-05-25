@@ -1,31 +1,30 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    Update Candidate
+Update Candidate Hunting
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
-        <div class="">
-            <div class="col-md-12">
 
-                @includeif('partials.errors')
+<!-- Area Chart -->
+<div class="col-xl-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Edição de Candidato - Hunting
+            </h6>
+        </div>                
+        <div class="card-body">
+            <form method="POST" action="{{ route('candidate-hunt.update', $candidateHunting->id) }}"  role="form" enctype="multipart/form-data">
+                {{ method_field('PATCH') }}
+                @csrf
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">Update Candidate</span>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('candidate.update', $candidate->id) }}"  role="form" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
-                            @csrf
+                @include('cms.hunting-admin.candidate.form')
 
-                            @include('candidate.form',array('role'=> $role))
-
-                        </form>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-    </section>
+    </div>
+</div>
+
+</section>
 @endsection

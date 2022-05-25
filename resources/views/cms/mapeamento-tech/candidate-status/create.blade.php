@@ -19,7 +19,7 @@
                         <form method="POST" action="{{ route('status.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
-                            @include('cms.candidate-status.form')
+                            @include('cms.mapeamento-tech.candidate-status.form')
 
                         </form>
                     </div>

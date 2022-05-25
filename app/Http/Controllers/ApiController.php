@@ -56,20 +56,19 @@ class ApiController extends Controller
 
         $counters = Content::getCounters($search, $state, $city, $contract);
         $content = Content::searchPositions($search, $state, $city, $contract);
-        
+
         $data = $counters->merge($content);
-//echo 'pega';
         
-//                dd('pega');
         $result = $data->all();
-        
+
         
 //        $result = $this->clearData($result);
-        dd($result);
+        //dd($result);
         // Cache::put($cacheName, $result, 600);
-       
+
         return response()->json($result);
     }
+    
     public function position(Request $request, $id){
         $user = auth()->guard('api')->user();
 
@@ -195,9 +194,9 @@ class ApiController extends Controller
             unset($content["actions"]);
 
             // Positions
-            if($content["type"] == 1){
-
-                if($content["group_id"]){
+            if($content["type"] == 1 ){
+//                dd( url()->current());
+                if($content["group_id"] && strpos(url()->current(),'busca') === false){
                     $group = Group::where("id", $content["group_id"])->first();
 
                     $content["id"] = $content["group_id"];
@@ -291,7 +290,7 @@ class ApiController extends Controller
     }
 
     private function clearHtml($string, $limit = FALSE){
-        $string = html_entity_decode(strip_tags($string));
+        $string = html_entity_decode(strip_tags($string,'<br></div><div><p></p>'));
 
         if($limit)
             $string = substr($string, 0, $limit);

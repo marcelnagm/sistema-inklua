@@ -31,6 +31,7 @@ class Candidate extends Model {
         'title',
         'payment', 'state_id', 'city', 'remote', 'move_out',
         'description', 'tecnical_degree', 'superior_degree',
+        'CID',
         'spec_degree', 'mba_degree', 'master_degree', 'doctor_degree',
         'english_level', 'full_name', 'cellphone', 'email', 'cv_url',
                    'pcd',
@@ -54,6 +55,7 @@ class Candidate extends Model {
         'email' => 'required|max:255',
         'payment' => 'required|max:255',
         'portifolio_url' => 'nullable',
+        'CID' => 'nullable',
         'linkedin_url' => 'nullable',
         'pcd' => 'required|max:1',
         'cv_path' => 'nullable',
@@ -66,6 +68,8 @@ class Candidate extends Model {
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
     );
+    
+    static $admin = array( 'full_name', 'cellphone', 'email');
     
 
     public function __construct($param = null) {

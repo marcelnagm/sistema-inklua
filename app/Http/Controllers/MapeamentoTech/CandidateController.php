@@ -27,9 +27,6 @@ class CandidateController extends Controller
     public function index(Request $request)
     {
         
-        session(['key' => 'teste de sesao']);
-        $value = $request->session()->pull('key', 'default');
-//        dd($value);
         $candidates = Candidate::orderby('created_at','DESC')->paginate();
         
         $race = CandidateRace::orderBy('id')->get();

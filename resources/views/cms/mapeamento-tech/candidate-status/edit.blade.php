@@ -20,7 +20,7 @@
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('cms.candidate-status.form')
+                            @include('cms.mapeamento-tech.candidate-status.form')
 
                         </form>
                     </div>

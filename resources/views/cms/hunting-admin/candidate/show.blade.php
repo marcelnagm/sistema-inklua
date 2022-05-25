@@ -1,174 +1,123 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    {{ $candidate->name ?? 'Show Candidate' }}
+{{ $candidateHunting->name ?? 'Show Candidate Hunting' }}
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="float-left">
-                            <span class="card-title">Show Candidate</span>
-                        </div>
-                        <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('candidate.index') }}"> Back</a>
-                        </div>
+<section class="content container-fluid">
+    <div class="col-xl-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Exibição de Candidato - Hunting
+                </h6>
+            </div>                
+            <div class="card-body">
+                <div class="float-right">
+                    <a class="btn btn-primary" href="{{ route('hunt.index') }}"> Retornar a Lista</a>
+                    <a class="btn btn-success" href="{{ route('candidate-hunt.edit',$candidateHunting->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
+                </div>
+
+
+                <div class="card-body">
+                    
+                    <div class="form-group">
+                        <strong>Nome:</strong>
+                        {{ $candidateHunting->name }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Sobrenome:</strong>
+                        {{ $candidateHunting->surname }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Data de Nascimento:</strong>
+                        {{ $candidateHunting->birth_date->format('d/m/Y')  }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Celular:</strong>
+                        {{ $candidateHunting->cellphone  }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Email:</strong>
+                        {{ $candidateHunting->email }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Pretensão Salarial:</strong>
+                       R$ {{ $candidateHunting->payment_formatted() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Curriculo:</strong>
+                      
+                      <a href='{{ route('hunt.cv',$candidateHunting->id) }}'>Baixe aqui o curriculo</a>
+                      
+                    </div>
+                    <div class="form-group">
+                        <strong>Portifolio:</strong>
+                        <a href='{{ $candidateHunting->portifolio_url }}'>Curriculo </a>
+                    </div>
+                    <div class="form-group">
+                        <strong>Linkedin:</strong>
+                        <a href='{{ $candidateHunting->linkedin_url }}'>Linkedin </a>                        
+                    </div>
+                    <div class="form-group">
+                        <strong>Pcd:</strong>
+                        @include('layouts.partials.yesno',array('param' => $candidateHunting->pcd))                                                
+                    </div>
+                    <div class="form-group">
+                        <strong>Tipo de Deficência:</strong>
+                        {{ $candidateHunting->pcd_typo() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Detalhes:</strong>
+                        {{ $candidateHunting->pcd_details }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Laudo Médico:</strong>
+                        <a href='{{ route('hunt.pcd_report',$candidateHunting->id) }}'>Laudo Medico </a>
+                    </div>
+                    <div class="form-group">
+                        <strong>Estado de Residência:</strong>
+                        {{ $candidateHunting->state() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Cidade de Residência:</strong>
+                        {{ $candidateHunting->city() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Primeiro Emprego?:</strong>
+                        @include('layouts.partials.yesno',array('param' => $candidateHunting->first_job))                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <strong>Aceita trabalhar remoto?:</strong>
+                         @include('layouts.partials.yesno',array('param' => $candidateHunting->remote))                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <strong>Têm disponibilidade de mudança?:</strong>
+                        @include('layouts.partials.yesno',array('param' => $candidateHunting->move_out))                                                
+                    </div>
+                    <div class="form-group">
+                        <strong>Nivel de Inglês:</strong>
+                        {{ $candidateHunting->english_level_obj() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Gênero:</strong>
+                        {{ $candidateHunting->gender() }}
+                    </div>
+                    <div class="form-group">
+                        <strong>Raça:</strong>
+                        {{ $candidateHunting->race() }}
                     </div>
 
-                    <div class="card-body">
-                                <table class="table table-striped table-hover">
-                            
-                            <tbody>
-                            
-                                <tr>
-                                    <td>Codigo do candidato</td>                                    
-                                    <td>KUNLA-{{ $candidate->id}}</td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Função</td>                                    
-                                    <td>{{ $candidate->role() }}</td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Titulo</td>                                    
-                                    <td>  {{ $candidate->title }}</td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Pretensão Salarial</td>                                    
-                                    <td> 
-                                    R${{ $candidate->payment_formatted() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Estado</td>                                    
-                                    <td> 
-                            {{ $candidate->state() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Cidade</td>                                    
-                                    <td> 
-                               {{ $candidate->city }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Remoto:</td>                                    
-                                    <td> 
-                               @include('layouts.partials.yesno',array('param' => $candidate->remote ==1)  )
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Disponilidade de mudança:</td>                                    
-                                    <td> 
-                            {{ $candidate->move_out ==0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança'}}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Descrição:</td>                                    
-                                    <td> 
-                            {{ $candidate->description }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Nivel Técnico:</td>                                    
-                                    <td> 
-                            {{ $candidate->tecnical_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Nivel Superior:</td>                                    
-                                    <td> 
-                            {{ $candidate->superior_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Pós-graduação:</td>                                    
-                                    <td> 
-                              {{ $candidate->spec_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>MBA:</td>                                    
-                                    <td> 
-                               {{ $candidate->mba_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Mestrado:</td>                                    
-                                    <td> 
-                            {{ $candidate->master_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Doutorado:</td>                                    
-                                    <td> 
-                            {{ $candidate->doctor_degree }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Nível de inglês:</td>                                    
-                                    <td> 
-                            {{ $candidate->english_level_obj() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Nome completo:</td>                                    
-                                    <td> 
-                            {{ $candidate->full_name }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Genêro:</td>                                    
-                                    <td> 
-                            {{ $candidate->gender() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Raça:</td>                                    
-                                    <td> 
-                            {{ $candidate->race() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Celular:</td>                                    
-                                    <td> 
-                            {{ $candidate->phone() }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Email:</td>                                    
-                                    <td> 
-                            {{ $candidate->email }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Cv URL:</td>                                    
-                                    <td> 
-                                        <a target="_blank" href="{{ $candidate->cv_url }}">Link </a>
-                            
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Publicado em:</td>                                    
-                                    <td> 
-                                          {{ $candidate->published_at == NULL? 'Não Publicado' : $candidate->published_at->format('d/m/Y H:i') }}
-                                    </td>                                    
-                                </tr>
-                                <tr>
-                                    <td>Status:</td>                                    
-                                    <td> 
-                                          {{ $candidate->status() }}
-                                    </td>                                    
-                                </tr>
-                           
-                            </tbody>
-                        </table>
-
-                    </div>
+                 @include('cms.hunting-admin.candidate-education.index',array('candidateEducationHuntings' => $candidateHunting->education()))
+                 @include('cms.hunting-admin.candidate-experience.index',array('candidateExperienceHuntings' => $candidateHunting->experience()))
+                    
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    
+</section>
 @endsection

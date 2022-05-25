@@ -23,7 +23,7 @@ class CandidateExperienceHunting extends Migration
             $table->string('description')->nullable(false);
 
             $table->date('start_at')->nullable(false);
-            $table->date('end_at')->nullable(false);
+            $table->date('end_at')->nullable(true);
             
             $table->foreign('candidate_id')->references('id')->on('candidate_hunting');
             $table->timestamps();

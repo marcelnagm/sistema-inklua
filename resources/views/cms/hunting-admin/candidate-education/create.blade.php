@@ -1,26 +1,25 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    Update Candidate English Level
+    Create Candidate Education Hunting
 @endsection
 
 @section('content')
     <section class="content container-fluid">
-        <div class="">
+        <div class="row">
             <div class="col-md-12">
 
                 @includeif('partials.errors')
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Update Candidate English Level</span>
+                        <span class="card-title">Create Candidate Education Hunting</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('english_level.update', $candidateEnglishLevel->id) }}"  role="form" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                        <form method="POST" action="{{ route('education.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
-                            @include('cms.mapeamento-tech.candidate-english-level.form')
+                            @include('cms.hunting-admin.candidate-education.form')
 
                         </form>
                     </div>

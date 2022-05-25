@@ -2,113 +2,85 @@
 
 namespace App\Http\Controllers\HuntingAdmin;
 
-use App\Models\CandidateHunting as Candidate;
+use App\Models\CandidateHunting;
 use Illuminate\Http\Request;
-use App\Models\CandidateEnglishLevel;
-use App\Models\CandidateRole;
-use App\Models\CandidateStatus;
-use App\Models\State;
-use App\Http\Controllers\ApiControler;
-use App\Models\CandidateRace;
+use App\Http\Controllers\Controller;
 use App\Models\CandidateGender;
-use App\Http\Controllers\Controller; 
+use App\Models\CandidateRace;
+use App\Models\CandidateEnglishLevel;
+use App\Models\State;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * Class CandidateController
+ * Class CandidateHuntingController
  * @package App\Http\Controllers
  */
-class CandidateController extends Controller
-{
+class CandidateController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        
-//        session(['key' => 'teste de sesao']);
-//        $value = $request->session()->pull('key', 'default');
-//        dd($value);
-        $candidates = Candidate::orderby('created_at','DESC')->paginate();
-        
+    public function index() {
+        $candidateHuntings = CandidateHunting::paginate();
         $race = CandidateRace::orderBy('id')->get();
         $gender = CandidateGender::orderBy('id')->get();
-        $status = CandidateStatus::select('id','status')->get()->toArray();
-        $status = $this->adjustArray($status,'id','status');
-        $status[0] = 'Todos os status';
-        ksort($status,SORT_NUMERIC);
-//        dd($status);
-            return view('cms.hunting-admin.candidate.index', compact('candidates','status','race','gender'))
-            ->with('i', (request()->input('page',1) - 1) * $candidates->perPage());
+
+        return view('cms.hunting-admin.candidate.index', compact('candidateHuntings', 'race', 'gender'))
+                        ->with('i', (request()->input('page', 1) - 1) * $candidateHuntings->perPage());
     }
-    
-    public function clear(Request $request)
-    {
-    $request->session()->forget('search');
-    return redirect('/admin/candidate');
+
+    public function clear(Request $request) {
+        $request->session()->forget('hunt');
+//        dd('oeg');
+        return redirect()->route('hunt.index');
 //    dd('')
     }
-    
-    public function search(Request $request)
-    {
-        
-        if($request->has('page') ){
-        $param =$request->session()->get('search')['param'];
-        $status =$request->session()->get('search')['status'];
-        $race =$request->session()->get('search')['race'];
-        $gender =$request->session()->get('search')['gender'];
-    }else{
-        
-        $param =$request->input('search');
-        $status =$request->input('status_id');
-        $race =$request->input('race_id');
-        $gender =$request->input('gender_id');
+
+    public function search(Request $request) {
+
+        if ($request->has('page')) {
+            $param = $request->session()->get('hunt')['param'];
+            $race = $request->session()->get('hunt')['race'];
+            $gender = $request->session()->get('hunt')['gender'];
+        } else {
+            $param = $request->input('search');
+            $race = $request->input('race_id');
+            $gender = $request->input('gender_id');
 //        dd($gender,$race);
-        session([
-            'search' => array(
-                'param' =>$param,
-                'status' => $status,
-                'race' => $race,
-                'gender' => $gender
-                
+            session([
+                'hunt' => array(
+                    'param' => $param,
+                    'race' => $race,
+                    'gender' => $gender
                 )
             ]);
-        
-    }
-    
-    
-    
-    
-    
-        $candidates = Candidate::
-                whereRaw("(full_name like '%$param%'  or "
+        }
+
+        $candidateHuntings = CandidateHunting::
+                whereRaw("("
+                        . "name like '%$param%'  or "
+                        . "surname like '%$param%'  or "
                         . "cellphone like '%$param%'  or "
                         . "id = '$param'  "
-                        . ") ")->                
-                orderby('created_at','DESC');
-        
-    if($status != 0){
-        $candidates->where('status_id',$status);
-    }
-    if($race != 0){
-        $candidates->where('race_id',$race+1);
-    }
-    if($gender!= 0){
-        $candidates->where('gender_id',$gender+1);
-    }
+                        . ") ")->
+                orderby('created_at', 'DESC');
+
+        if ($race != 0) {
+            $candidateHuntings->where('race_id', $race + 1);
+        }
+        if ($gender != 0) {
+            $candidateHuntings->where('gender_id', $gender + 1);
+        }
 //        dd($this->getEloquentSqlWithBindings($candidates));
-        $candidates= $candidates->paginate();
-        
-         $status = CandidateStatus::select('id','status')->get()->toArray();
-        $status = $this->adjustArray($status,'id','status');
-        $status[0] = 'Todos os status';
-        ksort($status,SORT_NUMERIC);
-          $races = CandidateRace::orderBy('id')->get();
+        $candidateHuntings = $candidateHuntings->paginate();
+
+        $races = CandidateRace::orderBy('id')->get();
         $genders = CandidateGender::orderBy('id')->get();
-      
-        return view('cms.candidate.index', compact('candidates','status','races','genders'))
-            ->with('i', (request()->input('page', 1) - 1) * $candidates->perPage());
+
+        return view('cms.hunting-admin.candidate.index', compact('candidateHuntings', 'races', 'genders'))
+                        ->with('i', (request()->input('page', 1) - 1) * $candidateHuntings->perPage());
     }
 
     /**
@@ -116,18 +88,15 @@ class CandidateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $candidate = new Candidate();
-        return view('cms.candidate.create', array(
-            'candidate' => $candidate,
-             'english_levels' => CandidateEnglishLevel::all(),
-            'states' => State::all(),
-            'role' => CandidateRole::all(),
-            'status' => CandidateStatus::all(),
-            'race' => CandidateRace::all(),
-            'gender' => CandidateGender::all()        
-        ));
+    public function create() {
+
+        $race = CandidateRace::orderBy('id')->get();
+        $gender = CandidateGender::orderBy('id')->get();
+        $english_levels = CandidateEnglishLevel::all();
+        $states = State::all();
+        $pcd = \App\Models\PcdType::all();
+        $candidateHunting = new CandidateHunting();
+        return view('cms.hunting-admin.candidate.create', compact('candidateHunting', 'race', 'pcd', 'gender', 'english_levels', 'states'));
     }
 
     /**
@@ -136,13 +105,26 @@ class CandidateController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
 //        dd($request);
-          $result = (new ApiControler)->store($request);
-          
-        return redirect()->route('candidate.index')
-            ->with('success', 'Candidato cadastrado com sucesso.');
+        request()->validate(CandidateHunting::$rules);
+
+        $candidateHunting = new CandidateHunting($request->all());
+        $candidateHunting->generate();
+        if ($request->file('pcd_report') != NULL) {
+            $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
+            $candidateHunting->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+        }
+        if ($request->file('cv_path') != NULL) {
+            unset($pcd_report);
+            $pcd_report = file_get_contents($request->file('cv_path')->getRealPath());
+            $candidateHunting->save_cv_path(base64_encode($pcd_report), $request->file('cv_path')->extension());
+        }
+        $candidateHunting->save();
+
+        return redirect()->route('candidate-hunt.show', array('candidate_hunt' => $candidateHunting))
+                        ->with('success', 'Candidato editado com sucesso');
     }
 
     /**
@@ -151,11 +133,22 @@ class CandidateController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $candidate = Candidate::find($id);
+    public function show($id) {
+        $candidateHunting = CandidateHunting::find($id);
 
-        return view('cms.candidate.show', compact('candidate'));
+        return view('cms.hunting-admin.candidate.show', compact('candidateHunting'));
+    }
+
+    public function cv($id) {
+        $candidateHunting = CandidateHunting::find($id);
+
+        return Storage::download($candidateHunting->cv_path);
+    }
+
+    public function pcd_report($id) {
+        $candidateHunting = CandidateHunting::find($id);
+
+        return Storage::download($candidateHunting->pcd_report);
     }
 
     /**
@@ -164,37 +157,45 @@ class CandidateController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $candidate = Candidate::find($id);
+    public function edit($id) {
+        $race = CandidateRace::orderBy('id')->get();
+        $gender = CandidateGender::orderBy('id')->get();
+        $english_levels = CandidateEnglishLevel::all();
+        $states = State::all();
+        $pcd = \App\Models\PcdType::all();
 
-        return view('cms.candidate.edit',  array(
-            'candidate' => $candidate,
-             'english_levels' => CandidateEnglishLevel::all(),
-            'states' => State::all(),
-            'role' => CandidateRole::all(),
-            'status' => CandidateStatus::all(),
-            'race' => CandidateRace::all(),
-            'gender' => CandidateGender::all()        
-        ));
+        $candidateHunting = CandidateHunting::find($id);
+
+        return view('cms.hunting-admin.candidate.edit', compact('candidateHunting', 'race', 'pcd', 'gender', 'english_levels', 'states'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  Candidate $candidate
+     * @param  CandidateHunting $candidateHunting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Candidate $candidate)
-    {
-//        dd($request);
-        
-        $result = (new ApiControler)->update($request,$request->input('gid'));
-          
-//        dd($result);
-        return redirect()->route('candidate.index')
-            ->with('success', 'Candidato editado com sucesso');
+    public function update(Request $request, $id) {
+//        dd($request->file());
+        request()->validate(CandidateHunting::$rules);
+
+//        dd($pcd_report);
+
+        $candidateHunting = CandidateHunting::where('gid', $request->input('gid'))->first();
+        if ($request->file('pcd_report') != NULL) {
+            $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
+            $candidateHunting->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+        }
+        if ($request->file('cv_path') != NULL) {
+            $pcd_report = file_get_contents($request->file('cv_path')->getRealPath());
+            $candidateHunting->save_cv_path(base64_encode($pcd_report), $request->file('cv_path')->extension());
+        }
+//        $candidateHunting->save_cv_path(base64_encode($request->file('cv_path')), $request->file('cv_path')->extension());        
+        $candidateHunting->update($request->all());
+
+        return redirect()->route('candidate-hunt.show', array('candidate_hunt' => $candidateHunting))
+                        ->with('success', 'Candidato editado com sucesso');
     }
 
     /**
@@ -202,46 +203,11 @@ class CandidateController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    
-    
-    public function publish(Request $request, $id) {
-        $candidate = Candidate::find( $id);
-        $candidate->status_id = 1;
-        $candidate->published_at = date("Y-m-d H:i:s");
-        $candidate->update();
+    public function destroy($id) {
+        $candidateHunting = CandidateHunting::find($id)->delete();
 
-        
-        return redirect()->route('candidate.index')
-            ->with('success', 'Candidato publicado');
-    }
-    
-    public function unpublish(Request $request, $id) {
-        $candidate = Candidate::find( $id);
-        $candidate->status_id = 2;
-        $candidate->published_at = null;
-        $candidate->update();
-
-        
-        return redirect()->route('candidate.index')
-            ->with('success', 'Candidato arquivado');
-    }
-    
-      public function detail(Request $request)
-    {
-//        $candidate = Candidate::find($id);
- $candidate = Candidate::where('id', str_replace('KUNLA#', '', $request->input('GID')))->first();
-// dd($candidate);
-        return view('cms.candidate.show', compact('cms.candidate'));
+        return redirect()->route('hunt.index')
+                        ->with('success', 'Candidato removido com sucesso');
     }
 
-
-    public function adjustArray($array, $key, $value) {
-        $retornoo = array();
-        foreach ($array as $a) {
-            $retornoo[$a[$key]] = $a[$value];
-        }
-
-        return $retornoo;
-    }
-    
 }

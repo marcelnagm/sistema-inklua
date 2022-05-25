@@ -8,8 +8,6 @@
 
 namespace App\Models;
 
-
-
 /**
  * Experience Parte do sistema hunting
  *
@@ -17,6 +15,7 @@ namespace App\Models;
  */
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Str;
+use Carbon;
 
 class CandidateExperience extends Model {
 
@@ -26,17 +25,41 @@ class CandidateExperience extends Model {
         'role',
         'company',
         'description',
-        'start_at', 
+        'start_at',
         'end_at'
     ];
-        
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'start_at',
+        'end_at'
+    ];
     static $rules = array(
-        'role'=> 'required|max:255',
+        'candidate_id' => 'required|max:255',
+        'role' => 'required|max:255',
         'company' => 'required|max:255',
         'description' => 'nullable',
-        'start_at'  => 'required', 
-        'end_at' => 'nullable'        
+        'start_at' => 'required',
+        'end_at' => 'nullable'
     );
-    
-    
+    protected $casts = [
+        'start_at' => 'date',
+        'end_at' => 'date',
+    ];
+
+    public function __construct($param = null) {
+
+//             dd($param);
+        if ($param != null) {
+            if (isset($param['start_at'])) {
+                $this->start_at = Carbon\Carbon::createFromFormat('d/m/Y', $param['start_at']);
+                if (isset($param['end_at'])) {
+                    $this->end_at = Carbon\Carbon::createFromFormat('d/m/Y', $param['end_at']);
+                }
+                unset($param['start_at'], $param['end_at']);
+            }
+            parent::__construct($param);
+        }
+    }
+
 }

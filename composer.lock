@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d36650715bf571edd8af0d613504994c",
+    "content-hash": "830315a51c0b0f182636c84c9ab677e5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7641,6 +7641,67 @@
             "time": "2020-07-09T08:09:16+00:00"
         },
         {
+            "name": "ibex/crud-generator",
+            "version": "v1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/awais-vteams/laravel-crud-generator.git",
+                "reference": "5736a2c53c5534cceb03d97ce9613aacb97c810c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/awais-vteams/laravel-crud-generator/zipball/5736a2c53c5534cceb03d97ce9613aacb97c810c",
+                "reference": "5736a2c53c5534cceb03d97ce9613aacb97c810c",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.5|^6.20.42|^7.0|^8.0|^9.0",
+                "laravelcollective/html": "^5.4|^6.0|^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ibex\\CrudGenerator\\CrudServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ibex\\CrudGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "M Awais",
+                    "email": "asargodha@gmail.com"
+                }
+            ],
+            "description": "Laravel Crud Generator",
+            "keywords": [
+                "crud",
+                "crud generator",
+                "laravel",
+                "laravel crud generator",
+                "laravel package"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/awais-vteams",
+                    "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/mawais",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2022-03-08T14:13:11+00:00"
+        },
+        {
             "name": "laravel/sail",
             "version": "v1.8.6",
             "source": {
@@ -9572,7 +9633,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {

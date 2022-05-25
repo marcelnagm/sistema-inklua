@@ -1,7 +1,7 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    Update Candidate English Level
+    Update Candidate Experience Hunting
 @endsection
 
 @section('content')
@@ -13,14 +13,14 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Update Candidate English Level</span>
+                        <span class="card-title">Update Candidate Experience Hunting</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('english_level.update', $candidateEnglishLevel->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('work.update', $candidateExperienceHunting->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('cms.mapeamento-tech.candidate-english-level.form')
+                            @include('cms.hunting-admin.candidate-experience.form')
 
                         </form>
                     </div>

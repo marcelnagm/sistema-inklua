@@ -32,8 +32,7 @@ class CreateCandidateHunting extends Migration {
             $table->unsignedBigInteger('city_id')->nullable(false);
             $table->boolean('first_job')->defaul(1)->nullable(true);
             $table->boolean('remote')->defaul(0)->nullable(false);
-            $table->boolean('move_out')->defaul(0)->nullable(false);
-            $table->integer('status')->defaul(0)->nullable(true);
+            $table->boolean('move_out')->defaul(0)->nullable(false);            
             $table->unsignedBigInteger('english_level')->nullable(false);
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->foreign('english_level')->references('id')->on('candidate_english_level');

@@ -9,30 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class ApiControler extends Controller {
 
-    private $rules = array(
-        'title' => 'required|max:255',
-        'role_id' => 'required|max:255',
-        'payment' => 'required|max:12',
-        'state_id' => 'required|max:2',
-        'race_id' => 'required|max:2',
-        'gender_id' => 'required|max:2',
-        'city' => 'required|max:255',
-        'remote' => 'required|max:1',
-        'move_out' => 'required|max:1',
-        'description' => 'required',
-        'english_level' => 'required|max:1',
-        'full_name' => 'required|max:255',
-        'tecnical_degree' => 'nullable',
-        'superior_degree' => 'nullable',
-        'spec_degree' => 'nullable',
-        'mba_degree' => 'nullable',
-        'master_degree' => 'nullable',
-        'doctor_degree' => 'nullable',
-        'full_name' => 'required|max:255',
-        'cellphone' => 'required|max:15',
-        'email' => 'required|max:255',
-        'cv_url' => 'required|max:255',
-    );
     private $searchble = array(
         'title' => '%',
         'role_id' => '%',
@@ -343,7 +319,7 @@ class ApiControler extends Controller {
 
     public function validate_data($request) {
 
-        $data = $this->validate($request, $this->rules);
+        $data = $this->validate($request, Candidate::$rules);
         $data['cellphone'] = trim(str_replace(array('(', ')', '-'), '', $data['cellphone']));
         $data['payment'] = trim(str_replace(array('R$', '.', ','), '', $data['payment']));
 

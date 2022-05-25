@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CandidateReport;
+use App\Models\CandidateGender;
+use App\Models\CandidateRace;
+use Carbon;
 
 class CandidateHunting extends Model {
 
@@ -36,36 +39,26 @@ class CandidateHunting extends Model {
         'pcd_type_id',
         'pcd_details',
         'pcd_report',
+        'first_job',
         'state_id',
         'city_id',
-        'remote', 'move_out',
+        'remote', 'move_out'
         ,'race_id','gender_id',
         'english_level'
     ];
-    protected $required = array(
-        'gid' => 'required|max:255',
-        'name' => 'required|max:255',
-        'surname' => 'required|max:255',
-        'birth_date' => 'required',
-        'cellphone' => 'required|max:255',
-        'email' => 'required|max:255',
-        'payment' => 'required|max:255',
-        'portifolio_url' => 'required|max:255',
-        'linkedin_url' => 'required|max:255',
-        'pcd' => 'required|max:1',
-        'pcd_type_id' => 'nullable',
-        'pcd_details' => 'nullable',
-        'pcd_report' => 'nullable',
-        'english_level' => 'nullable',
-        'state_id' => 'required|max:255',
-        'city_id' => 'required|max:255',
-        'remote' => 'required|max:1',
-        'move_out' => 'required|max:1',        
-    );
+    
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
+         'birth_date'
     ];
+    
+    protected $casts = [
+        'start_at' => 'date',
+        'end_at' => 'date',
+        'birth_date' => 'date',
+    ];
+    
     static $rules = array(
         'gid' => 'nullable',
         'name' => 'required|max:255',
@@ -77,6 +70,7 @@ class CandidateHunting extends Model {
         'portifolio_url' => 'nullable',
         'linkedin_url' => 'nullable',
         'pcd' => 'required|max:1',
+        'first_job' => 'required|max:1',
         'cv_path' => 'nullable',
         'pcd_type_id' => 'nullable',
         'pcd_details' => 'nullable',
@@ -87,18 +81,26 @@ class CandidateHunting extends Model {
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
         'race_id' => 'required|max:1',
-        'gender_id'v=> 'required|max:1'
+        'gender_id'=> 'required|max:1'
     );
 
 //    protected $hidden = [ ‘password’ ];
 
-    public function __construct($param = null) {
-        if ($param != null) {
-            $this->gid = md5(random_int(1, 125) * time() . Str::random(20));
+       public function __construct($param = null) {
+       if ($param != null) {
+            if (isset($param['birth_date'])) {
+                $this->birth_date = Carbon\Carbon::createFromFormat('d/m/Y', $param['birth_date']);                
+//                $this->cellphone = str_replace(['(',')','-'],'' ,$param['cellphone']);                
+                unset($param['birth_date'],$param['cellphone']);
+            }
             parent::__construct($param);
         }
     }
 
+    public function generate() {
+        $this->gid = md5(random_int(1, 125) * time() . Str::random(20));                        
+    }
+    
     public function english_level_obj() {
         return CandidateEnglishLevel::find($this->english_level);
     }
@@ -125,7 +127,13 @@ class CandidateHunting extends Model {
             return substr($TEL, 0, $tam - 4) . "-" . substr($TEL, -4);
         }
     }
+    
+    
 
+    public function full_name() {
+    return $this->name.' '.$this->surname;    
+    }
+    
     public function payment_formatted() {
         return number_format($this->payment, 0, '', '.');
     }
@@ -169,7 +177,7 @@ class CandidateHunting extends Model {
             Storage::makeDirectory("docs/$this->gid");
 
         Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
-        $this->cv_path = "docs/$this->gid/pcd_report.$ext";
+        $this->cv_path = "docs/$this->gid/cv.$ext";
     }
 
     public function compact() {
@@ -189,6 +197,14 @@ class CandidateHunting extends Model {
         
         
         return $data;
+    }
+    
+    public function gender() {
+      return CandidateGender::find($this->gender_id);
+    }
+    
+    public function race() {
+        return CandidateRace::find($this->race_id);
     }
 
 }

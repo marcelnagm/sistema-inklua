@@ -13,8 +13,8 @@ use App\Http\Controllers\ActionsController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\SocialController;
-
-
+use App\Http\Controllers\MyContentController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,13 +59,21 @@ Route::post('/actions/clear', [ActionsController::class, 'clear']);
 /* Wallet */
 Route::get('/wallet', [WalletController::class, 'wallet']);
 
+
 Route::get('/home', [ApiController::class, 'home']);
 Route::get('/busca', [ApiController::class, 'search']);
 Route::get('/vaga/{id}', [ApiController::class, 'position'])->where('id', '[0-9]+');
+Route::get('/minhas-vagas', [MyContentController::class, 'index']);
+Route::get('/minhas-vagas/status', [MyContentController::class, 'myContentStatus']);
+Route::post('/minhas-vagas/new', [MyContentController::class, 'store']);
+Route::get('/minhas-vagas/{id}/edit', [MyContentController::class, 'edit']);
+Route::post('/minhas-vagas/{id}', [MyContentController::class, 'update']);
 
 // Route::get('/contato', [ApiController::class, 'contact']);
 Route::post('/contato', [ApiController::class, 'contact']);
 
+Route::post('/transaction', [TransactionController::class, 'create']);
+Route::get('/transaction/order', [TransactionController::class, 'order']);
 
 
 //rotas sistema hunting
