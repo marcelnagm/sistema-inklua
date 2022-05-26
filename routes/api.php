@@ -149,3 +149,12 @@ Route::post('/state', function () use ($router) {
 Route::post('/pcd_type', function () use ($router) {
     return PcdType::all();
 });
+
+
+// Rotas API Mapeamento Tech
+
+$router->post('/search', 'App\Http\Controllers\MapeamentoTech\SearchControler@index_search');
+$router->get('/search', 'App\Http\Controllers\MapeamentoTech\SearchControler@index_search');
+$router->post('/search_more', 'App\Http\Controllers\MapeamentoTech\SearchControler@search_more');
+$router->get('/people/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@candidate');
+$router->post('/detail/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@detail');
