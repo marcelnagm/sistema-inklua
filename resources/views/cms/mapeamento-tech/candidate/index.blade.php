@@ -14,18 +14,22 @@ Candidatos
         </div>                
 
 
-        <div class="float-right">
+        <div class="float-right p-4">
             <a href="{{ route('candidate.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                 Adicionar novo candidato
             </a>
 
 
-            @if(Session::has('search'))
+           
+       </div>
+
+        <div class="card-body">
+             @if(Session::has('search'))
 
             <span class="alert danger"> Resultado Filtrado <a href="{{ route('candidate.clear') }}"class="btn btn-danger btn-sm" >Limpar Filtro</a></span>
             @endif
-            <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>
-            <div  id="filtros" style="width: 100%;display: none;">                       
+            <button class="btn btn-primary" onclick="$('#filtros').toggle('100');"> Filtros</button>
+            <div class="p-4"  id="filtros" style="width: 100%;display: none;">                       
                 <form method="post" action="{{ route('candidate.search') }}"  role="form" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group form-control-lg" >
@@ -86,10 +90,7 @@ Candidatos
 
                 </form>
             </div>
-        </div>
-
-        <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive p-md-4">
                 <table class="table table-striped table-hover">
                     <thead class="thead">
                         <tr>

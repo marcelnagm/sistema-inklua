@@ -101,5 +101,9 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::resource('/hunting/work/{id}/', 'App\Http\Controllers\HuntingAdmin\CandidateExperienceController')->name('create','work.hunt.create');
     Route::resource('/hunting/education', 'App\Http\Controllers\HuntingAdmin\CandidateEducationController');
     Route::resource('/hunting/work', 'App\Http\Controllers\HuntingAdmin\CandidateExperienceController');
+   
+    Route::post('/users/search', 'App\Http\Controllers\HuntingAdmin\UserController@search')->name('users.search');
+    Route::get('/users/get', 'App\Http\Controllers\HuntingAdmin\UserController@clear')->name('users.clear');
+    Route::resource('/users', 'App\Http\Controllers\HuntingAdmin\UserController');
     
 });

@@ -15,7 +15,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('description') }}
-            {{ Form::text('description', $candidateExperienceHunting->description, ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description']) }}
+            {{ Form::textarea('description', $candidateExperienceHunting->description, ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description','id' => 'desc']) }}
             {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">

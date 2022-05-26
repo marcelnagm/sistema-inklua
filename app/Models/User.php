@@ -61,6 +61,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'google_id',
     ];
 
+    
+      static $rules = array(
+             'cnpj'  => 'required|max:255',
+        'fantasy_name' => 'required|max:255',
+        'name'  => 'required|max:255',
+        'lastname'  => 'required|max:255',
+        'phone'  => 'required|max:255',
+        'email'  => 'required|max:255',        
+    );
+    
     /**
      * The attributes that should be cast to native types.
      *

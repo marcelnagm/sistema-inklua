@@ -14,71 +14,71 @@ Candidate Hunting
             </h5>
         </div>                
 
-        <div class="float-right">
+        <div class="float-right p-4">
             <a href="{{ route('candidate-hunt.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                 Novo Candidato
             </a>
-        </div>
-        <div class="float-right">
-                    <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>
-                    @if(Session::has('hunt'))
+        </div>              
 
-                    <span class="alert danger"> Resultado Filtrado <a href="{{ route('hunt.clear') }}"class="btn btn-danger btn-sm" >Limpar Filtro</a></span>
-                    @endif
-                    <div  id="filtros" style="display: none;">                       
-                        <form method="post" action="{{ route('hunt.search') }}"  role="form" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group form-control-lg" >
-                                <table>
-                                    <thead>
-                                    <th colspan="2">
-
-                                    </th>                                    
-                                    <th>
-                                        Raça 
-                                    </th>
-                                    <th>
-                                        Genêro 
-                                    </th>
-                                    </thead>
-                                    <tr>
-                                        <td>
-                                            {{ Form::label('Pesquisar por:') }}
-                                        </td>
-                                        @if(Session::has('hunt'))
-                                        <td>
-                                            {{ Form::text('search', Session::get('hunt')['param'],['class' => 'form-control','placeholder' => 'Nome, telefone ou código' ]) }}                            
-                                        </td>                                        
-                                        <td>
-                                            {{ Form::select('race_id',isset($races) ? $races : $race,Session::get('hunt')['race'],['class' => 'form-control' ]) }}
-                                        </td>
-                                        <td>
-                                            {{ Form::select('gender_id',isset($genders) ? $genders : $gender,Session::get('hunt')['gender'],['class' => 'form-control' ]) }}
-                                        </td>
-                                        @else
-                                        <td>
-                                            {{ Form::text('search', '',['class' => '','placeholder' => 'Nome, telefone ou código' ]) }}                            
-                                        </td>
-                                        <td>
-                                            {{ Form::select('race_id',$race ?? '','',['class' => '' ]) }}
-                                        </td>
-                                        <td>
-                                            {{ Form::select('gender_id',$gender,'',['class' => '' ]) }}
-                                        </td>
-                                        @endif
-                                        <td>
-                                        <button type="submit" class="btn btn-primary">Buscar</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            
-                            
-                        </form>
-                    </div>                    
-                </div>
         <div class="card-body">
-            <div class="table-responsive">
+
+            <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>
+            @if(Session::has('hunt'))
+
+            <span class="alert danger"> Resultado Filtrado <a href="{{ route('hunt.clear') }}"class="btn btn-danger btn-sm" >Limpar Filtro</a></span>
+            @endif
+            <div  class="container p-4" id="filtros" style="display: none;">                       
+                <form method="post" action="{{ route('hunt.search') }}"  role="form" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group form-control-lg" >
+                        <table>
+                            <thead>
+                            <th colspan="2">
+
+                            </th>                                    
+                            <th>
+                                Raça 
+                            </th>
+                            <th>
+                                Genêro 
+                            </th>
+                            </thead>
+                            <tr>
+                                <td>
+                                    {{ Form::label('Pesquisar por:') }}
+                                </td>
+                                @if(Session::has('hunt'))
+                                <td>
+                                    {{ Form::text('search', Session::get('hunt')['param'],['class' => 'form-control','placeholder' => 'Nome, telefone ou código' ]) }}                            
+                                </td>                                        
+                                <td>
+                                    {{ Form::select('race_id',isset($races) ? $races : $race,Session::get('hunt')['race'],['class' => 'form-control' ]) }}
+                                </td>
+                                <td>
+                                    {{ Form::select('gender_id',isset($genders) ? $genders : $gender,Session::get('hunt')['gender'],['class' => 'form-control' ]) }}
+                                </td>
+                                @else
+                                <td>
+                                    {{ Form::text('search', '',['class' => '','placeholder' => 'Nome, telefone ou código' ]) }}                            
+                                </td>
+                                <td>
+                                    {{ Form::select('race_id',$race ?? '','',['class' => '' ]) }}
+                                </td>
+                                <td>
+                                    {{ Form::select('gender_id',$gender,'',['class' => '' ]) }}
+                                </td>
+                                @endif
+                                <td>
+                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </form>
+            </div>      
+            <div class="table-responsive p-md-4">
                 <table class="table table-striped table-hover">
                     <thead class="thead">
                         <tr>
@@ -104,21 +104,21 @@ Candidate Hunting
                                 R$ {{ $candidateHunting->payment_formatted() }}
                             </td>
                             <td>
-                            @include('layouts.partials.yesno',array('param' => $candidateHunting->pcd))                                                
+                                @include('layouts.partials.yesno',array('param' => $candidateHunting->pcd))                                                
                             </td>
                             <td>
-                            {{ $candidateHunting->city() }}
+                                {{ $candidateHunting->city() }}
                             </td>                            
                             <td>
-                            @include('layouts.partials.yesno',array('param' => $candidateHunting->first_job))                        
+                                @include('layouts.partials.yesno',array('param' => $candidateHunting->first_job))                        
                             </td>
                             <td>
-                            @include('layouts.partials.yesno',array('param' => $candidateHunting->remote))                        
+                                @include('layouts.partials.yesno',array('param' => $candidateHunting->remote))                        
                             </td>                            
                             <td>{{ $candidateHunting->english_level_obj() }}</td>
                             <td>
-                                
-                                    <a class="btn btn-sm btn-primary " href="{{ route('candidate-hunt.show',$candidateHunting->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
+
+                                <a class="btn btn-sm btn-primary " href="{{ route('candidate-hunt.show',$candidateHunting->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
                             </td>
                         </tr>
                         @endforeach

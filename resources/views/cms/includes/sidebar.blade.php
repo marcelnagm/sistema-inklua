@@ -140,6 +140,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Administrador :</h6>
                 <a class="collapse-item" href="{{ route('hunt.index') }}">Candidatos</a>
+                <a class="collapse-item" href="{{ route('users.index') }}">Recrutadores</a>
             </div>
         </div>
     </li>
