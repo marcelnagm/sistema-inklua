@@ -100,6 +100,22 @@ class UserController extends Controller
      * @param  User $user
      * @return \Illuminate\Http\Response
      */
+    public function promote(Request $request, $id)
+    {
+                   $user = User::find($id);
+           $user->promote($user->id);
+         return redirect()->route('users.show',array('user' => $id));
+    }
+    
+    public function revoke(Request $request, $id)
+    {
+           $user = User::find($id);
+//        dd($user);
+           $user->revoke();
+         return redirect('users/'.$user->id);
+        
+    }
+    
     public function update(Request $request, User $user)
     {
         request()->validate(User::$rules);

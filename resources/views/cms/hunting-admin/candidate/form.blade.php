@@ -2,32 +2,32 @@
     <div class="box-body">
 
         {{ Form::hidden('gid', $candidateHunting->gid, ['class' => 'form-control' . ($errors->has('gid') ? ' is-invalid' : ''), 'placeholder' => 'Gid']) }}        <div class="form-group">
-            {{ Form::label('name') }}
+            {{ Form::label('Nome') }}
             {{ Form::text('name', $candidateHunting->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : ''), 'placeholder' => 'Name']) }}
-            {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
+            {!! $errors->first('name', '<div classo="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('surname') }}
+            {{ Form::label('Sobrenome') }}
             {{ Form::text('surname', $candidateHunting->surname, ['class' => 'form-control' . ($errors->has('surname') ? ' is-invalid' : ''), 'placeholder' => 'Surname']) }}
             {!! $errors->first('surname', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('birth_date') }}
+            {{ Form::label('Data de Nascimento') }}
             {{ Form::text('birth_date', $candidateHunting->birth_date , ['class' => 'form-control datepicker' . ($errors->has('birth_date') ? ' is-invalid' : ''), 'placeholder' => 'Birth Date']) }}
             {!! $errors->first('birth_date', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('cellphone') }}
-            {{ Form::text('cellphone', $candidateHunting->cellphone, ['class' => 'form-control' . ($errors->has('cellphone') ? ' is-invalid' : ''), 'placeholder' => 'Cellphone']) }}
+            {{ Form::label('Celular') }}
+            {{ Form::text('cellphone', $candidateHunting->cellphone, ['class' => 'form-control' . ($errors->has('cellphone') ? ' is-invalid' : ''), 'placeholder' => 'Cellphone','id' => 'cellphone']) }}
             {!! $errors->first('cellphone', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('email') }}
+            {{ Form::label('Email') }}
             {{ Form::text('email', $candidateHunting->email, ['class' => 'form-control' . ($errors->has('email') ? ' is-invalid' : ''), 'placeholder' => 'Email']) }}
             {!! $errors->first('email', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('payment') }}
+            {{ Form::label('Pretensão Salarial') }}
             {{ Form::text('payment', $candidateHunting->payment, ['class' => 'form-control' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment']) }}
             {!! $errors->first('payment', '<div class="invalid-feedback">:message</div>') !!}
         </div>
@@ -40,12 +40,12 @@
             @endisset
         </div>
         <div class="form-group">
-            {{ Form::label('portifolio_url') }}
+            {{ Form::label('Url de Portifólio') }}
             {{ Form::text('portifolio_url', $candidateHunting->portifolio_url, ['class' => 'form-control' . ($errors->has('portifolio_url') ? ' is-invalid' : ''), 'placeholder' => 'Portifolio Url']) }}
             {!! $errors->first('portifolio_url', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('linkedin_url') }}
+            {{ Form::label('Linkedin') }}
             {{ Form::text('linkedin_url', $candidateHunting->linkedin_url, ['class' => 'form-control' . ($errors->has('linkedin_url') ? ' is-invalid' : ''), 'placeholder' => 'Linkedin Url']) }}
             {!! $errors->first('linkedin_url', '<div class="invalid-feedback">:message</div>') !!}
         </div>
@@ -60,19 +60,19 @@
         <div class="form-row mb-3">
             <div class="col-lg-9">
                 <div class="form-group">
-                    {{ Form::label('pcd_type_id') }}
+                    {{ Form::label('Tipo de Deficiência') }}
                     @include('layouts.partials.select',array('list' => $pcd,'param' => $candidateHunting->pcd_type_id,'name' => 'pcd_type_id'))
                     {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
         </div>
         <div class="form-group">
-            {{ Form::label('pcd_details') }}
+            {{ Form::label('Detalhes de PCD') }}
             {{ Form::textarea('pcd_details', $candidateHunting->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details']) }}
             {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('pcd_report') }}
+            {{ Form::label('Laudo Médico') }}
             {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
             {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
             @isset($candidateHunting->pcd_report)
@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="form-group">
-            {{ Form::label('city_id') }}       
+            {{ Form::label('Cidade') }}       
             @isset($candidateHunting->city_id)
             <h6>{{$candidateHunting->city()->name}}</h6>
             @endisset
@@ -113,7 +113,7 @@
         </div>
         <div class="form-row mb-3">
             <div class="form-group ">
-                {{ Form::label('Tem Disponibilidade De Mudança?') }}
+                {{ Form::label('Tem disponibilidade de mudança?') }}
                 <input type="hidden" name="move_out" value="0"> 
                 <input name="move_out" type="checkbox" class="" @if($candidateHunting->move_out==1) checked @endif value="1"> 
 

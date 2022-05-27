@@ -13,7 +13,7 @@
             </h5>
         </div>                
 
-                <div class="card-body">
+                <div class="card-body p-4">
                         <form method="POST" action="{{ route('candidate.update', $candidate->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf

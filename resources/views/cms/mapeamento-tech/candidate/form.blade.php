@@ -53,52 +53,6 @@
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="col-lg-9">
-            <div class="form-group">
-                {{ Form::label('Genêro') }}
-                @include('layouts.partials.select',array('list' => $gender,'param' => $candidate->gender_id,'name' => 'gender_id'))            
-            </div>
-        </div>
-    </div>
-    <div class="form-row mb-3">
-        <div class="col-lg-9">
-            <div class="form-group">
-                {{ Form::label('Raça') }}
-                @include('layouts.partials.select',array('list' => $race,'param' => $candidate->race_id,'name' => 'race_id'))            
-            </div>
-        </div>
-    </div>
- <div class="form-row mb-3">
-            <div class="form-group ">
-                {{ Form::label('Portador de  deficiência?') }}
-                <input type="hidden" name="pcd" value="0">
-                <input name="pcd" type="checkbox" class="" @if($candidate->pcd==1) checked @endif value="1">                        
-                {!! $errors->first('pcd', '<div class="invalid-feedback">:message</div>') !!}
-            </div>
-        </div>
-        <div class="form-row mb-3">
-            <div class="col-lg-9">
-                <div class="form-group">
-                    {{ Form::label('pcd_type_id') }}
-                    @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
-                    {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            {{ Form::label('pcd_details') }}
-            {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details']) }}
-            {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('pcd_report') }}
-            {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
-            {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
-            @isset($candidate->pcd_report)
-            <a href='{{ route('hunt.pcd_report',$candidate->id) }}'>Laudo Medico </a>
-            @endisset
-        </div>
-    <div class="form-row mb-3">
         <div class="form-group col-lg-6">
             {{ Form::label('Deseja trabalhar remoto?') }}
             <input type="hidden" name="remote" value="0">
@@ -114,12 +68,50 @@
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="col-lg-6">
+            <div class="form-group">
+                {{ Form::label('Genêro') }}
+                @include('layouts.partials.select',array('list' => $gender,'param' => $candidate->gender_id,'name' => 'gender_id'))            
+            </div>
+        </div>
+    
+        <div class="col-lg-6">
+            <div class="form-group">
+                {{ Form::label('Raça') }}
+                @include('layouts.partials.select',array('list' => $race,'param' => $candidate->race_id,'name' => 'race_id'))            
+            </div>
+        </div>
+    </div> 
+                <input type="hidden" name="pcd" value="1">                
+        <div class="form-row mb-3">
+            <div class="col-lg-9">
+                <div class="form-group">
+                    {{ Form::label('pcd_type_id') }}
+                    @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
+                    {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
+        </div>
+        <div class="form-group w-100 h-25">
+            {{ Form::label('pcd_details') }}
+            {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details', 'rows' => 4]) }}
+            {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('pcd_report') }}
+            {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
+            {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
+            @isset($candidate->pcd_report)
+            <a href='{{ route('hunt.pcd_report',$candidate->id) }}'>Laudo Medico </a>
+            @endisset
+        </div>    
+    
+        <div class="form-group w-100 h-25">
             {{ Form::label('Descrição do candidato') }}
-            {{ Form::textarea('description', $candidate->description, ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description']) }}
+            {{ Form::textarea('description', $candidate->description, ['class' => 'w-100 h-100' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description' ,'rows' => 5]) }}
             {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-    </div>
+    
     <div class="form-row mb-3">
         <div class="form-group ">
             {{ Form::label('Nível técnico') }}
@@ -163,7 +155,7 @@
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="col-lg-9">
+        <div class="col-lg-6">
             <div class="form-group">
                 {{ Form::label('Nível de Inglês') }}
                 @include('layouts.partials.select',array('list' => $english_levels,'param' => $candidate->english_level,'name' => 'english_level'))
@@ -203,45 +195,9 @@
     
     
     
-    <!--<div class="form-group ">-->
-    <!--{{ Form::label('published_at') }}-->
-
-    <!--{!! $errors->first('published_at', '<div class="invalid-feedback">:message</div>') !!}-->
-    <!--</div>-->
-    <div class="form-group ">
         {{ Form::hidden('published_at', $candidate->published_at, ['class' => 'form-control' . ($errors->has('published_at') ? ' is-invalid' : ''), 'placeholder' => 'Published At']) }}
-
-    </div>
-
+    
 </div>
 <div class="box-footer mt20">
     <button type="submit" class="btn btn-primary">Salvar</button>
 </div>
-</div>
-<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.min.js" integrity="sha512-hAJgR+pK6+s492clbGlnrRnt2J1CJK6kZ82FZy08tm6XG2Xl/ex9oVZLE6Krz+W+Iv4Gsr8U2mGMdh0ckRH61Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
-<script type="text/javascript">
-
-function mask_money(field) {
-
-    $(field).maskMoney({
-        prefix: 'R$ ',
-        allowNegative: true,
-        thousands: '.',
-        decimal: ','
-    });
-}
-
-
-$('#cellphone').mask('(00) 00000-0000');
-$('#cellphone').blur(function (event) {
-    if ($(this).val().length == 15) { // Celular com 9 dígitos + 2 dígitos DDD e 4 da máscara
-        $(this).mask('(00) 00000-0000');
-    } else {
-        $(this).mask('(00) 0000-00000');
-    }
-});
-
-</script>

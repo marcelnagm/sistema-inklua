@@ -144,6 +144,19 @@
             </div>
         </div>
     </li>
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#carteira"
+            aria-expanded="true" aria-controls="carteura">
+            <i class="fas fa-clipboard"></i>
+            <span>Carteira</span>
+        </a>
+        <div id="carteira" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Administrador :</h6>
+                <a class="collapse-item" href="{{ route('inklua_office.index') }}">Escritórios</a>
+            </div>
+        </div>
+    </li>
      <!-- Nav Item - Pages Collapse Menu -->
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report"

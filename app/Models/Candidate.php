@@ -21,6 +21,7 @@ use App\Models\State;
 use App\Models\CandidateStatus;
 use App\Models\CandidateGender;
 use App\Models\CandidateRace;
+use App\Models\PcdType;
 use Illuminate\Support\Facades\Storage;
 
 class Candidate extends Model {
@@ -145,6 +146,12 @@ class Candidate extends Model {
         return number_format($this->payment, 0, '', '.');
     }
 
+       
+    public function pcd_typo() {
+        return $this->pcd_type_id != null? PcdType::find($this->pcd_type_id) : "Nenhum";
+    }
+    
+    
     public function save_pcd_report($pcd_report, $ext) {
 
         if (Storage::exists("docs/$this->gid"))

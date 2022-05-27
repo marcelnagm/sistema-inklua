@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class InkluaUsers extends Migration
+class InkluaOffice extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class InkluaUsers extends Migration
      */
     public function up()
     {
-        //inklua_users
-         //
-        Schema::create('inklua_users', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable(false);
+        //
+         Schema::create('inklua_office', function (Blueprint $table) {
+             $table->id();
+             $table->string('name');
+            $table->unsignedBigInteger('leader_id')->nullable(false);
+            $table->foreign('leader_id')->references('id')->on('users');
+            $table->timestamps();
         });
     }
 

@@ -11,13 +11,7 @@ User
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h5 class="m-0 font-weight-bold text-primary">Lista de Recrutadores - Hunting
             </h5>
-        </div>                
-
-                @if ($message = Session::get('success'))
-                <div class="alert alert-success">
-                    <p>{{ $message }}</p>
-                </div>
-                @endif
+        </div>  
                 <div class="card-body">
                     
                 <button class="btn btn-primary " onclick="$('#filtros').toggle('100');"> Filtros</button>
@@ -64,13 +58,12 @@ User
                             <thead class="thead">
                                 <tr>
                                     <th>No</th>
-
-                                    <th>Name</th>
-                                    <th>Lastname</th>
+                                    <th>Nome</th>
+                                    <th>Sobrenome</th>
                                     <th>Email</th>
-                                    <th>Cnpj</th>
-                                    <th>Fantasy Name</th>
-                                    <th>Phone</th>									
+                                    <th>CNPJ</th>
+                                    <th>Nome Fantasia</th>
+                                    <th>Celular</th>									
                                     <th></th>
                                 </tr>
                             </thead>
@@ -86,8 +79,7 @@ User
                                     <td>{{ $user->fantasy_name }}</td>
                                     <td>{{ $user->phone }}</td>											
                                     <td>
-                                            <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
-                                            <a class="btn btn-sm btn-success" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                                            <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>                                            
                                         
                                     </td>
                                 </tr>

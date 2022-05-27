@@ -11,6 +11,8 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Passport\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\VerifyEmail;
+use App\Models\InkluaUser;
+use Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -25,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $fillable = [
+    protected $fillable = ['id',
         'cnpj',
         'fantasy_name',
         'name',
@@ -45,8 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $hidden = [
-        'id',
+    protected $hidden = [        
         'created_at',
         'updated_at',
         'password',
@@ -187,4 +188,39 @@ class User extends Authenticatable implements MustVerifyEmail
                                 $q->where('users.cnpj', $this->cnpj);
                             })->exists();
     }
+    
+    
+    public function inklua(){
+    return InkluaUser::
+             where('user_id',$this->id)
+             ->where('active',1)->first();       
+    }
+    
+    public function isInklua(){
+     return InkluaUser::
+             where('user_id',$this->id)
+             ->where('active',1)->count() ==1;   
+    }
+    
+    public function revoke(){
+    $ink =  InkluaUser:: where('user_id',$this->id)
+             ->where('active',1);   
+    $inl->active = 0;
+    $inl->end_at = \Illuminate\Support\Carbon::now();
+    $ink->save();
+    }
+    
+    public function promote($id){      
+        $ink = new InkluaUser(
+                array('user_id'=> $id,
+                    'active' => 1
+                    )
+                );
+        $ink->save();
+           
+    }
+    
+    
+    
+    
 }

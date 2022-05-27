@@ -210,7 +210,7 @@
         <!-- Custom Js -->
         <script src="{{ url("") }}/cms/js/admin.js"></script>
 
-
+        
         <!-- Editor de conteúdo em textareas -->
         <script src="{{ url("") }}/tinymce/tinymce.min.js"></script>
         <script>

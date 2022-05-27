@@ -105,6 +105,7 @@ class SearchControler extends Controller {
             $data['payment'] = $candidate->payment_formatted();
             $data['payment_2'] = $candidate->payment_formatted();
             $data['english_level'] = $candidate->english_level_obj()->level;
+            $data['pcd_type'] = $candidate->pcd_typo();
             $data['published_at'] = $candidate->published_at->format('d/m/Y H:i');
             $data['updated_at'] = $candidate->updated_at->format('d/m/Y H:i');
             $data['move_out'] = $data['move_out'] == 0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança';
