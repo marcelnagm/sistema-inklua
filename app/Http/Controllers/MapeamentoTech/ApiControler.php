@@ -61,8 +61,12 @@ class ApiControler extends Controller {
 //	);
 
         $data = $this->validate_data($request);
+//        dd($data);
         $cand = new Candidate($data);
-
+        if ($request->file('pcd_report') != NULL) {
+            $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
+            $cand->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+        }
         $cand->save();
 
         return response()->json([
@@ -322,7 +326,7 @@ class ApiControler extends Controller {
         $data = $this->validate($request, Candidate::$rules);
         $data['cellphone'] = trim(str_replace(array('(', ')', '-'), '', $data['cellphone']));
         $data['payment'] = trim(str_replace(array('R$', '.', ','), '', $data['payment']));
-
+//        dd($data);
         return $data;
     }
 

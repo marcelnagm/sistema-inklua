@@ -17,121 +17,137 @@
         <div class="float-right">
             <a class="btn btn-primary" href="{{ route('candidate.index') }}"> Back</a>
         </div>
-    
 
-    <div class="card-body">
-        <table class="table table-striped table-hover">
 
-            <tbody>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
 
-                <tr>
-                    <td>Codigo do candidato</td>                                    
-                    <td>KUNLA-{{ $candidate->id}}</td>                                    
-                </tr>
-                <tr>
-                    <td>Função</td>                                    
-                    <td>{{ $candidate->role() }}</td>                                    
-                </tr>
-                <tr>
-                    <td>Titulo</td>                                    
-                    <td>  {{ $candidate->title }}</td>                                    
-                </tr>
-                <tr>
-                    <td>Pretensão Salarial</td>                                    
-                    <td> 
-                        R${{ $candidate->payment_formatted() }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Estado</td>                                    
-                    <td> 
-                        {{ $candidate->state() }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Cidade</td>                                    
-                    <td> 
-                        {{ $candidate->city }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Remoto:</td>                                    
-                    <td> 
-                        @include('layouts.partials.yesno',array('param' => $candidate->remote ==1)  )
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Disponilidade de mudança:</td>                                    
-                    <td> 
-                        {{ $candidate->move_out ==0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança'}}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Descrição:</td>                                    
-                    <td> 
-                        {{ $candidate->description }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Nivel Técnico:</td>                                    
-                    <td> 
-                        {{ $candidate->tecnical_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Nivel Superior:</td>                                    
-                    <td> 
-                        {{ $candidate->superior_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Pós-graduação:</td>                                    
-                    <td> 
-                        {{ $candidate->spec_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>MBA:</td>                                    
-                    <td> 
-                        {{ $candidate->mba_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Mestrado:</td>                                    
-                    <td> 
-                        {{ $candidate->master_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Doutorado:</td>                                    
-                    <td> 
-                        {{ $candidate->doctor_degree }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Nível de inglês:</td>                                    
-                    <td> 
-                        {{ $candidate->english_level_obj() }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Nome completo:</td>                                    
-                    <td> 
-                        {{ $candidate->full_name }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Genêro:</td>                                    
-                    <td> 
-                        {{ $candidate->gender() }}
-                    </td>                                    
-                </tr>
-                <tr>
-                    <td>Raça:</td>                                    
-                    <td> 
-                        {{ $candidate->race() }}
-                    </td>                                    
-                </tr>
+                <tbody>
+
+                    <tr>
+                        <td>Codigo do candidato</td>                                    
+                        <td>KUNLA-{{ $candidate->id}}</td>                                    
+                    </tr>
+                    <tr>
+                        <td>Função</td>                                    
+                        <td>{{ $candidate->role() }}</td>                                    
+                    </tr>
+                    <tr>
+                        <td>Titulo</td>                                    
+                        <td>  {{ $candidate->title }}</td>                                    
+                    </tr>
+                    <tr>
+                        <td>Pretensão Salarial</td>                                    
+                        <td> 
+                            R${{ $candidate->payment_formatted() }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Estado</td>                                    
+                        <td> 
+                            {{ $candidate->state() }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Cidade</td>                                    
+                        <td> 
+                            {{ $candidate->city }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Remoto:</td>                                    
+                        <td> 
+                            @include('layouts.partials.yesno',array('param' => $candidate->remote ==1)  )
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Disponilidade de mudança:</td>                                    
+                        <td> 
+                            {{ $candidate->move_out ==0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança'}}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Descrição:</td>                                    
+                        <td> 
+                            {{ $candidate->description }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Nivel Técnico:</td>                                    
+                        <td> 
+                            {{ $candidate->tecnical_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Nivel Superior:</td>                                    
+                        <td> 
+                            {{ $candidate->superior_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Pós-graduação:</td>                                    
+                        <td> 
+                            {{ $candidate->spec_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>MBA:</td>                                    
+                        <td> 
+                            {{ $candidate->mba_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Mestrado:</td>                                    
+                        <td> 
+                            {{ $candidate->master_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Doutorado:</td>                                    
+                        <td> 
+                            {{ $candidate->doctor_degree }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Nível de inglês:</td>                                    
+                        <td> 
+                            {{ $candidate->english_level_obj() }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Nome completo:</td>                                    
+                        <td> 
+                            {{ $candidate->full_name }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Genêro:</td>                                    
+                        <td> 
+                            {{ $candidate->gender() }}
+                        </td>                                    
+                    </tr>
+                    <tr>
+                        <td>Raça:</td>                                    
+                        <td> 
+                            {{ $candidate->race() }}
+                        </td>                                    
+                    </tr>
+                <div class="form-group">
+                    <strong>Pcd:</strong>
+                    @include('layouts.partials.yesno',array('param' => $candidateHunting->pcd))                                                
+                </div>
+                <div class="form-group">
+                    <strong>Tipo de Deficência:</strong>
+                    {{ $candidateHunting->pcd_typo() }}
+                </div>
+                <div class="form-group">
+                    <strong>Detalhes:</strong>
+                    {{ $candidateHunting->pcd_details }}
+                </div>
+                <div class="form-group">
+                    <strong>Laudo Médico:</strong>
+                    <a href='{{ route('candidate.pcd_report',$candidateHunting->id) }}'>Laudo Medico </a>
+                </div>
                 <tr>
                     <td>Celular:</td>                                    
                     <td> 
@@ -164,10 +180,10 @@
                     </td>                                    
                 </tr>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-    </div>
+        </div>
     </div>
 </div>
 @endsection

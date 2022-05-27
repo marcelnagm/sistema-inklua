@@ -78,7 +78,7 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::resource('/admin/states', 'App\Http\Controllers\MapeamentoTech\StateController');
     Route::resource('/admin/status', 'App\Http\Controllers\MapeamentoTech\CandidateStatusController');
     Route::resource('/admin/candidate', 'App\Http\Controllers\MapeamentoTech\CandidateController');
-
+    Route::get('/admin/candidate/pcd_report/{id}', 'App\Http\Controllers\MapeamentoTech\CandidateController@pcd_report')->name('candidate.pcd_report');
     $router->post('/candidate/detail/', 'App\Http\Controllers\MapeamentoTech\CandidateController@detail')->name('candidate.detail');
     Route::resource('/admin/english_level', 'App\Http\Controllers\MapeamentoTech\CandidateEnglishLevelController');
     Route::resource('/admin/role', 'App\Http\Controllers\MapeamentoTech\CandidateRoleController');

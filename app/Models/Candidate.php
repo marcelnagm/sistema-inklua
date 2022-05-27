@@ -21,6 +21,7 @@ use App\Models\State;
 use App\Models\CandidateStatus;
 use App\Models\CandidateGender;
 use App\Models\CandidateRace;
+use Illuminate\Support\Facades\Storage;
 
 class Candidate extends Model {
 
@@ -34,48 +35,61 @@ class Candidate extends Model {
         'CID',
         'spec_degree', 'mba_degree', 'master_degree', 'doctor_degree',
         'english_level', 'full_name', 'cellphone', 'email', 'cv_url',
-                   'pcd',
+        'pcd',
         'pcd_type_id',
         'pcd_details',
-        'pcd_report',     
-        'status_id', 'published_at','race_id','gender_id'
+        'pcd_report',
+        'english_level',
+        'full_name',
+        'cellphone',
+        'email',
+        'cv_url',
+        'status_id', 'published_at', 'race_id', 'gender_id'
     ];
     protected $dates = [
         'created_at',
         'updated_at',
         'published_at'
     ];
-   
     static $rules = array(
         'gid' => 'nullable',
-        'name' => 'required|max:255',
-        'surname' => 'required|max:255',
-        'birth_date' => 'required',
+        'role_id' => 'required|max:255',
+        'status_id' => 'required|max:255',
         'cellphone' => 'required|max:255',
         'email' => 'required|max:255',
         'payment' => 'required|max:255',
         'portifolio_url' => 'nullable',
         'CID' => 'nullable',
+        'description' => 'required',
+        'tecnical_degree' => 'nullable',
+        'superior_degree' => 'nullable',
+        'spec_degree' => 'nullable',
+        'mba_degree' => 'nullable',
+        'master_degree' => 'nullable',
+        'doctor_degree' => 'nullable',
         'linkedin_url' => 'nullable',
         'pcd' => 'required|max:1',
-        'cv_path' => 'nullable',
+        'cv_url' => 'nullable',
         'pcd_type_id' => 'nullable',
         'pcd_details' => 'nullable',
         'pcd_report' => 'nullable',
         'state_id' => 'required|max:255',
-        'city_id' => 'required|max:255',
+        'city' => 'required|max:255',
+        'full_name' => 'required|max:255',
+        'cellphone' => 'required|max:255',
+        'email' => 'required|max:255',
         'english_level' => 'required|max:1',
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
     );
-    
-    static $admin = array( 'full_name', 'cellphone', 'email');
-    
+    static $admin = array('full_name', 'cellphone', 'email');
 
     public function __construct($param = null) {
-        if ($param != null) {
+        if ($param == null) {
             $this->gid = md5(random_int(1, 125) * time() . Str::random(20));
             $this->status_id = 3;
+            parent::__construct();
+        } else {
             parent::__construct($param);
         }
     }
@@ -87,46 +101,56 @@ class Candidate extends Model {
     public function state() {
         return State::find($this->state_id);
     }
+
     public function status() {
         return CandidateStatus::find($this->status_id);
-    }       
+    }
 
     public function english_level_obj() {
         return CandidateEnglishLevel::find($this->english_level);
     }
-    
+
     public function race() {
         return CandidateRace::find($this->race_id);
     }
+
     public function gender() {
         return CandidateGender::find($this->gender_id);
     }
-    
-       function phone(){
-     return $this->masc_tel($this->cellphone);
+
+    function phone() {
+        return $this->masc_tel($this->cellphone);
     }
-    
+
     function masc_tel($TEL) {
-    $tam = strlen(preg_replace("/[^0-9]/", "", $TEL));
-      if ($tam == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
-      return "+".substr($TEL,0,$tam-11)."(".substr($TEL,$tam-11,2).")".substr($TEL,$tam-9,5)."-".substr($TEL,-4);
-      }
-      if ($tam == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
-      return "+".substr($TEL,0,$tam-10)."(".substr($TEL,$tam-10,2).")".substr($TEL,$tam-8,4)."-".substr($TEL,-4);
-      }
-      if ($tam == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
-      return "(".substr($TEL,0,2).")".substr($TEL,2,5)."-".substr($TEL,7,11);
-      }
-      if ($tam == 10) { // COM CÓDIGO DE ÁREA NACIONAL
-      return "(".substr($TEL,0,2).")".substr($TEL,2,4)."-".substr($TEL,6,10);
-      }
-      if ($tam <= 9) { // SEM CÓDIGO DE ÁREA
-      return substr($TEL,0,$tam-4)."-".substr($TEL,-4);
-      }
-  }
-  
-public function payment_formatted(){
-    return number_format($this->payment,0,'','.');
-}
-  
+        $tam = strlen(preg_replace("/[^0-9]/", "", $TEL));
+        if ($tam == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
+            return "+" . substr($TEL, 0, $tam - 11) . "(" . substr($TEL, $tam - 11, 2) . ")" . substr($TEL, $tam - 9, 5) . "-" . substr($TEL, -4);
+        }
+        if ($tam == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
+            return "+" . substr($TEL, 0, $tam - 10) . "(" . substr($TEL, $tam - 10, 2) . ")" . substr($TEL, $tam - 8, 4) . "-" . substr($TEL, -4);
+        }
+        if ($tam == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
+            return "(" . substr($TEL, 0, 2) . ")" . substr($TEL, 2, 5) . "-" . substr($TEL, 7, 11);
+        }
+        if ($tam == 10) { // COM CÓDIGO DE ÁREA NACIONAL
+            return "(" . substr($TEL, 0, 2) . ")" . substr($TEL, 2, 4) . "-" . substr($TEL, 6, 10);
+        }
+        if ($tam <= 9) { // SEM CÓDIGO DE ÁREA
+            return substr($TEL, 0, $tam - 4) . "-" . substr($TEL, -4);
+        }
+    }
+
+    public function payment_formatted() {
+        return number_format($this->payment, 0, '', '.');
+    }
+
+    public function save_pcd_report($pcd_report, $ext) {
+
+        if (Storage::exists("docs/$this->gid"))
+            Storage::makeDirectory("docs/$this->gid");
+
+        Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
+        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
+    }
 }

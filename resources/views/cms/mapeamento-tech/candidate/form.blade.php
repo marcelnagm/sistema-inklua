@@ -1,3 +1,8 @@
+@if ($errors->any())
+     @foreach ($errors->all() as $error)
+         <div>{{$error}}</div>
+     @endforeach
+ @endif
 <div class="box box-info padding-1">
     <div class="box-body">
         <div class="form-row mb-3">
@@ -10,6 +15,7 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     {{ Form::hidden('gid', $candidate->gid, ['class' => 'form-control' . ($errors->has('gid') ? ' is-invalid' : ''), 'placeholder' => 'Gid']) }}
+                    {{ Form::hidden('status_id', $candidate->status_id, ['class' => 'form-control' . ($errors->has('status_id') ? ' is-invalid' : ''), 'placeholder' => 'Gid']) }}
 
                     {{ Form::label('Função') }}
                     @include('layouts.partials.select',array('list' => $role,'param' => $candidate->role_id,'name' => 'role_id'))
@@ -62,7 +68,36 @@
             </div>
         </div>
     </div>
-
+ <div class="form-row mb-3">
+            <div class="form-group ">
+                {{ Form::label('Portador de  deficiência?') }}
+                <input type="hidden" name="pcd" value="0">
+                <input name="pcd" type="checkbox" class="" @if($candidate->pcd==1) checked @endif value="1">                        
+                {!! $errors->first('pcd', '<div class="invalid-feedback">:message</div>') !!}
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <div class="col-lg-9">
+                <div class="form-group">
+                    {{ Form::label('pcd_type_id') }}
+                    @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
+                    {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('pcd_details') }}
+            {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details']) }}
+            {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('pcd_report') }}
+            {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
+            {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
+            @isset($candidate->pcd_report)
+            <a href='{{ route('hunt.pcd_report',$candidate->id) }}'>Laudo Medico </a>
+            @endisset
+        </div>
     <div class="form-row mb-3">
         <div class="form-group col-lg-6">
             {{ Form::label('Deseja trabalhar remoto?') }}
