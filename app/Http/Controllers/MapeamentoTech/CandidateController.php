@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MapeamentoTech;
 
 use App\Models\Candidate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\CandidateEnglishLevel;
 use App\Models\CandidateRole;
 use App\Models\CandidateStatus;

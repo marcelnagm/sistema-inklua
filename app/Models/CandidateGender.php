@@ -28,7 +28,7 @@ class CandidateGender extends Model {
 //    protected $hidden = [ ‘password’ ];
     
     public function __toString() {
-        return $this->name;
+        return ucfirst($this->name);
     }
     
 }

@@ -59,14 +59,17 @@ class ApiControler extends Controller {
 //		'name.required'=>'You cant leave name field empty',
 //                'name.min'=>'The field has to be :min chars long',
 //	);
-
+        $cand = new Candidate();
         $data = $this->validate_data($request);
-//        dd($data);
-        $cand = new Candidate($data);
         if ($request->file('pcd_report') != NULL) {
             $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
             $cand->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+            unset($data['pcd_report']);
         }
+        $cand->setRawAttributes($data);
+//        dd($data);
+
+
         $cand->save();
 
         return response()->json([
@@ -110,6 +113,13 @@ class ApiControler extends Controller {
     public function update(Request $request, $id) {
         $candidate = Candidate::where('gid', $id)->first();
         $data = $this->validate_data($request);
+        if ($request->file('pcd_report') != NULL) {
+            $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
+            $candidate->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+            unset($data['pcd_report']);
+        }
+
+
 
         $candidate->update($data);
 
@@ -212,7 +222,7 @@ class ApiControler extends Controller {
             }
         }
 
-        if (isset($data['payment_max'])) {            
+        if (isset($data['payment_max'])) {
             if ($data['payment_max'] == 5000) {
                 $data['payment_min'] = "" . (0000);
             }
@@ -285,9 +295,9 @@ class ApiControler extends Controller {
                     }
                     if ($val == 'min' || $val == 'max') {
 //                        if (!isset($filtered['payment_max'])) {
-                            $search = $search->where(str_replace('_' . $val, '', $key),
-                                    $val == 'min' ? '>=' : '<',
-                                    $data[$key]);
+                        $search = $search->where(str_replace('_' . $val, '', $key),
+                                $val == 'min' ? '>=' : '<',
+                                $data[$key]);
 //                        }
                     }
                 }
@@ -309,7 +319,7 @@ class ApiControler extends Controller {
                 }
             }
         }
-        
+
 
 //        dd($search->toSql());
 

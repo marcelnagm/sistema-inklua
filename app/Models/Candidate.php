@@ -54,6 +54,7 @@ class Candidate extends Model {
     ];
     static $rules = array(
         'gid' => 'nullable',
+        'title' => 'required|max:255',
         'role_id' => 'required|max:255',
         'status_id' => 'required|max:255',
         'cellphone' => 'required|max:255',

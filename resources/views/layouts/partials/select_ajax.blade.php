@@ -1,4 +1,7 @@
-<select class="browser-default custom-select" name="{{$name}}" id="{{$name}}">
+<select class="browser-default custom-select" 
+        @isset($name) name="{{$name}}"  @endisset        
+        @isset($id)  id="{{$id}}" @endisset
+        @isset($onchange) onchange='{{$onchange}}' @endisset>
 </select>
 <script type="text/javascript">
 
@@ -15,12 +18,10 @@
                 id: cat_id
             },
             success: function (data) {
-                $('#{{$name}}').empty();
+                $('#{{$id}}').empty();
                 console.log(data);
-                $.each(data, function (index, subcategory) {
-                    console.log(data[index].id);
-                    console.log(data[index].name);
-                    $('#{{$name}}').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
+                $.each(data, function (index, subcategory) {                    
+                    $('#{{$id}}').append('<option value="' + data[index].id + '">' + data[index].name + '</option>');
                 })
             }
         });

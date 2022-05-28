@@ -29,7 +29,7 @@
         <div class="form-row mb-3">
             <div class="form-group col-lg-6">
                 {{ Form::label('Pretensão Salárial') }}
-                {{ Form::text('payment', $candidate->payment, ['class' => 'form-control payment' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment', 'onkeypress' => 'mask_money(this)']) }}
+                {{ Form::text('payment', $candidate->payment, ['class' => 'form-control payment' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment', 'onkeyup' => 'mascaraMoeda(this, event)']) }}
                 {!! $errors->first('payment', '<div class="invalid-feedback">:message</div>') !!}
             </div>            
             <div class="form-group col-lg-6">
@@ -86,23 +86,23 @@
         <div class="form-row mb-3">
             <div class="col-lg-9">
                 <div class="form-group">
-                    {{ Form::label('pcd_type_id') }}
+                    {{ Form::label('Tipo de Deficiência') }}
                     @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
                     {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
         </div>
         <div class="form-group w-100 h-25">
-            {{ Form::label('pcd_details') }}
+            {{ Form::label('Detalhes  da deficiência') }}
             {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details', 'rows' => 4]) }}
             {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('pcd_report') }}
+            {{ Form::label('Laudo Médico') }}
             {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
             {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
             @isset($candidate->pcd_report)
-            <a href='{{ route('hunt.pcd_report',$candidate->id) }}'>Laudo Medico </a>
+            <a href='{{ route('candidate.pcd_report',$candidate->id) }}'>Laudo Medico </a>
             @endisset
         </div>    
     
@@ -198,6 +198,6 @@
         {{ Form::hidden('published_at', $candidate->published_at, ['class' => 'form-control' . ($errors->has('published_at') ? ' is-invalid' : ''), 'placeholder' => 'Published At']) }}
     
 </div>
-<div class="box-footer mt20">
+<div class="box-footer mt20 mb-4">
     <button type="submit" class="btn btn-primary">Salvar</button>
 </div>

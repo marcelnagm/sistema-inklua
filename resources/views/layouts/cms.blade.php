@@ -210,7 +210,7 @@
         <!-- Custom Js -->
         <script src="{{ url("") }}/cms/js/admin.js"></script>
 
-        
+
         <!-- Editor de conteúdo em textareas -->
         <script src="{{ url("") }}/tinymce/tinymce.min.js"></script>
         <script>
@@ -247,25 +247,44 @@ tinymce.init({
 
         <script type="text/javascript">
 
-        function mask_money(field) {
 
-            $(field).maskMoney({
-                prefix: 'R$ ',
-                allowNegative: true,
-                thousands: '.',
-                decimal: ','
-            });
+String.prototype.reverse = function () {
+    return this.split('').reverse().join('');
+};
+
+mascaraMoeda($('input[name="payment"]')[0],false);
+
+function mascaraMoeda(campo, evento) {
+    
+    if(evento !==false)  {
+        var tecla = (!evento) ? window.event.keyCode : evento.which;
+    }
+    console.log(campo);
+    var valor = campo.value.replace(/[^\d]+/gi, '').reverse();
+    var resultado = "";
+    var mascara = "###.###.##".reverse();
+    for (var x = 0, y = 0; x < mascara.length && y < valor.length; ) {
+        if (mascara.charAt(x) != '#') {
+            resultado += mascara.charAt(x);
+            x++;
+        } else {
+            resultado += valor.charAt(y);
+            y++;
+            x++;
         }
+    }
+    campo.value = resultado.reverse();
+}
 
 
-        $('#cellphone').mask('(00) 00000-0000');
-        $('#cellphone').blur(function (event) {
-            if ($(this).val().length == 15) { // Celular com 9 dígitos + 2 dígitos DDD e 4 da máscara
-                $(this).mask('(00) 00000-0000');
-            } else {
-                $(this).mask('(00) 0000-00000');
-            }
-        });
+$('#cellphone').mask('(00) 00000-0000');
+$('#cellphone').blur(function (event) {
+    if ($(this).val().length == 15) { // Celular com 9 dígitos + 2 dígitos DDD e 4 da máscara
+        $(this).mask('(00) 00000-0000');
+    } else {
+        $(this).mask('(00) 0000-00000');
+    }
+});
 
         </script>
 

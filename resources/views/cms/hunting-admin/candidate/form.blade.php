@@ -1,3 +1,8 @@
+@if ($errors->any())
+     @foreach ($errors->all() as $error)
+         <div>{{$error}}</div>
+     @endforeach
+ @endif
 <div class="box box-info padding-1">
     <div class="box-body">
 
@@ -28,7 +33,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('Pretensão Salarial') }}
-            {{ Form::text('payment', $candidateHunting->payment, ['class' => 'form-control' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment']) }}
+            {{ Form::text('payment', $candidateHunting->payment, ['class' => 'form-control' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment','onkeyup' => 'mascaraMoeda(this, event)'] ) }}
             {!! $errors->first('payment', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
@@ -90,11 +95,21 @@
         <div class="form-group">
             {{ Form::label('Cidade') }}       
             @isset($candidateHunting->city_id)
-            <h6>{{$candidateHunting->city()->name}}</h6>
+            <h6 id='result_city'>{{$candidateHunting->city()->name}}</h6>
+            {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
             @endisset
-            @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'name' => 'city_id','route' => '/api/city/uf'))
+            @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'id' => 'city_id','route' => '/api/city/uf', 'onchange' => 'change(this);'))
             {!! $errors->first('city_id', '<div class="invalid-feedback">:message</div>') !!}
         </div>
+        <script>
+            function change(input){
+              console.log(input.value);              
+              
+            
+              $('#result_city').text($("#"+input.id+" option:selected").text());
+              $('input[name="city_id"]').val(input.value);
+            }
+        </script>
         <div class="form-row mb-3">
             <div class="form-group ">
                 {{ Form::label('Primeiro Emprego?') }}

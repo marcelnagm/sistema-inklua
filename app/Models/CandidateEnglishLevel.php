@@ -26,7 +26,7 @@ class CandidateEnglishLevel extends Model {
 //    protected $hidden = [ ‘password’ ];
     
     public function __toString() {
-        return $this->level;
+        return ucfirst( $this->level);
     }
     
 }
