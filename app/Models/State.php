@@ -28,7 +28,7 @@ class State extends Model {
 //    protected $hidden = [ ‘password’ ];
     
     public function __toString() {
-        return $this->name.' - '.$this->uf;
+        return $this->name.' - '.$this->UF;
     }
     
 }
