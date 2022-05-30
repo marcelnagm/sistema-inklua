@@ -13,8 +13,10 @@ User
             </h5>
         </div>  
                 <div class="card-body">
-                    
-                <button class="btn btn-primary " onclick="$('#filtros').toggle('100');"> Filtros</button>
+                    <div class="ml-4">
+                    <button class="btn btn-primary " onclick="$('#filtros').toggle('100');"> Filtros</button>
+                    </div>    
+                
                     @if(Session::has('recruiter'))
 
                     <span class="alert danger"> Resultado Filtrado <a href="{{ route('users.clear') }}"class="btn btn-danger btn-sm" >Limpar Filtro</a></span>
@@ -79,7 +81,7 @@ User
                                     <td>{{ $user->fantasy_name }}</td>
                                     <td>{{ $user->phone }}</td>											
                                     <td>
-                                            <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>                                            
+                                            <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>                                            
                                         
                                     </td>
                                 </tr>

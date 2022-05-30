@@ -262,7 +262,7 @@ function mascaraMoeda(campo, evento) {
     console.log(campo);
     var valor = campo.value.replace(/[^\d]+/gi, '').reverse();
     var resultado = "";
-    var mascara = "###.###.##".reverse();
+    var mascara = "###.###".reverse();
     for (var x = 0, y = 0; x < mascara.length && y < valor.length; ) {
         if (mascara.charAt(x) != '#') {
             resultado += mascara.charAt(x);

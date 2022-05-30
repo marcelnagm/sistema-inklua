@@ -59,14 +59,14 @@ class ApiControler extends Controller {
 //		'name.required'=>'You cant leave name field empty',
 //                'name.min'=>'The field has to be :min chars long',
 //	);
-        $cand = new Candidate();
         $data = $this->validate_data($request);
+        $cand = new Candidate($data);        
         if ($request->file('pcd_report') != NULL) {
             $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
             $cand->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
             unset($data['pcd_report']);
         }
-        $cand->setRawAttributes($data);
+        
 //        dd($data);
 
 

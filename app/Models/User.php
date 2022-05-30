@@ -203,17 +203,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     
     public function revoke(){
-    $ink =  InkluaUser:: where('user_id',$this->id)
-             ->where('active',1);   
-    $inl->active = 0;
-    $inl->end_at = \Illuminate\Support\Carbon::now();
+    $ink =  InkluaUser::where('user_id',$this->id)
+             ->where('active',1)->first();   
+//    dd($ink);
+    $ink->active = 0;
+    $ink->end_at = \Illuminate\Support\Carbon::now();
     $ink->save();
     }
     
     public function promote($id){      
         $ink = new InkluaUser(
                 array('user_id'=> $id,
-                    'active' => 1
+                    'active' => 1,
+                    'start_at'=> \Illuminate\Support\Carbon::now()
                     )
                 );
         $ink->save();

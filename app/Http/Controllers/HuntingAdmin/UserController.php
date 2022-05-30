@@ -21,7 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('type','PJ')->paginate();
+        $users = User::where('type','PJ')
+               ->orderBy('created_at','desc')
+                ->paginate();
 
         return view('cms.hunting-admin.user.index', compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());

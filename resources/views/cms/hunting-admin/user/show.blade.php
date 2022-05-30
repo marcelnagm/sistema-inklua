@@ -18,7 +18,7 @@
                     <div class="card-body">
                         
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                            <a class="btn btn-primary" href="{{ route('users.index') }}"> Voltar</a>
                         </div>
                 
                         <div class="form-group">
