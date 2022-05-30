@@ -65,7 +65,7 @@
         <div class="form-row mb-3">
             <div class="col-lg-9">
                 <div class="form-group">
-                    {{ Form::label('Tipo de Deficiência') }}
+                    {{ Form::label('Característica da deficiência') }}
                     @include('layouts.partials.select',array('list' => $pcd,'param' => $candidateHunting->pcd_type_id,'name' => 'pcd_type_id'))
                     {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
@@ -96,8 +96,9 @@
             {{ Form::label('Cidade') }}       
             @isset($candidateHunting->city_id)
             <h6 id='result_city'>{{$candidateHunting->city()->name}}</h6>
-            {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
             @endisset
+            {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
+            
             @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'id' => 'city_id','route' => '/api/city/uf', 'onchange' => 'change(this);'))
             {!! $errors->first('city_id', '<div class="invalid-feedback">:message</div>') !!}
         </div>
