@@ -92,6 +92,8 @@ class SearchControler extends Controller {
             'role_id',
             'state_id',
             'status_id',
+            'race_id',
+            'gender_id'
         );
         $data = array();
         $candidate = Candidate::where('gid', $gid)->

@@ -19,7 +19,7 @@ class InkluaUsers extends Migration
         Schema::create('inklua_users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('office_id')->nullable(true);
+            $table->unsignedBigInteger('office_id')->nullable(false);
             $table->boolean('active')->nullable(false);
             $table->date('start_at')->nullable(false);
             $table->date('end_at')->nullable(true);                       

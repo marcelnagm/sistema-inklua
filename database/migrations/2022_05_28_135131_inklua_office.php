@@ -14,10 +14,11 @@ class InkluaOffice extends Migration
     public function up()
     {
         //
+        Schema::dropIfExists('inklua_office');
          Schema::create('inklua_office', function (Blueprint $table) {
              $table->id();
              $table->string('name');
-            $table->unsignedBigInteger('leader_id')->nullable(false);
+            $table->unsignedBigInteger('leader_id')->nullable(true);
             $table->foreign('leader_id')->references('id')->on('users');
             $table->timestamps();
         });

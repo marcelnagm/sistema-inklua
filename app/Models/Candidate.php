@@ -83,6 +83,8 @@ class Candidate extends Model {
         'english_level' => 'required|max:1',
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
+        'race_id' => 'required|max:2',
+        'gender_id' => 'required|max:2',
     );
     static $admin = array('full_name', 'cellphone', 'email');
 

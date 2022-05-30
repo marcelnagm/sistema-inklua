@@ -86,7 +86,7 @@
         <div class="form-row mb-3">
             <div class="col-lg-9">
                 <div class="form-group">
-                    {{ Form::label('Tipo de Deficiência') }}
+                    {{ Form::label('Característica da deficiência') }}
                     @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
                     {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
