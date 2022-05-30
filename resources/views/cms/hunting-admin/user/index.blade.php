@@ -62,10 +62,8 @@ User
                                     <th>No</th>
                                     <th>Nome</th>
                                     <th>Sobrenome</th>
-                                    <th>Email</th>
                                     <th>CNPJ</th>
-                                    <th>Nome Fantasia</th>
-                                    <th>Celular</th>									
+                                    <th>Nome Fantasia</th>								
                                     <th></th>
                                 </tr>
                             </thead>
@@ -76,10 +74,8 @@ User
 
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->lastname }}</td>
-                                    <td>{{ $user->email }}</td>
                                     <td>{{ $user->cnpj }}</td>
-                                    <td>{{ $user->fantasy_name }}</td>
-                                    <td>{{ $user->phone }}</td>											
+                                    <td>{{ $user->fantasy_name }}</td>										
                                     <td>
                                             <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>                                            
                                         

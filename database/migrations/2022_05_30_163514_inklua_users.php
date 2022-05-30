@@ -20,6 +20,7 @@ class InkluaUsers extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->unsignedBigInteger('office_id')->nullable(false);
+            $table->unsignedBigInteger('role_id')->nullable(false)->default(0);
             $table->boolean('active')->nullable(false);
             $table->date('start_at')->nullable(false);
             $table->date('end_at')->nullable(true);                       

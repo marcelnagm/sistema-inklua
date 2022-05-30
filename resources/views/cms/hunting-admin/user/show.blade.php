@@ -13,8 +13,6 @@
             </h5>
         </div>                
 
-                
-
                     <div class="card-body">
                         
                         <div class="float-right">
@@ -64,7 +62,7 @@
                             @if($user->isInklua())
                             <a class="btn btn-sm btn-danger" href="{{ route('users.revoke',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Revogar</a>                            
                             @else
-                            <a class="btn btn-sm btn-primary" href="{{ route('users.promote',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Promover</<a>
+                            <a class="btn btn-sm btn-primary" href="{{ route('users.promote',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Promover</<a>                            
                             @endif
                             
                             <a class="btn btn-sm btn-success" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>

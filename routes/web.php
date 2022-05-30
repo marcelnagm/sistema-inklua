@@ -105,6 +105,7 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::post('/users/search', 'App\Http\Controllers\HuntingAdmin\UserController@search')->name('users.search');
     Route::get('/users/get', 'App\Http\Controllers\HuntingAdmin\UserController@clear')->name('users.clear');
     Route::get('/users/promote/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@promote')->name('users.promote');
+    Route::post('/users/grant/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@grant')->name('users.grant');
     Route::get('/users/revoke/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@revoke')->name('users.revoke');
     Route::resource('/users', 'App\Http\Controllers\HuntingAdmin\UserController');
     

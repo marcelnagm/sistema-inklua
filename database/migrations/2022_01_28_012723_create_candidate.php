@@ -39,7 +39,7 @@ class CreateCandidate extends Migration
             $table->string('full_name')->nullable(false);             
             $table->string('cellphone')->nullable(false);             
             $table->string('email')->nullable(false);             
-            $table->string('cv_url')->nullable(false);             
+            $table->string('cv_url')->nullable(true);             
             $table->timestamp('published_at')->nullable(true);
             $table->unsignedBigInteger('status_id')->nullable(false);            
             $table->foreign('role_id')->references('id')->on('candidate_role');
