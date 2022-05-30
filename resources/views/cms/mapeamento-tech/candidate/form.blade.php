@@ -112,42 +112,42 @@
     </div>
 
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="form-group col-lg-12 ">
             {{ Form::label('Nível técnico') }}
             {{ Form::text('tecnical_degree', $candidate->tecnical_degree, ['class' => 'form-control' . ($errors->has('tecnical_degree') ? ' is-invalid' : ''), 'placeholder' => 'Tecnical Degree']) }}
             {!! $errors->first('tecnical_degree', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="form-group col-lg-12">
             {{ Form::label('Nível superior') }}
             {{ Form::text('superior_degree', $candidate->superior_degree, ['class' => 'form-control' . ($errors->has('superior_degree') ? ' is-invalid' : ''), 'placeholder' => 'Superior Degree']) }}
             {!! $errors->first('superior_degree', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="form-group col-lg-12">
             {{ Form::label('Pós-graduação') }}
             {{ Form::text('spec_degree', $candidate->spec_degree, ['class' => 'form-control' . ($errors->has('spec_degree') ? ' is-invalid' : ''), 'placeholder' => 'Spec Degree']) }}
             {!! $errors->first('spec_degree', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>
     <div class="form-row mb-3"> 
-        <div class="form-group ">
+        <div class="form-group col-lg-12">
             {{ Form::label('MBA') }}
             {{ Form::text('mba_degree', $candidate->mba_degree, ['class' => 'form-control' . ($errors->has('mba_degree') ? ' is-invalid' : ''), 'placeholder' => 'Mba Degree']) }}
             {!! $errors->first('mba_degree', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="form-group col-lg-12">
             {{ Form::label('Mestrado') }}
             {{ Form::text('master_degree', $candidate->master_degree, ['class' => 'form-control' . ($errors->has('master_degree') ? ' is-invalid' : ''), 'placeholder' => 'Master Degree']) }}
             {!! $errors->first('master_degree', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>
     <div class="form-row mb-3">
-        <div class="form-group ">
+        <div class="form-group col-lg-12">
             {{ Form::label('Doutorado') }}
             {{ Form::text('doctor_degree', $candidate->doctor_degree, ['class' => 'form-control' . ($errors->has('doctor_degree') ? ' is-invalid' : ''), 'placeholder' => 'Doctor Degree']) }}
             {!! $errors->first('doctor_degree', '<div class="invalid-feedback">:message</div>') !!}
