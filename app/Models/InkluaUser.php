@@ -6,16 +6,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\InkluaOffice;
+use App\Models\User;
 
 class InkluaUser extends Model
 {
     //
     protected $table = 'inklua_users';
-    protected $fillable = [ 'user_id','active','start_at','end_at','office_id'
+    protected $fillable = [ 'user_id','active','start_at','end_at','office_id','role_id'
         ];
     
         public function office() {
             return InkluaOffice::find($this->office_id);
+        }
+        public function user() {
+            return User::find($this->user_id);
         }
     
     

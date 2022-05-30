@@ -47,8 +47,9 @@ class InkluaOfficeController extends Controller
     {
         request()->validate(InkluaOffice::$rules);
 
-        $inkluaOffice = InkluaOffice::create($request->all());
-
+        $inkluaOffice = new InkluaOffice($request->all());
+        $inkluaOffice->leader_id = null;
+        $inkluaOffice->save();
         return redirect()->route('inklua_office.index')
             ->with('success', 'InkluaOffice created successfully.');
     }

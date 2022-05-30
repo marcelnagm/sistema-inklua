@@ -23,7 +23,7 @@ class InkluaOffice extends Model
       protected $table = 'inklua_office';
     static $rules = [
 		'name' => 'required',
-		'leader_id' => 'required',
+		'leader_id' => 'nullable',
     ];
 
     protected $perPage = 20;
@@ -53,4 +53,9 @@ class InkluaOffice extends Model
     }
     
 
+        public function __toString() {
+        return ucfirst($this->name);
+    }
+
+    
 }
