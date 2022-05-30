@@ -1,8 +1,8 @@
 @if ($errors->any())
-     @foreach ($errors->all() as $error)
-         <div>{{$error}}</div>
-     @endforeach
- @endif
+@foreach ($errors->all() as $error)
+<div>{{$error}}</div>
+@endforeach
+@endif
 <div class="box box-info padding-1">
     <div class="box-body">
         <div class="form-row mb-3">
@@ -41,7 +41,7 @@
     </div>
     <h5 class="bold">Localização</h5 class="bold"><br>
     <div class="form-row mb-3">
-        
+
         <div class="form-group col-lg-6">
             {{ Form::label('Estado de Residencia') }}
             @include('layouts.partials.select',array('list' => $states,'param' => $candidate->state_id,'name' => 'state_id'))            
@@ -74,7 +74,7 @@
                 @include('layouts.partials.select',array('list' => $gender,'param' => $candidate->gender_id,'name' => 'gender_id'))            
             </div>
         </div>
-    
+
         <div class="col-lg-6">
             <div class="form-group">
                 {{ Form::label('Raça') }}
@@ -82,36 +82,35 @@
             </div>
         </div>
     </div> 
-                <input type="hidden" name="pcd" value="1">                
-        <div class="form-row mb-3">
-            <div class="col-lg-9">
-                <div class="form-group">
-                    {{ Form::label('Característica da deficiência') }}
-                    @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
-                    {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
+    <input type="hidden" name="pcd" value="1">                
+    <div class="form-row mb-3 ">
+        <div class="form-group col-lg-6">
+            {{ Form::label('Característica da deficiência') }}
+            @include('layouts.partials.select',array('list' => $pcd,'param' => $candidate->pcd_type_id,'name' => 'pcd_type_id'))
+            {!! $errors->first('pcd_type_id', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-group w-100 h-25">
-            {{ Form::label('Detalhes  da deficiência') }}
-            {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details', 'rows' => 4]) }}
-            {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Laudo Médico') }}
-            {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
-            {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
-            @isset($candidate->pcd_report)
-            <a href='{{ route('candidate.pcd_report',$candidate->id) }}'>Laudo Medico </a>
-            @endisset
-        </div>    
-    
-        <div class="form-group w-100 h-25">
-            {{ Form::label('Descrição do candidato') }}
-            {{ Form::textarea('description', $candidate->description, ['class' => 'w-100 h-100' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description' ,'rows' => 5]) }}
-            {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-    
+
+    </div>
+    <div class="form-group w-100 h-25">
+        {{ Form::label('Detalhes  da deficiência') }}
+        {{ Form::textarea('pcd_details', $candidate->pcd_details, ['class' => 'form-control' . ($errors->has('pcd_details') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Details', 'rows' => 4]) }}
+        {!! $errors->first('pcd_details', '<div class="invalid-feedback">:message</div>') !!}
+    </div>
+    <div class="form-group">
+        {{ Form::label('Laudo Médico') }}
+        {{ Form::file('pcd_report',['class' => 'form-control' . ($errors->has('pcd_report') ? ' is-invalid' : ''), 'placeholder' => 'Pcd Report']) }}
+        {!! $errors->first('pcd_report', '<div class="invalid-feedback">:message</div>') !!}
+        @isset($candidate->pcd_report)
+        <a href='{{ route('candidate.pcd_report',$candidate->id) }}'>Laudo Medico </a>
+        @endisset
+    </div>    
+
+    <div class="form-group w-100 h-25">
+        {{ Form::label('Descrição do candidato') }}
+        {{ Form::textarea('description', $candidate->description, ['class' => 'w-100 h-100' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description' ,'rows' => 5]) }}
+        {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
+    </div>
+
     <div class="form-row mb-3">
         <div class="form-group ">
             {{ Form::label('Nível técnico') }}
@@ -176,7 +175,7 @@
             {{ Form::text('cv_url', $candidate->cv_url, ['class' => 'form-control' . ($errors->has('cv_url') ? ' is-invalid' : ''), 'placeholder' => 'Cv Url']) }}
             {!! $errors->first('cv_url', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-    
+
     </div>
     <div class="form-row mb-3">
         <div class="form-group col-lg-6 ">
@@ -184,19 +183,19 @@
             {{ Form::text('cellphone', $candidate->cellphone, ['class' => 'form-control' . ($errors->has('cellphone') ? ' is-invalid' : ''), 'placeholder' => 'Cellphone','id' => 'cellphone']) }}
             {!! $errors->first('cellphone', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-            <div class="form-group col-lg-6 ">
+        <div class="form-group col-lg-6 ">
             {{ Form::label('Email') }}
             {{ Form::text('email', $candidate->email, ['class' => 'form-control' . ($errors->has('email') ? ' is-invalid' : ''), 'placeholder' => 'Email']) }}
             {!! $errors->first('email', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-    
-        
+
+
     </div>
-    
-    
-    
-        {{ Form::hidden('published_at', $candidate->published_at, ['class' => 'form-control' . ($errors->has('published_at') ? ' is-invalid' : ''), 'placeholder' => 'Published At']) }}
-    
+
+
+
+    {{ Form::hidden('published_at', $candidate->published_at, ['class' => 'form-control' . ($errors->has('published_at') ? ' is-invalid' : ''), 'placeholder' => 'Published At']) }}
+
 </div>
 <div class="box-footer mt20 mb-4">
     <button type="submit" class="btn btn-primary">Salvar</button>
