@@ -186,7 +186,7 @@ class Candidate extends Model {
                 unset($data[$u]);
             }
         }
-        $data['pcd_type'] = $this->pcd_typo();
+        $data['pcd_type_id'] = $this->pcd_typo()->type;
         return $data;
     }
 }
