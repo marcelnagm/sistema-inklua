@@ -186,7 +186,9 @@ class Candidate extends Model {
                 unset($data[$u]);
             }
         }
+        if($this->pcd_type_id != null){
         $data['pcd_type_id'] = $this->pcd_typo()->type;
+        }else $data['pcd_type_id'] = 'Nennhuma';
         return $data;
     }
 }
