@@ -92,7 +92,6 @@ class Candidate extends Model {
         'created_at',
         'cv_url',
         'email',
-        'CID',
         'full_name',
         'id',
         'remote',
@@ -100,7 +99,10 @@ class Candidate extends Model {
         'state_id',
         'status_id',
         'race_id',
-        'gender_id'
+        'gender_id',
+        'pcd',
+        'pcd_details',
+        'pcd_report'
     );
 
     public function __construct($param = null) {
@@ -184,7 +186,7 @@ class Candidate extends Model {
                 unset($data[$u]);
             }
         }
-
+        $data['pcd_type'] = $this->pcd_typo();
         return $data;
     }
 }
