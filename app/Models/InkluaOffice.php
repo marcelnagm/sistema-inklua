@@ -41,7 +41,7 @@ class InkluaOffice extends Model
      */
     public function inkluaUsers()
     {
-        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id');
+        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->orderBy('active','DESC')->orderBy('updated_at','DESC');
     }
     
     public function inkluaUsersActive(){

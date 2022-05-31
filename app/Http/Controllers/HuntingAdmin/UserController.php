@@ -100,7 +100,8 @@ class UserController extends Controller {
     public function promote(Request $request, $id) {
         $user = User::find($id);
         $office = \App\Models\InkluaOffice::all();
-        return view('cms.hunting-admin.user.promote', compact('user', 'office'));
+        $role = \App\Models\OfficeRole::all();
+        return view('cms.hunting-admin.user.promote', compact('user', 'office','role'));
     }
 
     public function grant(Request $request, $id) {

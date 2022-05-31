@@ -12,12 +12,12 @@
             <h5 class="m-0 font-weight-bold text-primary">Escritório
             </h5>
         </div>                      
-        
+
 
         <div class="card-body">
-<div class="float-right">
-            <a class="btn btn-primary" href="{{ route('inklua_office.index') }}"> Voltar</a>
-        </div>
+            <div class="float-right">
+                <a class="btn btn-primary" href="{{ route('inklua_office.index') }}"> Voltar</a>
+            </div>
 
             <div class="form-group">
                 <strong>Nome:</strong>
@@ -27,19 +27,71 @@
                 <strong>Lider:</strong>
                 <?php $off = $inkluaOffice->user()->first(); ?>
                 <a href="{{route('users.show',$off)}}">
-                {{ $off ? $off->fullname().' - INKLUER#'.$off->id: 'Não Atribuido'}}
+                    {{ $off ? $off->fullname().' - INKLUER#'.$off->id: 'Não Atribuido'}}
                 </a>
             </div>
             <div class="form-group">
-                <strong>Associados:</strong>
+                <strong>Associados Ativos:</strong>
                 @foreach( $inkluaOffice->inkluaUsersActive()->get() as $user)
                 <br>
                 <a href="{{route('users.show',$user->user()->id)}}">
-                <strong>
-                {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
-                </strong>
+                    <strong>
+                        {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
+                    </strong>
                 </a>
                 @endforeach
+            </div>
+            <div class="form-group">
+                <strong>Histórico Geral:</strong>
+
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="thead">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Cadastro</th>
+                                <th>Inicio</th>
+                                <th>Fim</th>
+                                <th>Ativo</th>
+                                <th>Ações</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach( $inkluaOffice->inkluaUsers()->get() as $user)            
+                            <tr>
+                                <td>
+                                    {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
+                                </td>
+                                <td>
+                                    {{  $user->role()}}
+                                </td>
+                                <td>
+                                    {{  $user->created_at->format('d/m/Y')}}
+                                </td>
+                                <td>
+                                    {{  $user->start_at->format('d/m/Y')}}
+                                </td>
+                                <td>
+
+                                    {{  $user->end_at ? $user->end_at->format('d/m/Y') : '' }}
+                                </td>
+                                <td>
+                                    @include('layouts.partials.yesno',array('param' => $user->active))                                                
+                                </td>
+                                <td>
+                                    <a href="{{route('users.show',$user->user()->id)}}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                        Visualizar
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
         </div>

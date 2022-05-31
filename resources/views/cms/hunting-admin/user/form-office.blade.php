@@ -7,9 +7,8 @@
             {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('Lider') }}
-             <input type="hidden" name="role_id" value="0">
-                <input name="role_id" type="checkbox" class="" @if($user->role_id==1) checked @endif value="1">                        
+            {{ Form::label('Funcao') }}
+         @include('layouts.partials.select',array('list' => $role,'param' => $user->role_id,'name' => 'role_id'))
         </div>
     </div>
     <div class="box-footer mt20">

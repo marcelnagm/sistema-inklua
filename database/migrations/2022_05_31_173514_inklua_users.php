@@ -25,6 +25,7 @@ class InkluaUsers extends Migration
             $table->date('start_at')->nullable(false);
             $table->date('end_at')->nullable(true);                       
             $table->foreign('office_id')->references('id')->on('inklua_office');
+            $table->foreign('role_id')->references('id')->on('office_role');
             $table->timestamps();
         });
     }
