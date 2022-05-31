@@ -41,8 +41,11 @@ class SearchControler extends Controller {
             return response()->json([]);
         }
 
-
-
+        $temp = array();
+        foreach ($this->candidates as $cand) {
+            $temp[] = $cand->toArray(true);
+        }
+        $this->candidates = $temp;
 //        dd($result['param']);
         return response()->json([
                     'statesAll' => State::all(),
@@ -80,27 +83,14 @@ class SearchControler extends Controller {
 
     public function detail($gid) {
 
-        $unused = array(
-            'cellphone',
-            'created_at',
-            'cv_url',
-            'email',
-            'CID',
-            'full_name',
-            'id',
-            'remote',
-            'role_id',
-            'state_id',
-            'status_id',
-            'race_id',
-            'gender_id'
-        );
-        $data = array();
+
+
         $candidate = Candidate::where('gid', $gid)->
                 where('published_at', '<>', 'NULL')->
                 first();
         if ($candidate != null) {
-            $data = $candidate->toArray();
+            $data = array();
+            $data = $candidate->toArray(true);
             $data['gid'] = 'INKLUA#' . $candidate->id;
             $data['city'] = $data['city'] . ' - ' . $candidate->state()->UF;
             $data['role'] = $candidate->title;
@@ -111,9 +101,6 @@ class SearchControler extends Controller {
             $data['published_at'] = $candidate->published_at->format('d/m/Y H:i');
             $data['updated_at'] = $candidate->updated_at->format('d/m/Y H:i');
             $data['move_out'] = $data['move_out'] == 0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança';
-            foreach ($unused as $u) {
-                unset($data[$u]);
-            }
             return json_encode($data);
         } else {
             return json_encode([]);

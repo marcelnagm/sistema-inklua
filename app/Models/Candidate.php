@@ -87,6 +87,21 @@ class Candidate extends Model {
         'gender_id' => 'required|max:2',
     );
     static $admin = array('full_name', 'cellphone', 'email');
+    static $public = array(
+        'cellphone',
+        'created_at',
+        'cv_url',
+        'email',
+        'CID',
+        'full_name',
+        'id',
+        'remote',
+        'role_id',
+        'state_id',
+        'status_id',
+        'race_id',
+        'gender_id'
+    );
 
     public function __construct($param = null) {
         if ($param == null) {
@@ -149,12 +164,10 @@ class Candidate extends Model {
         return number_format($this->payment, 0, '', '.');
     }
 
-       
     public function pcd_typo() {
-        return $this->pcd_type_id != null? PcdType::find($this->pcd_type_id) : "Nenhum";
+        return $this->pcd_type_id != null ? PcdType::find($this->pcd_type_id) : "Nenhum";
     }
-    
-    
+
     public function save_pcd_report($pcd_report, $ext) {
 
         if (Storage::exists("docs/$this->gid"))
@@ -163,4 +176,16 @@ class Candidate extends Model {
         Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
         $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
     }
+
+    public function toArray($public = false) {
+        $data = parent::toArray();
+        if ($public == true) {
+            foreach (Candidate::$public as $u) {
+                unset($data[$u]);
+            }
+        }
+
+        return $data;
+    }
 }
+    
