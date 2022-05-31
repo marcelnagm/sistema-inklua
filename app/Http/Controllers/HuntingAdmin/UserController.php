@@ -115,7 +115,7 @@ class UserController extends Controller {
                     where('role_id',$request->input('role_id') )->
                     where('active',1)->first();
             if($ink != null){
-                $name = $ink->user()->fullname() ;
+                $name = $ink->user()->fullname().' - INKLUER#'.$ink->user()->id ;
                return redirect('users/' . $user->id)
                         ->with('error', "Já existe um lider para este escritorio, o $name  deve ser revogado para esta acao continuar");         
             }

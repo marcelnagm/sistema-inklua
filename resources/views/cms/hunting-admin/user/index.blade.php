@@ -70,7 +70,7 @@ User
                             <tbody>
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td>{{ ++$i }}</td>
+                                    <td>INKLUER#{{ $user->id }}</td>
 
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->lastname }}</td>

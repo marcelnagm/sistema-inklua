@@ -30,7 +30,7 @@ Inklua Office
                             <th>No</th>
 
                             <th>Nome</th>
-                            <th>Leader Id</th>
+                            <th>Lider</th>
 
                             <th></th>
                         </tr>
@@ -41,15 +41,19 @@ Inklua Office
                             <td>{{ ++$i }}</td>
 
                             <td>{{ $inkluaOffice->name }}</td>
-                            <td>{{ $inkluaOffice->leader_id }}</td>
+                            <td>
+                                <?php $off = $inkluaOffice->user()->first(); ?>
+                                {{ $off ? $off->fullname().' - INKLUER#'.$off->id: 'Não Atribuido'}}
+
+                            </td>
 
                             <td>
                                 <form action="{{ route('inklua_office.destroy',$inkluaOffice->id) }}" method="POST">
-                                    <a class="btn btn-sm btn-primary " href="{{ route('inklua_office.show',$inkluaOffice->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
-                                    <a class="btn btn-sm btn-success" href="{{ route('inklua_office.edit',$inkluaOffice->id) }}"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                                    <a class="btn btn-sm btn-primary " href="{{ route('inklua_office.show',$inkluaOffice->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
+                                    <a class="btn btn-sm btn-success" href="{{ route('inklua_office.edit',$inkluaOffice->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> Remover</button>
                                 </form>
                             </td>
                         </tr>

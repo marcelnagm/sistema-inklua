@@ -41,7 +41,11 @@ class InkluaOffice extends Model
      */
     public function inkluaUsers()
     {
-        return $this->hasMany('App\InkluaUser', 'office_id', 'id');
+        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id');
+    }
+    
+    public function inkluaUsersActive(){
+        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->where('active','1');
     }
     
     /**
@@ -49,7 +53,7 @@ class InkluaOffice extends Model
      */
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'leader_id');
+        return $this->hasOne('App\Models\User', 'id', 'leader_id');
     }
     
 
