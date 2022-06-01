@@ -122,7 +122,7 @@ class CandidateController extends Controller {
             $candidateHunting->save_cv_path(base64_encode($pcd_report), $request->file('cv_path')->extension());
         }
         $candidateHunting->save();
-
+//    dd($request);
         return redirect()->route('candidate-hunt.show', array('candidate_hunt' => $candidateHunting))
                         ->with('success', 'Candidato editado com sucesso');
     }
@@ -180,20 +180,24 @@ class CandidateController extends Controller {
 //        dd($request->file());
         request()->validate(CandidateHunting::$rules);
 
-//        dd($pcd_report);
+   
 
         $candidateHunting = CandidateHunting::where('gid', $request->input('gid'))->first();
+        $data = $request->all();
+
         if ($request->file('pcd_report') != NULL) {
             $pcd_report = file_get_contents($request->file('pcd_report')->getRealPath());
-            $candidateHunting->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());
+            $candidateHunting->save_pcd_report(base64_encode($pcd_report), $request->file('pcd_report')->extension());                 
+            unset($data['pcd_report']);
         }
         if ($request->file('cv_path') != NULL) {
             $pcd_report = file_get_contents($request->file('cv_path')->getRealPath());
             $candidateHunting->save_cv_path(base64_encode($pcd_report), $request->file('cv_path')->extension());
+            unset($data['cv_path']);
         }
 //        $candidateHunting->save_cv_path(base64_encode($request->file('cv_path')), $request->file('cv_path')->extension());        
-        $candidateHunting->update($request->all());
-
+       $candidateHunting->save($data);
+        
         return redirect()->route('candidate-hunt.show', array('candidate_hunt' => $candidateHunting))
                         ->with('success', 'Candidato editado com sucesso');
     }

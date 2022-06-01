@@ -54,11 +54,11 @@
                     </div>
                     <div class="form-group">
                         <strong>Portifolio:</strong>
-                        <a href='{{ $candidateHunting->portifolio_url }}'>Curriculo </a>
+                        <a  target="_blank" href='{{ $candidateHunting->portifolio_url }}'>Curriculo </a>
                     </div>
                     <div class="form-group">
                         <strong>Linkedin:</strong>
-                        <a href='{{ $candidateHunting->linkedin_url }}'>Linkedin </a>                        
+                        <a target="_blank" href='{{ $candidateHunting->linkedin_url }}'>Linkedin </a>                        
                     </div>
                     <div class="form-group">
                         <strong>Pcd:</strong>

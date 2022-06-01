@@ -88,7 +88,7 @@ class CandidateHunting extends Model {
             if (isset($param['birth_date'])) {
                 $this->birth_date = Carbon\Carbon::createFromFormat('d/m/Y', $param['birth_date']);
 //                $this->cellphone = str_replace(['(',')','-'],'' ,$param['cellphone']);                
-                unset($param['birth_date'], $param['cellphone']);
+                unset($param['birth_date']);
             }
             parent::__construct($param);
         }
@@ -163,14 +163,14 @@ class CandidateHunting extends Model {
             Storage::makeDirectory("docs/$this->gid");
 
         Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
-        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
+        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";      
     }
 
     public function save_cv_path($cv_path, $ext) {
 
         if (Storage::exists("docs/$this->gid"))
             Storage::makeDirectory("docs/$this->gid");
-
+        
         Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
         $this->cv_path = "docs/$this->gid/cv.$ext";
     }
