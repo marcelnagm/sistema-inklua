@@ -1,24 +1,28 @@
 @if ($errors->any())
-     @foreach ($errors->all() as $error)
-         <div>{{$error}}</div>
-     @endforeach
- @endif
+@foreach ($errors->all() as $error)
+<div>{{$error}}</div>
+@endforeach
+@endif
 <div class="box box-info padding-1">
     <div class="box-body">
+        <div class="form-row ">
+            <div class="form-group col-lg-6">
+                {{ Form::hidden('gid', $candidateHunting->gid, ['class' => 'form-control' . ($errors->has('gid') ? ' is-invalid' : ''), 'placeholder' => 'Gid']) }}        <div class="form-group">
 
-        {{ Form::hidden('gid', $candidateHunting->gid, ['class' => 'form-control' . ($errors->has('gid') ? ' is-invalid' : ''), 'placeholder' => 'Gid']) }}        <div class="form-group">
-            {{ Form::label('Nome') }}
-            {{ Form::text('name', $candidateHunting->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : ''), 'placeholder' => 'Name']) }}
-            {!! $errors->first('name', '<div classo="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Sobrenome') }}
-            {{ Form::text('surname', $candidateHunting->surname, ['class' => 'form-control' . ($errors->has('surname') ? ' is-invalid' : ''), 'placeholder' => 'Surname']) }}
-            {!! $errors->first('surname', '<div class="invalid-feedback">:message</div>') !!}
+                    {{ Form::label('Nome') }}
+                    {{ Form::text('name', $candidateHunting->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : ''), 'placeholder' => 'Name']) }}
+                    {!! $errors->first('name', '<div classo="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                {{ Form::label('Sobrenome') }}
+                {{ Form::text('surname', $candidateHunting->surname, ['class' => 'form-control' . ($errors->has('surname') ? ' is-invalid' : ''), 'placeholder' => 'Surname']) }}
+                {!! $errors->first('surname', '<div class="invalid-feedback">:message</div>') !!}
+            </div>
         </div>
         <div class="form-group">
             {{ Form::label('Data de Nascimento') }}
-            {{ Form::text('birth_date', $candidateHunting->birth_date , ['class' => 'form-control datepicker' . ($errors->has('birth_date') ? ' is-invalid' : ''), 'placeholder' => 'Birth Date']) }}
+            {{ Form::text('birth_date', $candidateHunting->birth_date? $candidateHunting->birth_date->format('d/m/Y') : "", ['class' => 'form-control datepicker' . ($errors->has('birth_date') ? ' is-invalid' : ''), 'placeholder' => 'Birth Date']) }}
             {!! $errors->first('birth_date', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
@@ -36,6 +40,7 @@
             {{ Form::text('payment', $candidateHunting->payment, ['class' => 'form-control' . ($errors->has('payment') ? ' is-invalid' : ''), 'placeholder' => 'Payment','onkeyup' => 'mascaraMoeda(this, event)'] ) }}
             {!! $errors->first('payment', '<div class="invalid-feedback">:message</div>') !!}
         </div>
+        
         <div class="form-group">
             {{ Form::label('Curriculo em ') }}
             {{ Form::file('cv_path',  ['class' => 'form-control' . ($errors->has('cv_path') ? ' is-invalid' : ''), 'placeholder' => 'Cv Path']) }}
@@ -54,7 +59,7 @@
             {{ Form::text('linkedin_url', $candidateHunting->linkedin_url, ['class' => 'form-control' . ($errors->has('linkedin_url') ? ' is-invalid' : ''), 'placeholder' => 'Linkedin Url']) }}
             {!! $errors->first('linkedin_url', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-row mb-3">
+        <div class="form-row ">
             <div class="form-group ">
                 {{ Form::label('Portador de  deficiência?') }}
                 <input type="hidden" name="pcd" value="0">
@@ -63,7 +68,7 @@
             </div>
         </div>
         <div class="form-row mb-3">
-            <div class="col-lg-9">
+            <div class="col-lg-6">
                 <div class="form-group">
                     {{ Form::label('Característica da deficiência') }}
                     @include('layouts.partials.select',array('list' => $pcd,'param' => $candidateHunting->pcd_type_id,'name' => 'pcd_type_id'))
@@ -85,32 +90,33 @@
             @endisset
         </div>
         <div class="form-row mb-3">
-            <div class="col-lg-9">
+            <div class="col-lg-6 ">
                 <div class="form-group">
                     {{ Form::label('Estado de Residencia') }}
                     @include('layouts.partials.select',array('list' => $states,'param' => $candidateHunting->state_id,'id' => 'state_id','name' => 'state_id','onchange' => 'depend("state_id");'))
                 </div>
             </div>
+
+            <div class="form-group col-lg-6">
+                {{ Form::label('Cidade') }}       
+                @isset($candidateHunting->city_id)
+                <h6 id='result_city'>{{$candidateHunting->city()->name}}</h6>
+                @endisset
+                {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
+
+                @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'id' => 'city_id','route' => '/api/city/uf', 'onchange' => 'change(this);'))
+                {!! $errors->first('city_id', '<div class="invalid-feedback">:message</div>') !!}
+            </div>
+            <script>
+                function change(input) {
+                    console.log(input.value);
+
+
+                    $('#result_city').text($("#" + input.id + " option:selected").text());
+                    $('input[name="city_id"]').val(input.value);
+                }
+            </script>
         </div>
-        <div class="form-group">
-            {{ Form::label('Cidade') }}       
-            @isset($candidateHunting->city_id)
-            <h6 id='result_city'>{{$candidateHunting->city()->name}}</h6>
-            @endisset
-            {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
-            
-            @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'id' => 'city_id','route' => '/api/city/uf', 'onchange' => 'change(this);'))
-            {!! $errors->first('city_id', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <script>
-            function change(input){
-              console.log(input.value);              
-              
-            
-              $('#result_city').text($("#"+input.id+" option:selected").text());
-              $('input[name="city_id"]').val(input.value);
-            }
-        </script>
         <div class="form-row mb-3">
             <div class="form-group ">
                 {{ Form::label('Primeiro Emprego?') }}
@@ -137,7 +143,7 @@
             </div>
         </div>       
         <div class="form-row mb-3">
-            <div class="col-lg-9">
+            <div class="col-lg-6">
                 <div class="form-group">         {{ Form::label('Nível de Inglês') }}
                     @include('layouts.partials.select',array('list' => $english_levels,'param' => $candidateHunting->english_level,'name' => 'english_level'))
 
@@ -148,15 +154,14 @@
         {{ Form::hidden('user_id', $candidateHunting->user_id, ['class' => 'form-control' . ($errors->has('user_id') ? ' is-invalid' : ''), 'placeholder' => 'User Id']) }}
 
         <div class="form-row mb-3">
-            <div class="col-lg-9">
+            <div class="col-lg-6">
                 <div class="form-group">
                     {{ Form::label('Genêro') }}
                     @include('layouts.partials.select',array('list' => $gender,'param' => $candidateHunting->gender_id,'name' => 'gender_id'))            
                 </div>
             </div>
-        </div>
-        <div class="form-row mb-3">
-            <div class="col-lg-9">
+
+            <div class="col-lg-6">
                 <div class="form-group">
                     {{ Form::label('Raça') }}
                     @include('layouts.partials.select',array('list' => $race,'param' => $candidateHunting->race_id,'name' => 'race_id'))            

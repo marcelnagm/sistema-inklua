@@ -191,5 +191,26 @@ class Candidate extends Model {
         }else $data['pcd_type_id'] = 'Nennhuma';
         return $data;
     }
+    
+     public function save(array $attributes = [], array $options = []) {
+
+        if (isset($attributes['payment'])) {
+            if(str_contains($attributes['payment'], '.'))
+            $attributes['payment'] = $attributes['payment'] * 1000  ;
+        }
+        parent::save($attributes, $options);
+    }
+    
+     public function update(array $attributes = [], array $options = []) {
+//        dd($attributes);
+     
+        if (isset($attributes['payment'])) {
+            if(str_contains($attributes['payment'], '.'))
+            $attributes['payment'] = $attributes['payment'] * 1000  ;
+        }
+
+        parent::update($attributes, $options);
+    }
+
 }
     

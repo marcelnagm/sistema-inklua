@@ -73,4 +73,16 @@ class CandidateEducation extends Model {
         return $data;
     }
 
+    
+     public function update(array $attributes = [], array $options = []) {
+//        dd($attributes);
+        if (isset($attributes['start_at'])) {
+            $attributes['start_at'] = Carbon\Carbon::createFromFormat('d/m/Y',$attributes['start_at']);
+        }
+        if (isset($attributes['end_at'])) {
+           $attributes['end_at']= Carbon\Carbon::createFromFormat('d/m/Y',  $attributes['end_at']);
+        }
+//        unset($param['start_at'], $param['end_at']);
+        parent::update($attributes, $options);
+    }
 }

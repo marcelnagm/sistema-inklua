@@ -14,28 +14,31 @@
         </div>
     </div>
     <div class="form-group">
-        {{ Form::label('institute') }}
-        {{ Form::text('institute', $candidateEducationHunting->institute, ['class' => 'form-control' . ($errors->has('institute') ? ' is-invalid' : ''), 'placeholder' => 'Institute']) }}
+        {{ Form::label('Instituição') }}
+        {{ Form::text('institute', $candidateEducationHunting->institute, ['class' => 'form-control' . ($errors->has('institute') ? ' is-invalid' : ''), 'placeholder' => 'Instituição']) }}
         {!! $errors->first('institute', '<div class="invalid-feedback">:message</div>') !!}
     </div>
     <div class="form-group">
-        {{ Form::label('course') }}
-        {{ Form::text('course', $candidateEducationHunting->course, ['class' => 'form-control' . ($errors->has('course') ? ' is-invalid' : ''), 'placeholder' => 'Course']) }}
+        {{ Form::label('Curso') }}
+        {{ Form::text('course', $candidateEducationHunting->course, ['class' => 'form-control' . ($errors->has('course') ? ' is-invalid' : ''), 'placeholder' => 'Curso']) }}
         {!! $errors->first('course', '<div class="invalid-feedback">:message</div>') !!}
     </div>
     <div class="form-group">
-        {{ Form::label('start_at') }}
-        {{ Form::text('start_at', $candidateEducationHunting->start_at, ['class' => 'form-control datepicker' . ($errors->has('start_at') ? ' is-invalid' : ''), 'placeholder' => 'Start At']) }}
+        {{ Form::label('Inicio em:') }}
+        {{ Form::text('start_at', $candidateEducationHunting->start_at? $candidateEducationHunting->start_at->format('d/m/Y') : "", ['class' => 'form-control datepicker' . ($errors->has('start_at') ? ' is-invalid' : ''), 'placeholder' => 'Inicio em:']) }}
         {!! $errors->first('start_at', '<div class="invalid-feedback">:message</div>') !!}
     </div>
     <div class="form-group">
-        {{ Form::label('end_at') }}
-        {{ Form::text('end_at', $candidateEducationHunting->end_at, ['class' => 'form-control datepicker' . ($errors->has('end_at') ? ' is-invalid' : ''), 'placeholder' => 'End At']) }}
+        {{ Form::label('Fim em:') }}
+        {{ Form::text('end_at', $candidateEducationHunting->end_at ? $candidateEducationHunting->end_at->format('d/m/Y') : '', ['class' => 'form-control datepicker' . ($errors->has('end_at') ? ' is-invalid' : ''), 'placeholder' => '']) }}
+        <p>
+            Preencha se houver concluido, caso contrário deixe em branco
+        </p>
         {!! $errors->first('end_at', '<div class="invalid-feedback">:message</div>') !!}
     </div>
 
 </div>
 <div class="box-footer mt20">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
 </div>
 </div>

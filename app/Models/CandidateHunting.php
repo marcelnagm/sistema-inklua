@@ -43,22 +43,19 @@ class CandidateHunting extends Model {
         'state_id',
         'city_id',
         'remote', 'move_out'
-        ,'race_id','gender_id',
+        , 'race_id', 'gender_id',
         'english_level'
     ];
-    
     protected $dates = [
         'created_at',
         'updated_at',
-         'birth_date'
+        'birth_date'
     ];
-    
     protected $casts = [
         'start_at' => 'date',
         'end_at' => 'date',
         'birth_date' => 'date',
     ];
-    
     static $rules = array(
         'gid' => 'nullable',
         'name' => 'required|max:255',
@@ -81,26 +78,26 @@ class CandidateHunting extends Model {
         'remote' => 'required|max:1',
         'move_out' => 'required|max:1',
         'race_id' => 'required|max:2',
-        'gender_id'=> 'required|max:2'
+        'gender_id' => 'required|max:2'
     );
 
 //    protected $hidden = [ ‘password’ ];
 
-       public function __construct($param = null) {
-       if ($param != null) {
+    public function __construct($param = null) {
+        if ($param != null) {
             if (isset($param['birth_date'])) {
-                $this->birth_date = Carbon\Carbon::createFromFormat('d/m/Y', $param['birth_date']);                
+                $this->birth_date = Carbon\Carbon::createFromFormat('d/m/Y', $param['birth_date']);
 //                $this->cellphone = str_replace(['(',')','-'],'' ,$param['cellphone']);                
-                unset($param['birth_date'],$param['cellphone']);
+                unset($param['birth_date'], $param['cellphone']);
             }
             parent::__construct($param);
         }
     }
 
     public function generate() {
-        $this->gid = md5(random_int(1, 125) * time() . Str::random(20));                        
+        $this->gid = md5(random_int(1, 125) * time() . Str::random(20));
     }
-    
+
     public function english_level_obj() {
         return CandidateEnglishLevel::find($this->english_level);
     }
@@ -127,13 +124,11 @@ class CandidateHunting extends Model {
             return substr($TEL, 0, $tam - 4) . "-" . substr($TEL, -4);
         }
     }
-    
-    
 
     public function full_name() {
-    return $this->name.' '.$this->surname;    
+        return $this->name . ' ' . $this->surname;
     }
-    
+
     public function payment_formatted() {
         return number_format($this->payment, 0, '', '.');
     }
@@ -145,9 +140,9 @@ class CandidateHunting extends Model {
     public function city() {
         return City::find($this->city_id);
     }
-        
+
     public function pcd_typo() {
-        return $this->pcd_type_id != null? PcdType::find($this->pcd_type_id) : "Nenhum";
+        return $this->pcd_type_id != null ? PcdType::find($this->pcd_type_id) : "Nenhum";
     }
 
     public function education() {
@@ -155,7 +150,7 @@ class CandidateHunting extends Model {
     }
 
     public function report() {
-        return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at','DESC')->get();
+        return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at', 'DESC')->get();
     }
 
     public function experience() {
@@ -187,24 +182,42 @@ class CandidateHunting extends Model {
         $data['pcd_type_id'] = $this->pcd_typo();
         $data['report'] = $this->report()->toArray();
         $data['cellphone'] = $this->phone();
-        $data['english_level'] = $this->english_level_obj().'';
-        $data['state_id'] = $this->state().'';
-        $data['city_id'] = $this->city().'';
-        $data['payment'] = $this->payment_formatted().'';
+        $data['english_level'] = $this->english_level_obj() . '';
+        $data['state_id'] = $this->state() . '';
+        $data['city_id'] = $this->city() . '';
+        $data['payment'] = $this->payment_formatted() . '';
 
-        
-        
-        
-        
         return $data;
     }
-    
+
     public function gender() {
-      return CandidateGender::find($this->gender_id);
+        return CandidateGender::find($this->gender_id);
     }
-    
+
     public function race() {
         return CandidateRace::find($this->race_id);
+    }
+
+    public function save(array $attributes = [], array $options = []) {
+
+        if (isset($attributes['payment'])) {
+            if(str_contains($attributes['payment'], '.'))
+            $attributes['payment'] = $attributes['payment'] * 1000  ;
+        }
+        parent::save($attributes, $options);
+    }
+
+    public function update(array $attributes = [], array $options = []) {
+//        dd($attributes);
+        if (isset($attributes['birth_date'])) {
+            $attributes['birth_date'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['birth_date']);
+        }
+        if (isset($attributes['payment'])) {
+            if(str_contains($attributes['payment'], '.'))
+            $attributes['payment'] = $attributes['payment'] * 1000  ;
+        }
+
+        parent::update($attributes, $options);
     }
 
 }

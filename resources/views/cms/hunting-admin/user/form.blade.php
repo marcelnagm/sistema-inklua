@@ -1,15 +1,17 @@
 <div class="box box-info padding-1">
     <div class="box-body">
         
-        <div class="form-group">
+        <div class="form-row ">
+        <div class="form-group col-lg-6">
             {{ Form::label('Nome') }}
             {{ Form::text('name', $user->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : ''), 'placeholder' => 'Name']) }}
             {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-group">
+        <div class="form-group col-lg-6">
             {{ Form::label('Sobrenome') }}
             {{ Form::text('lastname', $user->lastname, ['class' => 'form-control' . ($errors->has('lastname') ? ' is-invalid' : ''), 'placeholder' => 'Lastname']) }}
             {!! $errors->first('lastname', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
         </div>
         <div class="form-group">
             {{ Form::label('Email') }}

@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group">
                         <strong>Pretensão Salarial:</strong>
-                       R$ {{ $candidateHunting->payment_formatted() }}
+                       R$ {{ $candidateHunting->payment }}
                     </div>
                     <div class="form-group">
                         <strong>Curriculo:</strong>

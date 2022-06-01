@@ -247,36 +247,9 @@ tinymce.init({
 
         <script type="text/javascript">
 
-
-String.prototype.reverse = function () {
-    return this.split('').reverse().join('');
-};
-
-mascaraMoeda($('input[name="payment"]')[0],false);
-
-function mascaraMoeda(campo, evento) {
-    
-    if(evento !==false)  {
-        var tecla = (!evento) ? window.event.keyCode : evento.which;
-    }
-    console.log(campo);
-    var valor = campo.value.replace(/[^\d]+/gi, '').reverse();
-    var resultado = "";
-    var mascara = "###.###".reverse();
-    for (var x = 0, y = 0; x < mascara.length && y < valor.length; ) {
-        if (mascara.charAt(x) != '#') {
-            resultado += mascara.charAt(x);
-            x++;
-        } else {
-            resultado += valor.charAt(y);
-            y++;
-            x++;
-        }
-    }
-    campo.value = resultado.reverse();
-}
-
-
+$('input[name="cpf"]').mask('000.000.000-00', {reverse: true});
+$('input[name="cnpj"]').mask('00.000.000/0000-00', {reverse: true});
+ $('input[name="payment"]').mask('000.000', {reverse: true});
 $('#cellphone').mask('(00) 00000-0000');
 $('#cellphone').blur(function (event) {
     if ($(this).val().length == 15) { // Celular com 9 dígitos + 2 dígitos DDD e 4 da máscara

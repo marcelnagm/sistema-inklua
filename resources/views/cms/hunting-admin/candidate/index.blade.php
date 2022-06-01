@@ -14,20 +14,21 @@ Candidate Hunting
             </h5>
         </div>                
 
-        <div class="float-right p-4">
+        
+
+        <div class="card-body">
+            <div class="ml-4 mr-4">
+            <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>    
             <a href="{{ route('candidate-hunt.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                 Novo Candidato
             </a>
-        </div>              
-
-        <div class="card-body">
-
-            <button class="btn btn-primary btn" onclick="$('#filtros').toggle('100');"> Filtros</button>
+            </div>
+            
             @if(Session::has('hunt'))
 
             <span class="alert danger"> Resultado Filtrado <a href="{{ route('hunt.clear') }}"class="btn btn-danger btn-sm" >Limpar Filtro</a></span>
             @endif
-            <div  class="container p-4" id="filtros" style="display: none;">                       
+            <div  class="container" id="filtros" style="display: none;">                       
                 <form method="post" action="{{ route('hunt.search') }}"  role="form" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group form-control-lg" >
@@ -87,10 +88,7 @@ Candidate Hunting
                             <th>Email</th>
                             <th>Pretensão Salarial</th>
                             <th>Pcd</th>
-                            <th>Localidade</th>
-                            <th>Primero Emprego</th>
-                            <th>Remoto</th>
-                            <th>Inglês</th>                            
+                            <th>Localidade</th>                         
                             <th></th>
                         </tr>
                     </thead>
@@ -104,18 +102,11 @@ Candidate Hunting
                                 R$ {{ $candidateHunting->payment_formatted() }}
                             </td>
                             <td>
-                                @include('layouts.partials.yesno',array('param' => $candidateHunting->pcd))                                                
+                                {{ $candidateHunting->pcd_typo() }}                                              
                             </td>
                             <td>
                                 {{ $candidateHunting->city() }}
                             </td>                            
-                            <td>
-                                @include('layouts.partials.yesno',array('param' => $candidateHunting->first_job))                        
-                            </td>
-                            <td>
-                                @include('layouts.partials.yesno',array('param' => $candidateHunting->remote))                        
-                            </td>                            
-                            <td>{{ $candidateHunting->english_level_obj() }}</td>
                             <td>
 
                                 <a class="btn btn-sm btn-primary " href="{{ route('candidate-hunt.show',$candidateHunting->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
