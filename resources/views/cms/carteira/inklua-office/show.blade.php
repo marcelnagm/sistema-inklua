@@ -26,21 +26,25 @@
             <div class="form-group">
                 <strong>Lider:</strong>
                 <?php $off = $inkluaOffice->user()->first(); ?>
+                @if($off != null)
                 <a href="{{route('users.show',$off)}}">
                     {{ $off ? $off->fullname().' - INKLUER#'.$off->id: 'Não Atribuido'}}
                 </a>
-            </div>
-            <div class="form-group">
-                <strong>Associados Ativos:</strong>
-                @foreach( $inkluaOffice->inkluaUsersActive()->get() as $user)
+                @else
+                <marquee class='alert-warning fa-2x'> NÃO EXISTE LIDER ASSOCIADO</marquee>
+                @endif
                 <br>
-                <a href="{{route('users.show',$user->user()->id)}}">
-                    <strong>
-                        {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
-                    </strong>
+                <strong>PFL - Programa de Formação de Lider:</strong>
+                <?php $off = $inkluaOffice->user_pfl()->first(); ?>
+                @if($off != null)
+                <a href="{{route('users.show',$off)}}">
+                    {{ $off ? $off->fullname().' - INKLUER#'.$off->id: 'Não Atribuido'}}
                 </a>
-                @endforeach
+                @else
+                <marquee class='alert-warning fa-2x'> NÃO EXISTE PFL - Programa de Formação de Lider</marquee>
+                @endif
             </div>
+
             <div class="form-group">
                 <strong>Histórico Geral:</strong>
 
@@ -61,6 +65,7 @@
                         </thead>
                         <tbody>
                             @foreach( $inkluaOffice->inkluaUsers()->get() as $user)            
+                            @if($user != null)
                             <tr>
                                 <td>
                                     {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
@@ -87,6 +92,7 @@
                                     </a>
                                 </td>
                             </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>

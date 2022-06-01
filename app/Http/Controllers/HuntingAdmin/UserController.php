@@ -110,7 +110,7 @@ class UserController extends Controller {
         if (!$user->isInklua() ) {
             
        
-        if($request->input('role_id') == 1){                        
+        if(in_array($request->input('role_id'), array(1,2))){                        
             $ink = InkluaUser::
                     where('office_id',$request->input('office_id'))->
                     where('role_id',$request->input('role_id') )->
@@ -118,7 +118,7 @@ class UserController extends Controller {
             if($ink != null){
                 $name = $ink->user()->fullname().' - INKLUER#'.$ink->user()->id ;
                return redirect('users/' . $user->id)
-                        ->with('error', "Já existe um lider para este escritorio, o $name  deve ser revogado para esta acao continuar");         
+                        ->with('error', "Já existe um lider/PFL para este escritorio, o $name  deve ser revogado para esta acao continuar");         
             }
         }
             $user->promote($request);

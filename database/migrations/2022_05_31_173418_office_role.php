@@ -15,6 +15,7 @@ class OfficeRole extends Migration
     
     private $roles = [
         'Lider',
+        'Programa Formação de Lider - PFL',
         'Estagiário',
           'Auxiliar',
         "Assistente Pleno",

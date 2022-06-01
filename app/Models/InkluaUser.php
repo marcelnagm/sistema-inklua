@@ -36,9 +36,10 @@ protected $dates = [
     }
 
     public function save(array $options = []) {
-        if ($this->role_id == 1) {
+        if (in_array($this->role_id , array(1,2))) {
             $of = $this->office();
-            $of->leader_id = $this->end_at == null ? $this->user()->id : null;
+            if ($this->role_id == 1) $of->leader_id =$this->user()->id ;
+            if ($this->role_id == 2) $of->pfl_id =$this->user()->id ;
             $of->save();
         }
 

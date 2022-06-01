@@ -33,7 +33,7 @@ class InkluaOffice extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','leader_id'];
+    protected $fillable = ['name','leader_id','pfl_id'];
 
 
     /**
@@ -54,6 +54,10 @@ class InkluaOffice extends Model
     public function user()
     {
         return $this->hasOne('App\Models\User', 'id', 'leader_id');
+    }
+    public function user_pfl()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'pfl_id');
     }
     
 
