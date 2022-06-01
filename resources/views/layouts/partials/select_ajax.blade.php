@@ -2,6 +2,7 @@
         @isset($name) name="{{$name}}"  @endisset        
         @isset($id)  id="{{$id}}" @endisset
         @isset($onchange) onchange='{{$onchange}}' @endisset>
+    <option value="">Selecione uma Opção</option>
 </select>
 <script type="text/javascript">
 

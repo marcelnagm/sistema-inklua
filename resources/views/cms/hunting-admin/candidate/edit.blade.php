@@ -25,6 +25,11 @@ Update Candidate Hunting
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#city_id').append('<option value="{{$candidateHunting->city()->id}}" selected> {{$candidateHunting->city()->name}} </option>');
+    });
 
-</section>
+</script>
 @endsection

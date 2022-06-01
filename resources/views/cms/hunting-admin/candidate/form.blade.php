@@ -98,10 +98,7 @@
             </div>
 
             <div class="form-group col-lg-6">
-                {{ Form::label('Cidade') }}       
-                @isset($candidateHunting->city_id)
-                <h6 id='result_city'>{{$candidateHunting->city()->name}}</h6>
-                @endisset
+                {{ Form::label('Cidade') }}                      
                 {{ Form::hidden('city_id', $candidateHunting->city_id, ['class' => 'form-control' . ($errors->has('city_id') ? ' is-invalid' : ''), 'placeholder' => 'city_id']) }}             
 
                 @include('layouts.partials.select_ajax',array('param' => $candidateHunting->city_id,'id' => 'city_id','route' => '/api/city/uf', 'onchange' => 'change(this);'))
@@ -171,7 +168,7 @@
 
     </div>
     <div class="box-footer mt20">
-        <button type="submit" class="btn btn-primary">Salvar</button>"
+        <button type="submit" class="btn btn-primary">Salvar</button>
         @isset($candidateHunting->id)
         <a class="btn btn-success" href="{{ route('candidate-hunt.show',$candidateHunting->id) }}"><i class="fa fa-fw fa-eye"></i> Voltar a Exibição</a>
         @endisset

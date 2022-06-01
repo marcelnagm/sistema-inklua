@@ -28,7 +28,7 @@
                         <th>Empresa</th>
                         <th>Início</th>
                         <th>Fim</th>
-                        <th></th>
+                        <th colspan="2">   &nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,8 +40,11 @@
                         <td>{{ $candidateExperienceHunting->start_at->format('d/m/Y')  }}</td>
                         <td>{{ $candidateExperienceHunting->end_at <> NULL ? $candidateExperienceHunting->end_at->format('d/m/Y') : 'Ativo' }}</td>
 
-                        <td>
-                            <form action="{{ route('work.destroy',$candidateExperienceHunting->id) }}" method="POST">                                
+                        <td colspan="2">
+                            &nbsp;
+                        </td>
+                        <td colspan="">
+                            <form action="{{ route('work.destroy',$candidateExperienceHunting->id) }}" method="POST" class="float-right">                                
                                 <a class="btn btn-sm btn-success" href="{{ route('work.edit',$candidateExperienceHunting->id) }}"><i class="fa fa-fw fa-edit"></i> Edit</a>
                                 @csrf
                                 @method('DELETE')

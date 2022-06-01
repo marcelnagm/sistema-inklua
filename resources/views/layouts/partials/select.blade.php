@@ -3,6 +3,7 @@
         @isset($id) id="{{$id}}" @endisset
         
         >
+     <option value="">Selecione uma Opção</option>
                 @foreach ($list as $key)
                 <option value="{{ $key->id }}"
                         @if ($key->id == old('myselect', $param))

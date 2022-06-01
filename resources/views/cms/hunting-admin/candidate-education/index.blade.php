@@ -43,7 +43,7 @@
                     <td>{{  $candidateEducationHunting->end_at <> NULL ?$candidateEducationHunting->end_at->format('d/m/Y') : 'Ativo'  }}</td>
 
                     <td>
-                        <form action="{{ route('education.destroy',$candidateEducationHunting->id) }}" method="POST">                            
+                        <form action="{{ route('education.destroy',$candidateEducationHunting->id) }}" method="POST" class="float-right">                            
                             <a class="btn btn-sm btn-success" href="{{ route('education.edit',$candidateEducationHunting->id) }}"><i class="fa fa-fw fa-edit"></i> Edit</a>
                             @csrf
                             @method('DELETE')
