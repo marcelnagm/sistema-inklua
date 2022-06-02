@@ -6,6 +6,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\State;
+use Illuminate\Validation\Rule;
 
 /**
  * Class ClientController
@@ -45,7 +46,7 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         request()->validate(Client::$rules);
 
         $client = Client::create($request->all());
@@ -90,7 +91,9 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        request()->validate(Client::$rules);
+        $rules = Client::$rules;
+        unset ($rules[ 'cnpj'] );
+        request()->validate($rules);
 
         $client->update($request->all());
 

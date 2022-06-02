@@ -16,10 +16,16 @@
         </div>
         <div class="form-row">
             <div class="form-group col-lg-6">
+            @if(isset($client->cnpj))
+            {{ Form::label('CNPJ:') }}
+            <font class="font-bold fa-2x">{{$client->cnpj}}</font class="">
+            @else           
                 {{ Form::label('CNPJ') }}
                 {{ Form::text('cnpj', $client->cnpj, ['class' => 'form-control' . ($errors->has('cnpj') ? ' is-invalid' : ''), 'placeholder' => 'Cnpj']) }}
                 {!! $errors->first('cnpj', '<div class="invalid-feedback">:message</div>') !!}
+            @endif
             </div>
+            
             <div class="form-group col-lg-6">
                 {{ Form::label('Setor / Área') }}
                 {{ Form::text('sector', $client->sector, ['class' => 'form-control' . ($errors->has('sector') ? ' is-invalid' : ''), 'placeholder' => 'Setor / Área']) }}
