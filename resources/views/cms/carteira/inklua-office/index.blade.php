@@ -18,6 +18,9 @@ Inklua Office
             <a href="{{ route('inklua_office.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                 Novo Escritório
             </a>
+            <a href="{{ route('office_role.index') }}" class="btn btn-primary btn-sm float-right mr-1"  data-placement="left">
+                Lista de Funções
+            </a>
         </div>
         
 

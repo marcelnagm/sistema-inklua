@@ -108,10 +108,17 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::post('/users/grant/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@grant')->name('users.grant');
     Route::get('/users/revoke/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@revoke')->name('users.revoke');
     Route::resource('/users', 'App\Http\Controllers\HuntingAdmin\UserController');
+  
     
 });
 
 
 // rotas carteira
 
+$router->group(['middleware' => ['auth']], function ($router) {
  Route::resource('/inklua_office', 'App\Http\Controllers\Carteira\InkluaOfficeController');
+  Route::resource('/clients', 'App\Http\Controllers\Carteira\ClientController');
+  Route::resource('/conditions_name', 'App\Http\Controllers\Carteira\ConditionController');
+  Route::resource('/office_role', 'App\Http\Controllers\Carteira\OfficeRoleController');
+    
+});

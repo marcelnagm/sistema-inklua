@@ -1,30 +1,25 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    Create Inklua Office
+Create Inklua Office
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+<div class="col-xl-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h5 class="m-0 font-weight-bold text-primary">Novo Escritórios / Time
+            </h5>
+        </div> 
+        <div class="card-body">
+            <form method="POST" action="{{ route('inklua_office.store') }}"  role="form" enctype="multipart/form-data">
+                @csrf
 
-                @includeif('partials.errors')
+                @include('cms.carteira.inklua-office.form')
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">Create Inklua Office</span>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('inklua_office.store') }}"  role="form" enctype="multipart/form-data">
-                            @csrf
-
-                            @include('cms.carteira.inklua-office.form')
-
-                        </form>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-    </section>
+    </div>
+</div>
 @endsection

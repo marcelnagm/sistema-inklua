@@ -1,39 +1,45 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Models;
 
-/**
- * Description of State
- *
- * @author marcel
- */
 use Illuminate\Database\Eloquent\Model;
 
-class OfficeRole extends Model {
-    protected $table = 'office_role';
-    protected $fillable = [
-        'role'
-    ];
-    
-    protected $dates = [
-        'created_at',
-        'updated_at',
+/**
+ * Class OfficeRole
+ *
+ * @property $id
+ * @property $role
+ * @property $created_at
+ * @property $updated_at
+ *
+ * @property InkluaUser[] $inkluaUsers
+ * @package App
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
+class OfficeRole extends Model
+{
+      protected $table = 'office_role';
+    static $rules = [
+		'role' => 'required',
     ];
 
-      static $rules = [
-		'role' => 'required'
-    ];
-    
-//    protected $hidden = [ ‘password’ ];
-    
-    public function __toString() {
-        return $this->role;
+    protected $perPage = 20;
+
+    /**
+     * Attributes that should be mass-assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['role'];
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inkluaUsers()
+    {
+        return $this->hasMany('App\InkluaUser', 'role_id', 'id');
     }
     
+
 }
