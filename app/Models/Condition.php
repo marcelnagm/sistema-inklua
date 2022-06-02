@@ -33,6 +33,8 @@ class Condition extends Model
      */
     protected $fillable = ['name','intervals'];
 
-
+     public function __toString() {
+        return $this->name;
+    }
 
 }

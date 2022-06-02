@@ -120,5 +120,7 @@ $router->group(['middleware' => ['auth']], function ($router) {
   Route::resource('/clients', 'App\Http\Controllers\Carteira\ClientController');
   Route::resource('/conditions_name', 'App\Http\Controllers\Carteira\ConditionController');
   Route::resource('/office_role', 'App\Http\Controllers\Carteira\OfficeRoleController');
-    
+ Route::get('/client_condition/create/{id}', 'App\Http\Controllers\Carteira\ClientConditionController@create')->name('client_condition_sp.create');   
+  Route::resource('/client_condition', 'App\Http\Controllers\Carteira\ClientConditionController');
+ 
 });

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ClientCondition;
 
 /**
  * Class Client
@@ -54,6 +54,13 @@ class Client extends Model
     public function state()
     {
         return $this->hasOne('App\Models\State', 'id', 'state_id');
+    }
+    
+    public function conditions()
+    {
+      return ClientCondition::where('client_id', $this->id)->
+              where('active',1)
+              ->get();
     }
     
 

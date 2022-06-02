@@ -22,6 +22,7 @@ class ClientCondition extends Migration
             $table->boolean('brute')->nullable(false);                       
             $table->float('tax')->nullable(false);
             $table->integer('guarantee')->nullable(false);
+            $table->boolean('active')->defeult(1)->nullable(false);
             $table->float('start_cond')->nullable(true);
             $table->float('end_cond')->nullable(true);                       
             $table->foreign('client_id')->references('id')->on('clients');

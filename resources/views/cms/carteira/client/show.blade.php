@@ -46,7 +46,10 @@
                 <strong>Estado:</strong>
                 {{ $client->state()->first() }}
             </div>
-        </div>
+            
+            @include('cms.carteira.client-condition.index',array('clientConditions' => $client->conditions()))
+        </div>        
     </div>
 </div>
+
 @endsection
