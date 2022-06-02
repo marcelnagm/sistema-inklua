@@ -25,7 +25,7 @@ class ClientCondition extends Migration
             $table->float('start_cond')->nullable(true);
             $table->float('end_cond')->nullable(true);                       
             $table->foreign('client_id')->references('id')->on('clients');
-            $table->foreign('condition_id')->references('id')->on('condition');
+            $table->foreign('condition_id')->references('id')->on('conditions');
             $table->timestamps();
         });
     }
