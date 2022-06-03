@@ -154,8 +154,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Administrador :</h6>
                 <a class="collapse-item" href="{{ route('inklua_office.index') }}">Escritórios</a>
-                <a class="collapse-item" href="{{ route('clients.index') }}">Clientes</a>
-                <a class="collapse-item" href="{{ route('conditions_name.index') }}">Condicões</a>
+                <a class="collapse-item" href="{{ route('clients.index') }}">Clientes</a>             
             </div>
         </div>
     </li>

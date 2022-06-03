@@ -1,30 +1,29 @@
 @extends('layouts.cms')
 
 @section('template_title')
-    Create Client Condition
+Create Client Condition
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card shadow mb-4 vp">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h5 class="m-0 font-weight-bold text-primary">Nova Condição Contratual
+                    </h5>
+                </div> 
+                <div class="card-body">
+                    <form method="POST" action="{{ route('client_condition.store') }}"  role="form" enctype="multipart/form-data">
+                        @csrf
 
-                @includeif('partials.errors')
+                        @include('cms.carteira.client-condition.form')
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">Create Client Condition</span>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('client_condition.store') }}"  role="form" enctype="multipart/form-data">
-                            @csrf
-
-                            @include('cms.carteira.client-condition.form')
-
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection

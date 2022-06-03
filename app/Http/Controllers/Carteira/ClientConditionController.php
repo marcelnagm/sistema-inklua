@@ -52,7 +52,7 @@ class ClientConditionController extends Controller
         $clientCondition = ClientCondition::create($request->all());
 
         return redirect('/clients/'.$clientCondition->client_id)
-            ->with('success', 'ClientCondition created successfully.');
+            ->with('success', 'Nova condição contratual criada');
     }
 
     /**
@@ -95,7 +95,7 @@ class ClientConditionController extends Controller
         $clientCondition->update($request->all());
 
       return redirect('/clients/'.$clientCondition->client_id)
-            ->with('success', 'ClientCondition created successfully.');
+            ->with('success', 'Condição contratual editada');
     }
 
     /**
@@ -109,6 +109,6 @@ class ClientConditionController extends Controller
         $clientCondition->active = 0;
         $clientCondition->save();
        return redirect('/clients/'.$clientCondition->client_id)
-            ->with('success', 'ClientCondition created successfully.');
+            ->with('success', 'Condição contratual desativada');
     }
 }

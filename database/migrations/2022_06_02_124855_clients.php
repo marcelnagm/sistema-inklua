@@ -16,7 +16,7 @@ class Clients extends Migration {
             Schema::dropIfExists('clients');
           Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('cnpj')->nullable(false)->unique();
+            $table->string('cnpj')->nullable(false);
             $table->string('formal_name')->nullable(false);
             $table->string('fantasy_name')->nullable(false);
             $table->string('sector')->nullable(false);

@@ -28,7 +28,7 @@ class Client extends Model
 {
     
     static $rules = [
-		'cnpj' => 'required|unique:clients,cnpj',
+		'cnpj' => 'required',
 		'formal_name' => 'required',
 		'fantasy_name' => 'required',
 		'sector' => 'required',

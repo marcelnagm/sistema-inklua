@@ -16,14 +16,10 @@
         </div>
         <div class="form-row">
             <div class="form-group col-lg-6">
-            @if(isset($client->cnpj))
-            {{ Form::label('CNPJ:') }}
-            <font class="font-bold fa-2x">{{$client->cnpj}}</font class="">
-            @else           
+              
                 {{ Form::label('CNPJ') }}
                 {{ Form::text('cnpj', $client->cnpj, ['class' => 'form-control' . ($errors->has('cnpj') ? ' is-invalid' : ''), 'placeholder' => 'Cnpj']) }}
-                {!! $errors->first('cnpj', '<div class="invalid-feedback">:message</div>') !!}
-            @endif
+                {!! $errors->first('cnpj', '<div class="invalid-feedback">:message</div>') !!}       
             </div>
             
             <div class="form-group col-lg-6">
@@ -40,8 +36,11 @@
             </div>
             <div class="form-group col-lg-6">
                 {{ Form::label('Ativo') }}
-                 <input type="hidden" name="active" value="0">
-                <input name="active" type="checkbox" class="" @if($client->active==1) checked @endif value="1">                        
+                 <select name="active" class="form-control" >
+                <option value="">Selecione uma Opção</option>
+                <option value="0" @isset($client->active) @if($client->active ==0) selected @endif @endisset >Inativo</option>
+                <option value="1" @isset($client->active) @if($client->active ==1) selected @endif @endisset>Ativo</option>                
+            </select>            
              
                 {!! $errors->first('active', '<div class="invalid-feedback">:message</div>') !!}
             </div>

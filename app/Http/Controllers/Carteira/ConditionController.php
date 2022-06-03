@@ -49,7 +49,7 @@ class ConditionController extends Controller
         $condition = Condition::create($request->all());
 
         return redirect()->route('conditions_name.index')
-            ->with('success', 'Condition created successfully.');
+            ->with('success', 'Novo tipo de condição criado');
     }
 
     /**
@@ -92,7 +92,7 @@ class ConditionController extends Controller
         $condition->update($request->all());
 
         return redirect()->route('conditions_name.index')
-            ->with('success', 'Condition updated successfully');
+            ->with('success', 'Tipo de condição editado com sucesso');
     }
 
     /**
@@ -105,6 +105,6 @@ class ConditionController extends Controller
         $condition = Condition::find($id)->delete();
 
         return redirect()->route('conditions_name.index')
-            ->with('success', 'Condition deleted successfully');
+            ->with('success', 'Tipo de condição removido');
     }
 }
