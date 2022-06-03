@@ -73,13 +73,13 @@ class SearchControler extends Controller {
         }
 //        dd ($candidates );
         $temp = array();
-        foreach ($candidates as $cand) {
+        foreach ($candidates->paginate(10)->items() as $cand) {
             $temp[] = $cand->toArray(true);
         }
         $candidates = $temp;
 
         return response()->json([
-                    'candidates' => $candidates->paginate(10)->items(),
+                    'candidates' => $candidates,
                     'filters' => $filters,
                     'filtered' => $result['filtered'],
                     'param' => $result['param']
