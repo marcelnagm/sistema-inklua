@@ -72,6 +72,11 @@ class SearchControler extends Controller {
             $candidates->skip(10 * $request->input('page'))->take(10);
         }
 //        dd ($candidates );
+        $temp = array();
+        foreach ($candidates as $cand) {
+            $temp[] = $cand->toArray(true);
+        }
+        $candidates = $temp;
 
         return response()->json([
                     'candidates' => $candidates->paginate(10)->items(),
