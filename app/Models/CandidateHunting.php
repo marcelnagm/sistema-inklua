@@ -130,7 +130,7 @@ class CandidateHunting extends Model {
     }
 
     public function payment_formatted() {
-        return number_format($this->payment, 0, '', '.');
+        return number_format($this->payment, 2, ',', '.');
     }
 
     public function state() {

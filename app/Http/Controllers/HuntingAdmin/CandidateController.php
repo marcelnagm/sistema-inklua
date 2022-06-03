@@ -196,7 +196,7 @@ class CandidateController extends Controller {
             unset($data['cv_path']);
         }
 //        $candidateHunting->save_cv_path(base64_encode($request->file('cv_path')), $request->file('cv_path')->extension());        
-       $candidateHunting->save($data);
+       $candidateHunting->update($data);
         
         return redirect()->route('candidate-hunt.show', array('candidate_hunt' => $candidateHunting))
                         ->with('success', 'Candidato editado com sucesso');
