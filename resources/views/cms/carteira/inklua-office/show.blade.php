@@ -34,7 +34,7 @@
                 <marquee class='alert-warning fa-2x'> NÃO EXISTE LIDER ASSOCIADO</marquee>
                 @endif
                 <br>
-                <strong>PFL - Programa de Formação de Lider:</strong>
+                <strong>PFL:</strong>
                 <?php $off = $inkluaOffice->user_pfl()->first(); ?>
                 @if($off != null)
                 <a href="{{route('users.show',$off)}}">
@@ -71,7 +71,7 @@
                                     {{  $user->user()->fullname().' - INKLUER#'.$user->user()->id}}
                                 </td>
                                 <td>
-                                    {{  $user->role()}}
+                                    {{  $user->role()->role}}
                                 </td>
                                 <td>
                                     {{  $user->created_at->format('d/m/Y')}}

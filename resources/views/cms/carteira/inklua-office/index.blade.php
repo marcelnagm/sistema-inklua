@@ -51,7 +51,7 @@ Inklua Office
                             </td>
 
                             <td>
-                                <form action="{{ route('inklua_office.destroy',$inkluaOffice->id) }}" method="POST">
+                                <form class="float-right" action="{{ route('inklua_office.destroy',$inkluaOffice->id) }}" method="POST">
                                     <a class="btn btn-sm btn-primary " href="{{ route('inklua_office.show',$inkluaOffice->id) }}"><i class="fa fa-fw fa-eye"></i> Exibir</a>
                                     <a class="btn btn-sm btn-success" href="{{ route('inklua_office.edit',$inkluaOffice->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
                                     @csrf
