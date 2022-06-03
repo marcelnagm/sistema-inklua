@@ -18,14 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class InkluaOffice extends Model
-{
-      protected $table = 'inklua_office';
-    static $rules = [
-		'name' => 'required',
-		'leader_id' => 'nullable',
-    ];
+class InkluaOffice extends Model {
 
+    protected $table = 'inklua_office';
+    static $rules = [
+        'name' => 'required',
+        'leader_id' => 'nullable',
+    ];
     protected $perPage = 20;
 
     /**
@@ -33,37 +32,40 @@ class InkluaOffice extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','leader_id','pfl_id'];
-
+    protected $fillable = ['name', 'leader_id', 'pfl_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function inkluaUsers()
-    {
-        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->orderBy('active','DESC')->orderBy('updated_at','DESC');
+    public function inkluaUsers() {
+        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
     }
-    
-    public function inkluaUsersActive(){
-        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->where('active','1');
+
+    public function inkluaUsersActive() {
+        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->where('active', '1');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function user()
-    {
+    public function user() {
         return $this->hasOne('App\Models\User', 'id', 'leader_id');
     }
-    public function user_pfl()
-    {
+
+    public function user_pfl() {
         return $this->hasOne('App\Models\User', 'id', 'pfl_id');
     }
-    
 
-        public function __toString() {
+    public function __toString() {
         return ucfirst($this->name);
     }
 
-    
+    public function delete() {
+        $this->active = 0;
+        foreach ($this->inkluaUsersActive()->get() as $ink) {
+            $ink->user()->revoke();
+        }
+        $this->save();
+    }
+
 }

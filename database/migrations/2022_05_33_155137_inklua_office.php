@@ -19,8 +19,10 @@ class InkluaOffice extends Migration
              $table->id();
              $table->string('name');
             $table->unsignedBigInteger('leader_id')->nullable(true);
-            $table->unsignedBigInteger('pfl_id')->nullable(true);
+            $table->unsignedBigInteger('pfl_id')->nullable(true);            
+            $table->boolean('active')->default(1);
             $table->foreign('leader_id')->references('id')->on('users');
+            $table->foreign('pfl_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

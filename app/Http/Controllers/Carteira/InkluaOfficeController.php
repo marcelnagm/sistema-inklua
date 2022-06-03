@@ -20,7 +20,7 @@ class InkluaOfficeController extends Controller
      */
     public function index()
     {
-        $inkluaOffices = InkluaOffice::paginate();
+        $inkluaOffices = InkluaOffice::where('active','1')->paginate();
 
         return view('cms.carteira.inklua-office.index', compact('inkluaOffices'))
             ->with('i', (request()->input('page', 1) - 1) * $inkluaOffices->perPage());
@@ -51,7 +51,7 @@ class InkluaOfficeController extends Controller
         $inkluaOffice->leader_id = null;
         $inkluaOffice->save();
         return redirect()->route('inklua_office.index')
-            ->with('success', 'InkluaOffice created successfully.');
+            ->with('success', 'Escritório adicionado');
     }
 
     /**
@@ -94,7 +94,7 @@ class InkluaOfficeController extends Controller
         $inkluaOffice->update($request->all());
 
         return redirect()->route('inklua_office.index')
-            ->with('success', 'InkluaOffice updated successfully');
+            ->with('success', 'Escritório atualizado');
     }
 
     /**
@@ -105,8 +105,8 @@ class InkluaOfficeController extends Controller
     public function destroy($id)
     {
         $inkluaOffice = InkluaOffice::find($id)->delete();
-
+        
         return redirect()->route('inklua_office.index')
-            ->with('success', 'InkluaOffice deleted successfully');
+            ->with('success', 'Esccritório desativado');
     }
 }

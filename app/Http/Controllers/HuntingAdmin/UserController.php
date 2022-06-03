@@ -99,7 +99,7 @@ class UserController extends Controller {
      */
     public function promote(Request $request, $id) {
         $user = User::find($id);
-        $office = \App\Models\InkluaOffice::all();
+        $office = \App\Models\InkluaOffice::where('active',1)->get();
         $role = \App\Models\OfficeRole::all();
         return view('cms.hunting-admin.user.promote', compact('user', 'office','role'));
     }

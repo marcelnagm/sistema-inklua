@@ -40,6 +40,8 @@ class OfficeRole extends Model
     {
         return $this->hasMany('App\InkluaUser', 'role_id', 'id');
     }
-    
+     public function __toString() {
+        return $this->role;
+    }
 
 }
