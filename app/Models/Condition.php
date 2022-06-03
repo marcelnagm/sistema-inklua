@@ -34,7 +34,10 @@ class Condition extends Model
     protected $fillable = ['name','intervals'];
 
      public function __toString() {
-        return $this->name;
+        if($this->intervals)
+         return $this->name.' - [inicial, final]';
+        else 
+            return $this->name;
     }
 
 }

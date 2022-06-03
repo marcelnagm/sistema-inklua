@@ -34,6 +34,7 @@ class ClientConditionController extends Controller
     public function create($id)
     {   
         $condtions = Condition::all();
+        
         $clientCondition = new ClientCondition(array('client_id' => $id));
         return view('cms.carteira.client-condition.create', compact('clientCondition','condtions'));
     }
@@ -76,8 +77,8 @@ class ClientConditionController extends Controller
     public function edit($id)
     {
         $clientCondition = ClientCondition::find($id);
-
-        return view('cms.carteira.client-condition.edit', compact('clientCondition'));
+ $condtions = Condition::all();
+        return view('cms.carteira.client-condition.edit', compact('clientCondition','condtions'));
     }
 
     /**

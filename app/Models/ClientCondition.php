@@ -51,7 +51,7 @@ class ClientCondition extends Model
      */
     public function client()
     {
-        return $this->hasOne('App\Client', 'id', 'client_id');
+        return $this->hasOne('App\Models\Client', 'id', 'client_id');
     }
     
     /**
@@ -59,7 +59,7 @@ class ClientCondition extends Model
      */
     public function condition()
     {
-        return $this->hasOne('App\Condition', 'id', 'condition_id');
+        return $this->hasOne('App\Models\Condition', 'id', 'condition_id');
     }
     
 

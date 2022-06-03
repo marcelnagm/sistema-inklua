@@ -25,15 +25,17 @@
             {{ Form::text('birth_date', $candidateHunting->birth_date? $candidateHunting->birth_date->format('d/m/Y') : "", ['class' => 'form-control datepicker' . ($errors->has('birth_date') ? ' is-invalid' : ''), 'placeholder' => 'Birth Date']) }}
             {!! $errors->first('birth_date', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-group">
+        <div class="form-row">
+        <div class="form-group col-lg-6">
             {{ Form::label('Celular') }}
             {{ Form::text('cellphone', $candidateHunting->cellphone, ['class' => 'form-control' . ($errors->has('cellphone') ? ' is-invalid' : ''), 'placeholder' => 'Cellphone','id' => 'cellphone']) }}
             {!! $errors->first('cellphone', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-group">
+        <div class="form-group col-lg-6">
             {{ Form::label('Email') }}
             {{ Form::text('email', $candidateHunting->email, ['class' => 'form-control' . ($errors->has('email') ? ' is-invalid' : ''), 'placeholder' => 'Email']) }}
             {!! $errors->first('email', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
         </div>
         <div class="form-group">
             {{ Form::label('Pretensão Salarial') }}

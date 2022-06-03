@@ -25,14 +25,10 @@
                                 <tr>
 
 
-                                    <th>Condition Id</th>
-                                    <th>Client Id</th>
-                                    <th>Brute</th>
-                                    <th>Tax</th>
-                                    <th>Guarantee</th>
-                                    <th>Start Cond</th>
-                                    <th>End Cond</th>
-
+                                    <th>Tipo de condição</th>                                 
+                                    <th>Tipo de Taxa</th>
+                                    <th>Taxa</th>
+                                    <th>Garantia</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -40,15 +36,19 @@
                                 @foreach ($clientConditions as $clientCondition)
                                 <tr>
 
-
-                                    <td>{{ $clientCondition->condition_id }}</td>
-                                    <td>{{ $clientCondition->client_id }}</td>
-                                    <td>{{ $clientCondition->brute }}</td>
-                                    <td>{{ $clientCondition->tax }}</td>
-                                    <td>{{ $clientCondition->guarantee }}</td>
-                                    <td>{{ $clientCondition->start_cond }}</td>
-                                    <td>{{ $clientCondition->end_cond }}</td>
-
+                                    <?php $cond = $clientCondition->condition()->first()?>
+                                    <td>
+                                        
+                                        {{ $cond->name }}
+                                        @if($cond->intervals)
+                                        {{ $clientCondition->start_cond }} - {{ $clientCondition->end_cond }}
+                                        @endif
+                                    
+                                    </td>
+                                
+                                    <td>{{ $clientCondition->brute ?  'Líquida' : 'Bruta' }}</td>
+                                    <td>{{ $clientCondition->tax }}%</td>
+                                    <td>{{ $clientCondition->guarantee }} dias</td>
                                     <td>
                                         <form action="{{ route('client_condition.destroy',$clientCondition->id) }}" method="POST">
                                             <a class="btn btn-sm btn-primary " href="{{ route('client_condition.show',$clientCondition->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
