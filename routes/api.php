@@ -158,3 +158,16 @@ $router->get('/search', 'App\Http\Controllers\MapeamentoTech\SearchControler@ind
 $router->post('/search_more', 'App\Http\Controllers\MapeamentoTech\SearchControler@search_more');
 $router->get('/people/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@candidate');
 $router->post('/detail/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@detail');
+
+
+// Rotas da API Carteira
+
+
+
+Route::group(['middleware' => ['api']], function () {
+
+    Route::get('/clients', 'App\Http\Controllers\Carteira\ClientController@all');
+    Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
+    
+
+});

@@ -12,19 +12,29 @@ use Illuminate\Validation\Rule;
  * Class ClientController
  * @package App\Http\Controllers
  */
-class ClientController extends Controller
-{
+class ClientController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function all(Request $request) {
+        $clients = Client::where('active', 1);
+        if ($request->exists('formal_name')) {
+            $clients->where('formal_name', 'like', '%' . $request->input('formal_name') . '%');
+        }
+//        dd(Controller::getEloquentSqlWithBindings($clients));
+        return response()->json([
+                    'clients' => $clients->get()
+        ]);
+    }
+
+    public function index() {
         $clients = Client::paginate();
 
         return view('cms.carteira.client.index', compact('clients'))
-            ->with('i', (request()->input('page', 1) - 1) * $clients->perPage());
+                        ->with('i', (request()->input('page', 1) - 1) * $clients->perPage());
     }
 
     /**
@@ -32,11 +42,10 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         $states = State::all();
         $client = new Client();
-        return view('cms.carteira.client.create', compact('client','states'));
+        return view('cms.carteira.client.create', compact('client', 'states'));
     }
 
     /**
@@ -45,14 +54,13 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {        
+    public function store(Request $request) {
         request()->validate(Client::$rules_create);
 
         $client = Client::create($request->all());
 
         return redirect()->route('clients.index')
-            ->with('success', 'Novo CLiente Criado.');
+                        ->with('success', 'Novo CLiente Criado.');
     }
 
     /**
@@ -61,8 +69,7 @@ class ClientController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         $client = Client::find($id);
 
         return view('cms.carteira.client.show', compact('client'));
@@ -74,12 +81,11 @@ class ClientController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $states = State::all();
         $client = Client::find($id);
 
-        return view('cms.carteira.client.edit', compact('client','states'));
+        return view('cms.carteira.client.edit', compact('client', 'states'));
     }
 
     /**
@@ -89,16 +95,15 @@ class ClientController extends Controller
      * @param  Client $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
-    {
+    public function update(Request $request, Client $client) {
         $rules = Client::$rules;
-        unset ($rules[ 'cnpj'] );
+        unset($rules['cnpj']);
         request()->validate($rules);
 
         $client->update($request->all());
 
         return redirect()->route('clients.index')
-            ->with('success', 'CLiente editado com sucesso');
+                        ->with('success', 'CLiente editado com sucesso');
     }
 
     /**
@@ -106,11 +111,11 @@ class ClientController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $client = Client::find($id)->delete();
 
         return redirect()->route('clients.index')
-            ->with('success', 'CLiente removido com sucesso');
+                        ->with('success', 'CLiente removido com sucesso');
     }
+
 }

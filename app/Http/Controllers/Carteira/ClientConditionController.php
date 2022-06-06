@@ -13,6 +13,17 @@ use App\Models\Condition;
  */
 class ClientConditionController extends Controller
 {
+    
+      public function all(Request $request) {
+        $clients = ClientCondition::where('active', 1)->
+                where('client_id',$request->input('client_id'));
+        
+//        dd(Controller::getEloquentSqlWithBindings($clients));
+        return response()->json([
+                    'conditions' => $clients->get()
+        ]);
+    }
+    
     /**
      * Display a listing of the resource.
      *

@@ -37,6 +37,10 @@ class Content extends Model
         'category',
         'branch_code',
         'branch_name',
+        'district',
+        'benefits',
+        'requirements',
+        'hours',
     ];
 
 

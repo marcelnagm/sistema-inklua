@@ -62,5 +62,11 @@ class ClientCondition extends Model
         return $this->hasOne('App\Models\Condition', 'id', 'condition_id');
     }
     
+    
+    public function toArray() {
+        $data = parent::toArray();
+        $data['condition_id'] = $this->condition()->first();
+        return $data;
+    }
 
 }

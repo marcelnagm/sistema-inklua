@@ -217,4 +217,11 @@ class User extends Authenticatable implements MustVerifyEmail {
         return $this;
     }
 
+    public function toArray() {
+        $data = parent::toArray();
+        $data['inkluer'] = $this->isInklua();
+        return $data;
+    }
+    
+    
 }
