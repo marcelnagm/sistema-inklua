@@ -106,6 +106,7 @@ class SearchControler extends Controller {
             $data['published_at'] = $candidate->published_at->format('d/m/Y H:i');
             $data['updated_at'] = $candidate->updated_at->format('d/m/Y H:i');
             $data['move_out'] = $data['move_out'] == 0 ? 'Não possui disponibilidade de mudança' : 'Possui disponibilidade de mudança';
+            unset($data['pcd_type']);
             return json_encode($data);
         } else {
             return json_encode([]);
