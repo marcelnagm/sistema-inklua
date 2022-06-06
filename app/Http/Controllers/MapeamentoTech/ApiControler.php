@@ -163,7 +163,7 @@ class ApiControler extends Controller {
      *   'remote' => '='   
      * @return \Illuminate\Http\Response
      */
-    public function search(Request $request) {
+     public function search(Request $request) {
 
 
 //        dd ($request->all());
@@ -191,11 +191,12 @@ class ApiControler extends Controller {
         foreach ($data as $d => $val) {
             if (strpos($d, 'city_') !== false) {
                 unset($data[$d]);
-                $citys[str_replace('city_', '', $d)] = str_replace('city_', '', $d);
+                $citys[str_replace('city_', '', $d)] = str_replace('_',' ',str_replace('city_', '', $d));
                 $data['city'] = $citys;
             }
         }
         $filtered['city'] = $citys;
+//        dd($filtered['city'] );
         $english_levl = array();
         foreach ($data as $d => $val) {
             if (strpos($d, 'english_level_') !== false) {
@@ -204,6 +205,7 @@ class ApiControler extends Controller {
                 $data['english_level'] = $english_levl;
             }
         }
+        
         $filtered['english_level'] = $english_levl;
         $remotes = array();
         foreach ($data as $d => $val) {
@@ -222,7 +224,7 @@ class ApiControler extends Controller {
             }
         }
 
-        if (isset($data['payment_max'])) {
+        if (isset($data['payment_max'])) {            
             if ($data['payment_max'] == 5000) {
                 $data['payment_min'] = "" . (0000);
             }
@@ -295,9 +297,9 @@ class ApiControler extends Controller {
                     }
                     if ($val == 'min' || $val == 'max') {
 //                        if (!isset($filtered['payment_max'])) {
-                        $search = $search->where(str_replace('_' . $val, '', $key),
-                                $val == 'min' ? '>=' : '<',
-                                $data[$key]);
+                            $search = $search->where(str_replace('_' . $val, '', $key),
+                                    $val == 'min' ? '>=' : '<',
+                                    $data[$key]);
 //                        }
                     }
                 }
@@ -319,7 +321,7 @@ class ApiControler extends Controller {
                 }
             }
         }
-
+        
 
 //        dd($search->toSql());
 
