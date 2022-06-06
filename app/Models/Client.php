@@ -37,6 +37,16 @@ class Client extends Model
 		'state_id' => 'required',
 		'obs' => 'nullable',
     ];
+    static $rules_create = [
+		'cnpj' => 'required|unique:clients,cnpj',
+		'formal_name' => 'required',
+		'fantasy_name' => 'required',
+		'sector' => 'required',
+		'local_label' => 'required',
+		'active' => 'required',
+		'state_id' => 'required',
+		'obs' => 'nullable',
+    ];
 
     protected $perPage = 20;
 

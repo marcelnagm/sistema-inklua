@@ -47,7 +47,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {        
-        request()->validate(Client::$rules);
+        request()->validate(Client::$rules_create);
 
         $client = Client::create($request->all());
 
