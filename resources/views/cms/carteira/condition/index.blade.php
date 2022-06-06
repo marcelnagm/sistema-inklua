@@ -32,6 +32,7 @@ Condition
 
                                     <th>Nome</th>
                                     <th>Necessita de Intervalo</th>
+                                    <th>É Financeiro</th>
 
                                     <th></th>
                                 </tr>
@@ -43,6 +44,7 @@ Condition
 
                                     <td>{{ $condition->name }}</td>
                                     <td>{{ $condition->intervals ? 'Sim' : 'Não' }}</td>
+                                    <td>{{ $condition->money ? 'Sim' : 'Não' }}</td>
 
                                     <td>
                                         <form action="{{ route('conditions_name.destroy',$condition->id) }}" method="POST" class="float-right">                                         

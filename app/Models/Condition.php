@@ -14,16 +14,15 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Condition extends Model
-{
-    
+class Condition extends Model {
+
     static $rules = [
-		'name' => 'required',
-		'intervals' => 'required',
+        'name' => 'required',
+        'intervals' => 'required',
+        'money' => 'required',
     ];
     protected $dates = [
     ];
-
     protected $perPage = 20;
 
     /**
@@ -31,12 +30,12 @@ class Condition extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','intervals'];
+    protected $fillable = ['name', 'intervals', 'money'];
 
-     public function __toString() {
-        if($this->intervals)
-         return $this->name.' - [inicial, final]';
-        else 
+    public function __toString() {
+        if ($this->intervals)
+            return $this->name . ' - [inicial, final]';
+        else
             return $this->name;
     }
 

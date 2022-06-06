@@ -43,7 +43,7 @@
 
                                         {{ $cond->name }}
                                         @if($cond->intervals)
-                                        {{ $clientCondition->start_cond }} - {{ $clientCondition->end_cond }}
+                                        @if($cond->money) R$ @endif{{ $clientCondition->start_cond }} - @if($cond->money) R$ @endif{{ $clientCondition->end_cond }}
                                         @endif
 
                                     </td>

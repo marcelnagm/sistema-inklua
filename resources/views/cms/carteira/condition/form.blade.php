@@ -12,6 +12,12 @@
                 <input name="intervals" type="checkbox" class="" @if($condition->intervals==1) checked @endif value="1">                        
              {!! $errors->first('intervals', '<div class="invalid-feedback">:message</div>') !!}
         </div>
+        <div class="form-group">
+            {{ Form::label('É Financeiro') }}
+                <input type="hidden" name="money" value="0">
+                <input name="money" type="checkbox" class="" @if($condition->money==1) checked @endif value="1">                        
+             {!! $errors->first('intervals', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
 
     </div>
     <div class="box-footer mt20">
