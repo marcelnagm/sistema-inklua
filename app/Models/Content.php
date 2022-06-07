@@ -70,7 +70,7 @@ class Content extends Model
         $user = auth()->guard('api')->user();
         
 
-        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source,observation, created_at")                        
+        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")                        
                         ->selectRaw("(
                                 CASE  
                                     WHEN type = 1 AND group_id IS NOT NULL THEN 1
