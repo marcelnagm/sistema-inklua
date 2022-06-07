@@ -290,4 +290,9 @@ class Content extends Model
     // 1 => position
     // 2 => ad
     // 3 => content
+    
+    
+     public function getApplicationType() {
+        return ( filter_var($this->application, FILTER_VALIDATE_EMAIL) ) ? 'email' : 'url';
+    }
 }
