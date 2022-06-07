@@ -41,6 +41,7 @@ class Content extends Model
         'benefits',
         'requirements',
         'hours',
+       'english_level'
     ];
 
 

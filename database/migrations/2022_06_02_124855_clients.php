@@ -13,7 +13,7 @@ class Clients extends Migration {
      */
     public function up() {
         //
-            Schema::dropIfExists('clients');
+//            Schema::dropIfExists('clients');
           Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('cnpj')->nullable(false);

@@ -10,6 +10,22 @@ use Illuminate\Support\Facades\Auth;
 
 class MyContentController extends Controller
 {
+    
+    static $visible = [
+            'title',
+            'salary',
+            'contract_type',
+            'image',
+            'state',
+            'city',
+            'description',
+            'district',
+            'benefits',
+            'requirements',
+            'hours',
+            'english_level',
+        ];
+    
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -32,16 +48,7 @@ class MyContentController extends Controller
     public function store(Request $request) {
         $user = $request->user();
         
-        $data = $request->only([
-            'title',
-            'salary',
-            'contract_type',
-            'image',
-            'state',
-            'city',
-            'description',
-            'application',
-        ]);
+        $data = $request->only(MyContentController::$visible);
 
         $data['user_id'] = $user->id;
         $data['status'] = 'aguardando_aprovacao';
@@ -99,16 +106,7 @@ class MyContentController extends Controller
             ], 400);
         }
         
-        $data = $request->only([
-            'title',
-            'salary',
-            'image',
-            'contract_type',
-            'state',
-            'city',
-            'description',
-            'application',
-        ]);
+       $data = $request->only(MyContentController::$visible);
 
         $data['user_id'] = $user->id;
         $data['status'] = 'aguardando_aprovacao';
