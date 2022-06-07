@@ -295,4 +295,122 @@ class Content extends Model
      public function getApplicationType() {
         return ( filter_var($this->application, FILTER_VALIDATE_EMAIL) ) ? 'email' : 'url';
     }
+    
+     public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function notifications(){
+        return $this->belongsTo(Notification::class);
+    }
+
+   
+
+    public function transaction(){
+        return $this->hasOne(Transaction::class);
+    }
+    
+    
+
+     public static function getType($type) {
+        switch($type) {
+            case "position":
+                return 1;
+                break;
+            case "ad":
+                return 2;
+                break;
+            case "content":
+                return 3;
+                break;
+        }
+    }
+      public function getStatusName() {
+        switch($this->status) {
+            case "aguardando_aprovacao":
+                return 'Aguardando aprovação';
+                break;
+            case "aguardando_pagamento":
+                return 'Aguardando pagamento';
+                break;
+            case "publicada":
+                return 'Publicada';
+                break;
+            case "reprovada":
+                return 'Reprovada';
+                break;
+            case "expirada":
+                return 'Expirada';
+                break;
+        }
+    }
+    
+    public function checkExistenceOfPositionByCnpj() {
+        $user = $this->user;
+
+        if(!$user) {
+            return false;
+        }
+
+        return Content::where('id', '!=', $this->id)
+                            ->where(function($query){
+                                $query->where('status', 'publicada')
+                                        ->orWhere('status', 'aguardando_pagamento');
+                            })
+                            ->whereHas('user', function($q) use($user)
+                            {
+                                $q->where('users.cnpj', $user->cnpj);
+                            })->exists();
+    }
+
+    public function notifyPositionCreated() {
+        $user = $this->user;
+
+        $data = [
+            'user_id' => $user->id,
+            'content_id' => $this->id,
+            'message' => "Recebemos a sua vaga para “{$this->title}”, agora nossa equipe vai analisar se está tudo certo, ok? Pode deixar que nossa equipe em breve vai avisar você sobre as próximas etapas. ",
+            'active' => 1,
+        ];
+
+        Notification::create($data);
+
+        Mail::send(new PositionCreated($this));
+    }
+
+    public function notifyPositionApproved() {
+        $user = $this->user;
+
+        $data = [
+            'user_id' => $user->id,
+            'content_id' => $this->id,
+            'message' => "A sua vaga para “{$this->title}” foi aprovada! Clique no botão abaixo e realize o pagamento. ",
+            'active' => 1,
+        ];
+
+        Notification::create($data);
+
+        Mail::send(new PositionApproved($this));
+    }
+
+    public function notifyPositionPublished() {
+        $user = $this->user;
+
+        $data = [
+            'user_id' => $user->id,
+            'content_id' => $this->id,
+            'message' => "A sua vaga para “{$this->title}” foi publicada! A partir de agora os candidatos já podem acessá-la e se candidatar. ",
+            'active' => 1,
+        ];
+
+        Notification::create($data);
+
+        Mail::send(new PositionPublished($this));
+    }
+
+    protected static function booted(){
+        static::deleting(function ($content) {
+            $content->transaction()->delete();
+        });
+    }
 }
