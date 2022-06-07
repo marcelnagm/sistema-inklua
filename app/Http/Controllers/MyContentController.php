@@ -24,6 +24,7 @@ class MyContentController extends Controller
             'requirements',
             'hours',
             'english_level',
+            'observation',
         ];
     
     public function __construct()
