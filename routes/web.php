@@ -10,16 +10,17 @@ use App\Http\Controllers\cms\ReportController;
 use App\Http\Controllers\cms\UserPositionController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\VerificationController;
+
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | contains the "web" middleware group. Now create something great!
+  |
+ */
 
 Route::get('/', function () {
     return redirect('admin');
@@ -37,18 +38,17 @@ Route::resource('admin/anuncios', AdController::class);
 Route::resource('admin/vagas', PositionController::class);
 Route::resource('admin/grupo/vagas', GroupController::class);
 
-
 Route::get('admin/report/inkoins/donation', [ReportController::class, 'searchDonateReport']);
 Route::get('admin/report/inkoins/donation/show', [ReportController::class, 'donateReport']);
 
 Route::get('admin/report/inkoins', [ReportController::class, 'searchReport']);
 Route::get('admin/report/inkoins/show', [ReportController::class, 'report']);
 
-Route::get('social', function(){
+Route::get('social', function () {
     return view('social');
 });
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     echo Artisan::call('config:clear');
     echo Artisan::call('cache:clear');
     echo Artisan::call('config:cache');
@@ -82,11 +82,11 @@ $router->group(['middleware' => ['auth']], function ($router) {
     $router->post('/candidate/detail/', 'App\Http\Controllers\MapeamentoTech\CandidateController@detail')->name('candidate.detail');
     Route::resource('/admin/english_level', 'App\Http\Controllers\MapeamentoTech\CandidateEnglishLevelController');
     Route::resource('/admin/role', 'App\Http\Controllers\MapeamentoTech\CandidateRoleController');
-    
 });
 
 //sistema hunting admin
 
+use App\Http\Middleware\checkUserInkluer;
 
 $router->group(['middleware' => ['auth']], function ($router) {
 //    $router->post('/admin/hunting/candidate', 'App\Http\Controllers\HuntingAdmin\CandidateController@index');
@@ -95,32 +95,31 @@ $router->group(['middleware' => ['auth']], function ($router) {
     Route::get('/hunting/candidate-hunt/cv/{id}', 'App\Http\Controllers\HuntingAdmin\CandidateController@cv')->name('hunt.cv');
     Route::get('/hunting/candidate-hunt/pcd_report/{id}', 'App\Http\Controllers\HuntingAdmin\CandidateController@pcd_report')->name('hunt.pcd_report');
     Route::get('/hunting/candidate-hunt/clear', 'App\Http\Controllers\HuntingAdmin\CandidateController@clear')->name('hunt.clear');
-    Route::resource('/hunting/candidate-hunt', 'App\Http\Controllers\HuntingAdmin\CandidateController')->name('index','hunt.index');
-    Route::post('/hunting/candidate-hunt/search', 'App\Http\Controllers\HuntingAdmin\CandidateController@search')->name('hunt.search');    
-    Route::resource('/hunting/education/{id}/', 'App\Http\Controllers\HuntingAdmin\CandidateEducationController')->name('create','education.hunt.create');
-    Route::resource('/hunting/work/{id}/', 'App\Http\Controllers\HuntingAdmin\CandidateExperienceController')->name('create','work.hunt.create');
+    Route::resource('/hunting/candidate-hunt', 'App\Http\Controllers\HuntingAdmin\CandidateController')->name('index', 'hunt.index');
+    Route::post('/hunting/candidate-hunt/search', 'App\Http\Controllers\HuntingAdmin\CandidateController@search')->name('hunt.search');
+    Route::resource('/hunting/education/{id}/', 'App\Http\Controllers\HuntingAdmin\CandidateEducationController')->name('create', 'education.hunt.create');
+    Route::resource('/hunting/work/{id}/', 'App\Http\Controllers\HuntingAdmin\CandidateExperienceController')->name('create', 'work.hunt.create');
     Route::resource('/hunting/education', 'App\Http\Controllers\HuntingAdmin\CandidateEducationController');
     Route::resource('/hunting/work', 'App\Http\Controllers\HuntingAdmin\CandidateExperienceController');
-   
+
     Route::post('/users/search', 'App\Http\Controllers\HuntingAdmin\UserController@search')->name('users.search');
     Route::get('/users/get', 'App\Http\Controllers\HuntingAdmin\UserController@clear')->name('users.clear');
-    Route::get('/users/promote/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@promote')->name('users.promote');
-    Route::post('/users/grant/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@grant')->name('users.grant');
-    Route::get('/users/revoke/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@revoke')->name('users.revoke');
-    Route::resource('/users', 'App\Http\Controllers\HuntingAdmin\UserController');
-  
-    
-});
+    Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], function () {
 
+        Route::get('/users/promote/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@promote')->name('users.promote');
+        Route::post('/users/grant/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@grant')->name('users.grant');
+        Route::get('/users/revoke/{id}', 'App\Http\Controllers\HuntingAdmin\UserController@revoke')->name('users.revoke');
+    });
+    Route::resource('/users', 'App\Http\Controllers\HuntingAdmin\UserController');
+});
 
 // rotas carteira
 
 $router->group(['middleware' => ['auth']], function ($router) {
- Route::resource('/inklua_office', 'App\Http\Controllers\Carteira\InkluaOfficeController');
-  Route::resource('/clients', 'App\Http\Controllers\Carteira\ClientController');
-  Route::resource('/conditions_name', 'App\Http\Controllers\Carteira\ConditionController');
-  Route::resource('/office_role', 'App\Http\Controllers\Carteira\OfficeRoleController');
- Route::get('/client_condition/create/{id}', 'App\Http\Controllers\Carteira\ClientConditionController@create')->name('client_condition_sp.create');   
-  Route::resource('/client_condition', 'App\Http\Controllers\Carteira\ClientConditionController');
- 
+    Route::resource('/inklua_office', 'App\Http\Controllers\Carteira\InkluaOfficeController');
+    Route::resource('/clients', 'App\Http\Controllers\Carteira\ClientController');
+    Route::resource('/conditions_name', 'App\Http\Controllers\Carteira\ConditionController');
+    Route::resource('/office_role', 'App\Http\Controllers\Carteira\OfficeRoleController');
+    Route::get('/client_condition/create/{id}', 'App\Http\Controllers\Carteira\ClientConditionController@create')->name('client_condition_sp.create');
+    Route::resource('/client_condition', 'App\Http\Controllers\Carteira\ClientConditionController');
 });

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
-use App\Models\ClientCondition;
+use App\Models\User;
 
 /**
  * Class ContentClient
@@ -14,15 +14,15 @@ use App\Models\ClientCondition;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class ContentClient extends Model
+class ContentCancel extends Model
 {
-     protected $table = 'contents_client';
+     protected $table = 'content_canceled';
     
     static $rules = [
-		'client_condition_id' => 'required',
+		'user_id' => 'required',
 		'client_id' => 'required',
 		'content_id' => 'required',
-		'vacancy' => 'required',		
+		'reason' => 'required',		
     ];
 
     protected $perPage = 20;
@@ -32,7 +32,7 @@ class ContentClient extends Model
      *
      * @var array
      */
-    protected $fillable = ['content_id','client_condition_id','client_id','vacancy'];
+    protected $fillable = ['content_id','user_id','client_id','reason'];
 
 
     /**
@@ -46,9 +46,9 @@ class ContentClient extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function clientcondition()
+    public function user()
     {
-        return $this->hasOne('App\Models\ClientCondition', 'id', 'client_condition_id');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
     
     

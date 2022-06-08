@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActionsController;
 use App\Http\Controllers\WalletController;
@@ -17,18 +16,16 @@ use App\Http\Controllers\MyContentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionController;
 
-
-
 /*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+  |--------------------------------------------------------------------------
+  | API Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register API routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | is assigned the "api" middleware group. Enjoy building your API!
+  |
+ */
 
 /* Auth */
 Route::post('/user/register', [RegisterController::class, 'register']);
@@ -38,15 +35,14 @@ Route::post('/user/login', [LoginController::class, 'login']);
 Route::post('/auth/{media}', [SocialController::class, 'login'])->where('media', 'facebook|google');
 
 /* Auth - Email Verification */
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify'); 
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('email/verification', [VerificationController::class, 'resend'])->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
-
 /* Auth - Password */
-Route::post('/user/password/email',[ForgotPasswordController::class, 'sendResetLinkEmail']);
-Route::post('/user/password/reset',[ResetPasswordController::class, 'reset']);
-Route::post('/user/password/validateReset',[ResetPasswordController::class, 'validateReset']);
-Route::post('/user/password/update',[UserController::class, 'updatePassword']);
+Route::post('/user/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('/user/password/reset', [ResetPasswordController::class, 'reset']);
+Route::post('/user/password/validateReset', [ResetPasswordController::class, 'validateReset']);
+Route::post('/user/password/update', [UserController::class, 'updatePassword']);
 
 /* Account */
 Route::post('/user/update', [UserController::class, 'update']);
@@ -76,16 +72,25 @@ Route::get('/minhas-vagas/{id}/edit', [MyContentController::class, 'edit']);
 Route::post('/minhas-vagas/{id}', [MyContentController::class, 'update']);
 
 // Route::get('/contato', [ApiController::class, 'contact']);
- Route::post('/contato', [ApiController::class, 'contact']);
+Route::post('/contato', [ApiController::class, 'contact']);
 
 Route::post('/transaction', [TransactionController::class, 'create']);
 Route::get('/transaction/order', [TransactionController::class, 'order']);
+
+use App\Http\Middleware\checkUserInkluer;
+
+// rotas novas para aprovacao e cancelamento
+Route::group(['middleware' => ['api','App\Http\Middleware\checkUserInkluer']], function () {
+  
+        Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
+        Route::get('/vaga/fechar/{id}', [MyContentController::class, 'close']);
+        Route::post('/vaga/cancelar/{id}', [MyContentController::class, 'cancel']);   
+});
 
 //rotas sistema hunting
 
 use App\Models\PcdType;
 use App\Models\State;
-
 use App\Http\Controllers\Hunting\Recruiter\CandidateControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateReportControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateEducationControler;
@@ -109,7 +114,6 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/admin/hunting/job/recruiter/{id}', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@index');
 //Route::delete('/job/{id}', 'JobLikeControler@destroy');
- 
 });
 
 Route::group(['middleware' => ['api']], function ($router) {
@@ -141,7 +145,6 @@ Route::post('/city', 'App\Http\Controllers\MapeamentoTech\CityControler@index');
 Route::post('/city/uf/', 'App\Http\Controllers\MapeamentoTech\CityControler@uf');
 Route::post('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_name');
 
-
 Route::post('/state', function () use ($router) {
     return State::all();
 });
@@ -149,7 +152,6 @@ Route::post('/state', function () use ($router) {
 Route::post('/pcd_type', function () use ($router) {
     return PcdType::all();
 });
-
 
 // Rotas API Mapeamento Tech
 
@@ -159,7 +161,6 @@ $router->post('/search_more', 'App\Http\Controllers\MapeamentoTech\SearchControl
 $router->get('/people/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@candidate');
 $router->post('/detail/{gid}', 'App\Http\Controllers\MapeamentoTech\SearchControler@detail');
 
-
 // Rotas da API Carteira
 
 
@@ -168,6 +169,4 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/clients', 'App\Http\Controllers\Carteira\ClientController@all');
     Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
-    
-
 });

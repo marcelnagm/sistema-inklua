@@ -106,9 +106,7 @@ class UserController extends Controller {
 
     public function grant(Request $request, $id) {
 //        dd($request);        
-        $user = User::find($id);
-        if (!$user->isInklua() ) {
-            
+           
        
         if(in_array($request->input('role_id'), array(1,2))){                        
             $ink = InkluaUser::

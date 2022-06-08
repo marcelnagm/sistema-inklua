@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ContentClient;
+use App\Models\ContentCancel;
 
 class MyContentController extends Controller
 {
@@ -146,4 +147,48 @@ class MyContentController extends Controller
         return $response;
     }
 
+    
+public function approve($id){
+      
+       $content = Content::where('id', $id)->first();
+       $content->status='publicada';
+       $content->save();        
+         return response()->json([
+                    'message' => 'Vaga Aprovada',
+                    'content_id' => $content->id
+        ]);
+}
+
+
+public function close($id){
+       $content = Content::where('id', $id)->first();
+       $content->status='fechada';
+       $content->save();        
+         return response()->json([
+                    'message' => 'Vaga Fechada',
+                    'content_id' => $content->id
+        ]);
+}
+
+public function cancel(Request $request, $id){
+       $content = Content::where('id', $id)->first();
+       $content->status='cancelada';
+       $content->save();    
+       
+       $cc = $content->contentclient()->first();
+//       dd($cc);
+       
+       $cancel = new ContentCancel();
+       $cancel->content_id= $cc->content_id;
+       $cancel->client_id= $cc->client_id;
+       $cancel->user_id=  $request->user()->id;
+       $cancel->reason= $request->input('reason');
+       $cancel->save();
+       
+         return response()->json([
+                    'message' => 'Vaga Cancelada',
+                    'content_id' => $content->id
+        ]);
+}
+    
 }

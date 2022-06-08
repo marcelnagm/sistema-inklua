@@ -298,6 +298,5 @@ class ApiController extends Controller
 
         return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
     }
-
 }
 

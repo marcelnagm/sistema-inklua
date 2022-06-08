@@ -59,6 +59,11 @@ class Content extends Model
     {
         return $this->hasMany(\App\Models\Action::class);
     }
+    
+    public function contentclient()
+    {     
+        return $this->hasOne('App\Models\ContentClient','content_id' ,'id' );    
+    }
 
     public static function getRandomImage(){
         $img = random_int(1,16);
@@ -342,6 +347,12 @@ class Content extends Model
                 break;
             case "expirada":
                 return 'Expirada';
+                break;
+            case "fechada":
+                return 'Fechada';
+                break;
+            case "cancelada":
+                return 'Cancelada';
                 break;
         }
     }
