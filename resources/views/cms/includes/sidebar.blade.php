@@ -99,7 +99,7 @@
         </div>
     </li>
 
-      Nav Item - Pages Collapse Menu 
+      <!--Nav Item - Pages Collapse Menu--> 
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loc"
             aria-expanded="true" aria-controls="report">
@@ -130,6 +130,9 @@
             </div>
         </div>
     </li>
+    
+    @if(env('APP_ENV') == 'dev' )
+    
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#hunt"
             aria-expanded="true" aria-controls="hunt">
@@ -158,6 +161,7 @@
             </div>
         </div>
     </li>
+    @endif
      <!-- Nav Item - Pages Collapse Menu -->
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report"
