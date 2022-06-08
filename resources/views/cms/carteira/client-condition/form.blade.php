@@ -6,19 +6,19 @@
             @include('layouts.partials.select',array('list' => $condtions,'param' => $clientCondition->condition_id,'id' => 'condition_id','name' => 'condition_id','onchange' => 'change(this);'))
             {!! $errors->first('condition_id', '<div class="invalid-feedback">:message</div>') !!}
         </div>
+        @isset($clientCondition->condition_id)
+        @if($clientCondition->condition()->first()->intervals == 1)
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
         <script>
-            function change(input) {
-                console.log(input.value);
+            $(document).ready(function () {
+
+                $('#cond').show('1');
+            });
 
 
-                var opt = "" + $("#" + input.id + " option:selected").text();
-                if (opt.includes('inicial')) {
-                    $('#cond').show('1');
-                } else {
-                    $('#cond').hide('1');
-                }
-            }
         </script>
+        @endif
+        @endisset
         <div class="form-group">
             {{ Form::label('Tipo de Taxa') }}
 
@@ -39,17 +39,8 @@
             {{ Form::text('guarantee', $clientCondition->guarantee, ['class' => 'form-control' . ($errors->has('guarantee') ? ' is-invalid' : ''), 'placeholder' => 'Garantia em dias']) }}
             {!! $errors->first('guarantee', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-row" id='cond' 
-             @isset($clientCondition->condition_id)
-            @if($clientCondition->condition()->first()->intervals)
-            style="display: block;"
-            @else
-            style="display: none;"
-            @endif
-            @else
-            style="display: none;"
-            @endif
-            >
+
+        <div class="row" id="cond"        style="display: none;"                   >
             <div class="form-group col-lg-6">
                 {{ Form::label('Valor Inicial') }}
                 {{ Form::text('start_cond', $clientCondition->start_cond, ['class' => 'form-control' . ($errors->has('start_cond') ? ' is-invalid' : ''), 'placeholder' => 'Valor Inicial']) }}
@@ -60,10 +51,25 @@
                 {{ Form::text('end_cond', $clientCondition->end_cond, ['class' => 'form-control' . ($errors->has('end_cond') ? ' is-invalid' : ''), 'placeholder' => 'Valor Final']) }}
                 {!! $errors->first('end_cond', '<div class="invalid-feedback">:message</div>') !!}
             </div>
-        </div>
+        </div>               
         <input type="hidden" name="active" value="1">
     </div>
     <div class="box-footer mt20">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+<script>
+            function change(input) {
+
+                console.log(input);
+                var opt = "" + $("#" + input.id + " option:selected").text();
+
+                if (opt.includes('inicial')) {
+                    $('#cond').show('1');
+                } else {
+                    $('#cond').hide('1');
+                }
+            }
+
+</script>
