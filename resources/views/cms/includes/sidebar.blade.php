@@ -85,7 +85,7 @@
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
-<!--    <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#external-positions"
             aria-expanded="true" aria-controls="group">
             <i class="fas fa-fw fa-users"></i>
@@ -157,7 +157,7 @@
                 <a class="collapse-item" href="{{ route('clients.index') }}">Clientes</a>             
             </div>
         </div>
-    </li>-->
+    </li>
      <!-- Nav Item - Pages Collapse Menu -->
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report"
