@@ -38,7 +38,7 @@ class CreateCandidateHunting extends Migration {
             $table->foreign('english_level')->references('id')->on('candidate_english_level');
             $table->foreign('pcd_type_id')->references('id')->on('pcd_type');
             $table->foreign('state_id')->references('id')->on('state');
-            $table->foreign('city_id')->references('id')->on('city');
+//            $table->foreign('city_id')->references('id')->on('city');
             $table->timestamps();
         });
     }
