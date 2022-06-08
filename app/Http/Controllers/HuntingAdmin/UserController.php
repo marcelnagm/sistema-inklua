@@ -99,34 +99,32 @@ class UserController extends Controller {
      */
     public function promote(Request $request, $id) {
         $user = User::find($id);
-        $office = \App\Models\InkluaOffice::where('active',1)->get();
+        $office = \App\Models\InkluaOffice::where('active', 1)->get();
         $role = \App\Models\OfficeRole::all();
-        return view('cms.hunting-admin.user.promote', compact('user', 'office','role'));
+        return view('cms.hunting-admin.user.promote', compact('user', 'office', 'role'));
     }
 
     public function grant(Request $request, $id) {
 //        dd($request);        
-           
-       
-        if(in_array($request->input('role_id'), array(1,2))){                        
+
+
+        if (in_array($request->input('role_id'), array(1, 2))) {
             $ink = InkluaUser::
-                    where('office_id',$request->input('office_id'))->
-                    where('role_id',$request->input('role_id') )->
-                    where('active',1)->first();
-            if($ink != null){
-                $name = $ink->user()->fullname().' - INKLUER#'.$ink->user()->id ;
-               return redirect('users/' . $user->id)
-                        ->with('error', "Já existe um lider/PFL para este escritorio, o $name  deve ser revogado para esta acao continuar");         
+                            where('office_id', $request->input('office_id'))->
+                            where('role_id', $request->input('role_id'))->
+                            where('active', 1)->first();
+            if ($ink != null) {
+                $name = $ink->user()->fullname() . ' - INKLUER#' . $ink->user()->id;
+                return redirect('users/' . $user->id)
+                                ->with('error', "Já existe um lider/PFL para este escritorio, o $name  deve ser revogado para esta acao continuar");
             }
-        }
+
             $user->promote($request);
-            
-            
-            return redirect('users/' . $user->id)->with('success', 'Usuario atribuido a um escritorio'); 
-        } else {               
-           return redirect()->route('users.index')
-                        ->with('success', 'Usuario atribuido a um escritorio');
-    
+
+            return redirect('users/' . $user->id)->with('success', 'Usuario atribuido a um escritorio');
+        } else {
+            return redirect()->route('users.index')
+                            ->with('success', 'Usuario atribuido a um escritorio');
         }
     }
 
@@ -134,7 +132,8 @@ class UserController extends Controller {
         $user = User::find($id);
 //        dd($user);
         $user->revoke();
-        return redirect('users/' . $user->id)->with('success', 'Usuario removido de um escritorio');;
+        return redirect('users/' . $user->id)->with('success', 'Usuario removido de um escritorio');
+        ;
     }
 
     public function update(Request $request, User $user) {
