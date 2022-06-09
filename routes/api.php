@@ -169,4 +169,5 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/clients', 'App\Http\Controllers\Carteira\ClientController@all');
     Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
+    Route::get('/carteira', 'App\Http\Controllers\Carteira\ReportController@index');
 });

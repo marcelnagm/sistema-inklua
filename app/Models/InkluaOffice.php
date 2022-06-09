@@ -45,6 +45,12 @@ class InkluaOffice extends Model {
         return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->where('active', '1');
     }
 
+    public function inkluaUsersContent() {
+        return Content::where('status','publicada')->
+                where('type',1)
+                ->whereIn('user_id', $this->inkluaUsersActive()->get()->pluck('user_id') );
+    }
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

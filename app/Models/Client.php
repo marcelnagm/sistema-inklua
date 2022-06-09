@@ -73,5 +73,12 @@ class Client extends Model
               ->get();
     }
     
+    
+    public function contents()
+    {
+      return ContentClient::select('content_id')->where('client_id', $this->id)              
+              ->get();
+    }
+    
 
 }

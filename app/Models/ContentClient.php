@@ -32,7 +32,7 @@ class ContentClient extends Model
      *
      * @var array
      */
-    protected $fillable = ['content_id','client_condition_id','client_id','vacancy'];
+    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy'];
 
 
     /**
@@ -41,6 +41,10 @@ class ContentClient extends Model
     public function client()
     {
         return $this->hasOne('App\Models\Client', 'id', 'client_id');
+    }
+    
+      public function user() {
+        return User::find($this->user_id);
     }
     
     /**

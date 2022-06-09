@@ -71,6 +71,7 @@ class Importer implements ShouldQueue
                 'cod_filial' => trim($apiPosition->codigofilial),
                 'name_filial' => trim($apiPosition->nomefilial),
                 'description' => trim($apiPosition->descricaovaga),
+                'english_level' => 1
             ]);
             $counter ++;
         }

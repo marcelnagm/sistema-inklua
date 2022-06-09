@@ -13,6 +13,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\VerifyEmail;
 use App\Models\InkluaUser;
 use Carbon;
+use App\Models\InkluaOffice;
 
 class User extends Authenticatable implements MustVerifyEmail {
 
@@ -189,6 +190,9 @@ class User extends Authenticatable implements MustVerifyEmail {
         return InkluaUser::
                         where('user_id', $this->id)
                         ->where('active', 1)->first();
+    }
+    public function office() {
+        return $this->inklua()->office();
     }
     
 

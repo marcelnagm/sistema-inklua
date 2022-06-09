@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Group;
+use App\Models\ContentClient;
 
 class Content extends Model
 {
@@ -62,7 +63,8 @@ class Content extends Model
     
     public function contentclient()
     {     
-        return $this->hasOne('App\Models\ContentClient','content_id' ,'id' );    
+//        dd($this->id);
+        return ContentClient::where('content_id', $this->id)->first();    
     }
 
     public static function getRandomImage(){
@@ -309,7 +311,7 @@ class Content extends Model
     public function notifications(){
         return $this->belongsTo(Notification::class);
     }
-
+    
    
 
     public function transaction(){
@@ -371,7 +373,7 @@ class Content extends Model
                             })
                             ->whereHas('user', function($q) use($user)
                             {
-                                $q->where('users.cnpj', $user->cnpj);
+                                $q->where('usegetrs.cnpj', $user->cnpj);
                             })->exists();
     }
 
@@ -424,5 +426,5 @@ class Content extends Model
         static::deleting(function ($content) {
             $content->transaction()->delete();
         });
-    }
+    }       
 }

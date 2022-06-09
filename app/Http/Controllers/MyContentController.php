@@ -72,6 +72,7 @@ class MyContentController extends Controller
 
             $data = $request->only(array_keys(ContentClient::$rules));
             $data['content_id'] = $newContent->id;
+            $data['user_id'] = $user->id;
 //            dd($data);
 
             ContentClient::create($data);
