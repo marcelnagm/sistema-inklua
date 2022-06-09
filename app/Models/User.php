@@ -190,7 +190,15 @@ class User extends Authenticatable implements MustVerifyEmail {
                         where('user_id', $this->id)
                         ->where('active', 1)->first();
     }
+    
 
+    public function isInkluaLider() {
+        return InkluaUser::
+                        where('user_id', $this->id)->
+                        whereIn('role_id', array(1,2))
+                        ->where('active', 1)->count() == 1;
+    }
+    
     public function isInklua() {
         return InkluaUser::
                         where('user_id', $this->id)
@@ -221,6 +229,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     public function toArray() {
         $data = parent::toArray();
         $data['inkluer'] = $this->isInklua();
+        $data['inkluer_leader'] = $this->isInkluaLider();
         return $data;
     }
     
