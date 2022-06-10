@@ -17,7 +17,7 @@ namespace App\Models;
  */
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Str;
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 
 class CandidateReport extends Model {
 

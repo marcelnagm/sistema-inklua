@@ -19,7 +19,8 @@ class JobLikeControler extends Controller {
     public function index($id) {
            $user = auth()->guard('api')->user();
 //        dd(Content::find($id)->user_id ,$user->id);
-        if (Content::find($id)->user_id != $user->id) {
+           $content = Content::findOrFail($id);
+                   if ($content->user_id != $user->id) {
              return response()->json([
                         'status' => false,
                         'msg' => 'Esta vaga não é sua ç)!',
@@ -30,6 +31,33 @@ class JobLikeControler extends Controller {
             return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();                        
         } else {
             return JobLike::where('job_id', $id)->orderBy('created_at')->count();
+        }
+    }
+    
+    public function search(Request $request, $id) {
+           $user = auth()->guard('api')->user();
+//        dd(Content::find($id)->user_id ,$user->id);
+           $content = Content::findOrFail($id);
+                   if ($content->user_id != $user->id) {
+             return response()->json([
+                        'status' => false,
+                        'msg' => 'Esta vaga não é sua ç)!',
+            ]);
+        }
+        $param = $request->input('key');
+        if (InkluaUser::isInternal($user->id)) {
+            return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
+                       whereRaw("("
+                        . "full_name like '%$param%'  or "
+                        . "cellphone like '%$param%'  or "
+                        . "id = '$param'  "
+                        . ") ")->
+                    get();                        
+        } else {
+             return response()->json([
+                        'status' => false,
+                        'msg' => 'Esta vaga não é sua ç)!',
+            ]);
         }
     }
 

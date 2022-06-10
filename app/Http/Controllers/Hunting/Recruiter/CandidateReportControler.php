@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Hunting\Recruiter;
 
 use App\Models\CandidateReport;
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
@@ -17,16 +17,15 @@ class CandidateReportControler extends Controller {
      * @return Json 
      */
     public function index(Request $request) {
-                   $user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
         if (InkluaUser::isInternal($user->id)) {
-            return CandidateReport::where('candidate_id', $request->input('candidate_id'))->orderBy('updated_at',"DESC")->get();
+            return CandidateReport::where('candidate_id', $request->input('candidate_id'))->orderBy('updated_at', "DESC")->get();
         } else {
             return response()->json([
                         'status' => false,
                         'msg' => 'Função apenas para recrutadores internos',
             ]);
         }
-        
     }
 
     /*
@@ -35,10 +34,10 @@ class CandidateReportControler extends Controller {
      */
 
     public function store(Request $request) {
-
+        $user = auth()->guard('api')->user();
         $data = $this->validate($request, CandidateReport::$rules);
         unset($data['user_id']);
-        $data['user_id'] = $user->id;
+//        $data['user_id'] = $user->id;
 //        dd ($user);
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
@@ -53,7 +52,7 @@ class CandidateReportControler extends Controller {
                 $candidate->save();
                 return response()->json([
                             'status' => true,
-                            'msg' => 'Candidate Education successfully added!',
+                            'msg' => 'Abordagem Iniciada!',
                 ]);
             } else {
                 $user = User::find($cand->status);
@@ -103,6 +102,7 @@ class CandidateReportControler extends Controller {
      * @return \Illuminate\Http\Response Json com mensagem de sucesso ou mensagem de erro de validação
      */
     public function update(Request $request, $id) {
+        $user = auth()->guard('api')->user();
         $cand = CandidateReport::find($id);
         if ($cand->status != -1) {
             $data = $this->validate($request, CandidateReport::$rules);

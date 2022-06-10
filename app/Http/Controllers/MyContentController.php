@@ -170,6 +170,13 @@ public function close($id){
                     'content_id' => $content->id
         ]);
 }
+public function details($id){
+       $content = Content::where('id', $id)->first();
+       
+         return response()->json([
+                    'content' => [$content->id, $content->observation]
+        ]);
+}
 
 public function cancel(Request $request, $id){
        $content = Content::where('id', $id)->first();
