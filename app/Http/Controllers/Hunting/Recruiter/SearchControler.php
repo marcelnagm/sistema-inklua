@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Hunting\Recruiter;
 
 use App\Models\State;
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 use App\Models\CandidateEnglishLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +31,7 @@ class SearchControler extends Controller {
 
 
         $filters = $this->getFilterFields($result['search'], $result['search']);
-        $this->candidates = $result['search']->orderBy('candidate.updated_at', 'desc')->paginate(10);
+        $this->candidates = $result['search']->orderBy('candidate_hunting.updated_at', 'desc')->paginate(10);
         
                 
 //        dd($page);
@@ -122,13 +122,13 @@ class SearchControler extends Controller {
 
 //       dd ($candidates);
 //        dd(State::whereIn('id', $candidates->pluck('state_id'))->get());
-//        $city = $city->join('city', 'candidate.city_id', '=', 'city.id');
+//        $city = $city->join('city', 'candidate_hunting.city_id', '=', 'city.id');
         $city = $city->
                         select('city.name'
                                 ,
-                                DB::raw('count(candidate.city_id) as total')
+                                DB::raw('count(candidate_hunting.city_id) as total')
                         )
-                        ->groupBy('candidate.city_id')
+                        ->groupBy('candidate_hunting.city_id')
                         ->groupBy('city.name')
                 ->orderBy('total', 'desc')->get()->toArray();
 //        dd($city);
@@ -137,7 +137,7 @@ class SearchControler extends Controller {
                 select('english_level',
                         DB::raw('count(english_level) as total'),
                         'candidate_english_level.level')
-                ->join('candidate_english_level', 'candidate.english_level', '=', 'candidate_english_level.id')
+                ->join('candidate_english_level', 'candidate_hunting.english_level', '=', 'candidate_english_level.id')
                 ->groupBy('english_level')
                 ->groupBy('candidate_english_level.level')
                 ->orderBy('candidate_english_level.id', 'desc');
@@ -160,7 +160,7 @@ class SearchControler extends Controller {
                                 DB::raw('count(state_id) as total')
                         )
                         ->distinct('state_id')
-                        ->join('state', 'candidate.state_id', '=', 'state.id')
+                        ->join('state', 'candidate_hunting.state_id', '=', 'state.id')
                         ->groupBy('state_id')
                         ->groupBy('state.name')
                         ->orderBy('total', 'DESC')
@@ -228,8 +228,8 @@ class SearchControler extends Controller {
         'first_job' => '=',
         'pcd' => '=',
         'pcd_type_id' => '=',
-        'candidate.updated_at_min' => 'min',
-        'candidate.updated_at_max' => 'max'
+        'candidate_hunting.updated_at_min' => 'min',
+        'candidate_hunting.updated_at_max' => 'max'
     );
 
     /*
@@ -300,21 +300,21 @@ class SearchControler extends Controller {
         }
         $filtered['level_education_id'] = $level_education;
 
-        if (isset($data['candidate.updated_at_max'])) {
-            if ($data['candidate.updated_at_max'] == 'week') {
-                $data['candidate.updated_at_max'] = Carbon::now()->subWeek(1);
+        if (isset($data['candidate_hunting.updated_at_max'])) {
+            if ($data['candidate_hunting.updated_at_max'] == 'week') {
+                $data['candidate_hunting.updated_at_max'] = Carbon::now()->subWeek(1);
             }
-            if ($data['candidate.updated_at_max'] == '1 month') {
-                $data['candidate.updated_at_max'] = Carbon::now()->subMonth(1);
+            if ($data['candidate_hunting.updated_at_max'] == '1 month') {
+                $data['candidate_hunting.updated_at_max'] = Carbon::now()->subMonth(1);
             }
-            if ($data['candidate.updated_at_max'] == '3 month') {
-                $data['candidate.updated_at_max'] = Carbon::now()->subMonth(3);
+            if ($data['candidate_hunting.updated_at_max'] == '3 month') {
+                $data['candidate_hunting.updated_at_max'] = Carbon::now()->subMonth(3);
             }
-            if ($data['candidate.updated_at_max'] == '6 month') {
-                $data['candidate.updated_at_max'] = Carbon::now()->subMonth(6);
+            if ($data['candidate_hunting.updated_at_max'] == '6 month') {
+                $data['candidate_hunting.updated_at_max'] = Carbon::now()->subMonth(6);
             }
-            if ($data['candidate.updated_at_max'] == '1 year') {
-                $data['candidate.updated_at_max'] = Carbon::now()->subYear(6);
+            if ($data['candidate_hunting.updated_at_max'] == '1 year') {
+                $data['candidate_hunting.updated_at_max'] = Carbon::now()->subYear(6);
             }
         }
 
@@ -369,7 +369,7 @@ class SearchControler extends Controller {
 //                        dd('in');
                         if (is_array($data[$key])) {
                             if ($key == 'level_education_id') {
-                                $search = $search->join('candidate_education', 'candidate.id', '=', 'candidate_education.candidate_id');
+                                $search = $search->join('candidate_education_hunting', 'candidate_hunting.id', '=', 'candidate_education_hunting.candidate_id');
                             }
                             $search = $search->whereIn($key, $data[$key]);
 //                            dd($data['city']);
@@ -380,7 +380,7 @@ class SearchControler extends Controller {
                     }
                     if ($val == '%') {
                         if ($key == 'key') {
-                            $search = $search->whereRaw("candidate.id IN (select candidate_id from candidate_experience where candidate_experience.role like '$val$data[$key]$val' )");
+                            $search = $search->whereRaw("candidate_hunting.id IN (select candidate_id from candidate_experience_hunting where candidate_experience_hunting.role like '$val$data[$key]$val' )");
                         }
                         if ($key == 'location') {
                             $param[$key] = $request->input($key);
@@ -399,17 +399,17 @@ class SearchControler extends Controller {
             }
         }
 
-        $search = $search->join('city', 'candidate.city_id', '=', 'city.id');
+        $search = $search->join('city', 'candidate_hunting.city_id', '=', 'city.id');
         if ($request->has('order_by')) {
             foreach ($request->input('order_by')[0] as $order => $type) {
 //                      
                 $search->orderBy($order, $type);
                 if ($order == 'candidate_role.role') {
-                    $search = $search->join('candidate_role', 'candidate.role_id', '=', 'candidate_role.id');
+                    $search = $search->join('candidate_role', 'candidate_hunting.role_id', '=', 'candidate_role.id');
                     $search->orderBy($order, $type);
                 }
                 if ($order == 'state.name') {
-                    $search = $search->join('state', 'candidate.state_id', '=', 'state.id');
+                    $search = $search->join('state', 'candidate_hunting.state_id', '=', 'state.id');
                     $search->orderBy($order, $type);
                 }
             }
