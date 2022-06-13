@@ -94,9 +94,9 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     public function fullname() {
-    return $this->name.' '.$this->lastname;    
+        return $this->name . ' ' . $this->lastname;
     }
-    
+
     public function contents() {
         return $this->hasMany(Content::class);
     }
@@ -151,7 +151,7 @@ class User extends Authenticatable implements MustVerifyEmail {
 
         $searchEscaped = addslashes($search);
 
-        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,district,benefits, requirements, hours, english_level ,observation,created_at 
+        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,salary,district,benefits, requirements, hours, english_level ,observation,created_at 
         ")
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
@@ -191,18 +191,18 @@ class User extends Authenticatable implements MustVerifyEmail {
                         where('user_id', $this->id)
                         ->where('active', 1)->first();
     }
+
     public function office() {
         return $this->inklua()->office();
     }
-    
 
     public function isInkluaLider() {
         return InkluaUser::
                         where('user_id', $this->id)->
-                        whereIn('role_id', array(1,2))
+                        whereIn('role_id', array(1, 2))
                         ->where('active', 1)->count() == 1;
     }
-    
+
     public function isInklua() {
         return InkluaUser::
                         where('user_id', $this->id)
@@ -221,10 +221,10 @@ class User extends Authenticatable implements MustVerifyEmail {
     public function promote($request) {
         $data = $request->all();
         $data = array_merge($data, array(
-                'user_id' => $this->id,
-                'active' => 1,
-                'start_at' => \Illuminate\Support\Carbon::now()
-                ));
+            'user_id' => $this->id,
+            'active' => 1,
+            'start_at' => \Illuminate\Support\Carbon::now()
+        ));
         $ink = new InkluaUser($data);
         $ink->save();
         return $this;
@@ -236,6 +236,9 @@ class User extends Authenticatable implements MustVerifyEmail {
         $data['inkluer_leader'] = $this->isInkluaLider();
         return $data;
     }
-    
-    
+
+    public function candidatehunting() {
+    return CandidateHunting::where('user_id',$this->id)->first();    
+    }
+
 }

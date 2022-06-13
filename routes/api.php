@@ -70,6 +70,7 @@ Route::get('/minhas-vagas/status', [MyContentController::class, 'myContentStatus
 Route::post('/minhas-vagas/new', [MyContentController::class, 'store']);
 Route::get('/minhas-vagas/{id}/edit', [MyContentController::class, 'edit']);
 Route::post('/minhas-vagas/{id}', [MyContentController::class, 'update']);
+Route::get('/minhas-vagas/details/{id}', [MyContentController::class, 'details']);
 
 // Route::get('/contato', [ApiController::class, 'contact']);
 Route::post('/contato', [ApiController::class, 'contact']);
@@ -113,6 +114,7 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('/admin/hunting/search', 'App\Http\Controllers\Hunting\Recruiter\SearchControler@index_search');
 
     Route::post('/admin/hunting/job/recruiter/{id}', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@index');
+    Route::post('/admin/hunting/job/recruiter/{id}/search', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@search');
 //Route::delete('/job/{id}', 'JobLikeControler@destroy');
 });
 

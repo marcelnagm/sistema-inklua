@@ -25,7 +25,7 @@ class JobLikeControler extends Controller {
 
     public function store(Request $request) {
 $user = auth()->guard('api')->user();
-        $count = JobLike::where('candidate_id', $user->id)
+        $count = JobLike::where('candidate_id', $user->candidatehunting()->id)
                         ->where('job_id', $request->input('job_id'))->count();
 
         if ($count == 0) {
@@ -38,7 +38,7 @@ $user = auth()->guard('api')->user();
             
             
             $cand = new JobLike($data);
-            $cand->candidate_id = $user->id;
+            $cand->candidate_id = $user->candidatehunting()->id;
             $cand->save();
 //            if (InkluaUser::isInternal($job->user_id)) {
 //                $user = User::find($job->user_id);
@@ -64,7 +64,7 @@ $user = auth()->guard('api')->user();
     
      public function exist(Request $request) {
          $user = auth()->guard('api')->user();
-        $count = JobLike::where('candidate_id', $user->id)
+        $count = JobLike::where('candidate_id', $user->candidatehunting()->id)
                         ->where('job_id', $request->input('job_id'))->count();
 
         if ($count == 0) {

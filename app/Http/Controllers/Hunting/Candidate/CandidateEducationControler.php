@@ -17,7 +17,7 @@ class CandidateEducationControler extends Controller {
     public function index(Request $request) {        
         
            $user = auth()->guard('api')->user();
-        return CandidateEducation::where('candidate_id',$user->id )
+        return CandidateEducation::where('candidate_id',$user->candidatehunting()->id )
                 ->orderBy('level_education_id','DESC')
                 ->orderBy('end_at','DESC')
                 
@@ -36,7 +36,7 @@ class CandidateEducationControler extends Controller {
 
 $user = auth()->guard('api')->user();
         $cand = new CandidateEducation($data);
-        $cand->candidate_id = $user->id   ;
+        $cand->candidate_id = $user->candidatehunting()->id   ;
         $cand->save();
 
         return response()->json([

@@ -91,6 +91,7 @@ class CandidateHunting extends Model {
                 $this->birth_date = Carbon\Carbon::createFromFormat('d/m/Y', $param['birth_date']);
 //                $this->cellphone = str_replace(['(',')','-'],'' ,$param['cellphone']);                
                 unset($param['birth_date']);
+                $this->generate();
             }
             parent::__construct($param);
         }

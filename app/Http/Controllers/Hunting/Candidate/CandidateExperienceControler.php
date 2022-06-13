@@ -16,7 +16,7 @@ class CandidateExperienceControler extends Controller {
      */
     public function index(Request $request) {   
         $user = auth()->guard('api')->user();
-        return CandidateExperience::where('candidate_id',$user->id )->orderBy('start_at','ASC')->get();
+        return CandidateExperience::where('candidate_id',$user->candidatehunting()->id )->orderBy('start_at','ASC')->get();
     }
     
     /*
@@ -31,7 +31,7 @@ $user = auth()->guard('api')->user();
 
 
         $cand = new CandidateExperience($data);
-        $cand->candidate_id = $user->id   ;
+        $cand->candidate_id = $user->candidatehunting()->id   ;
         $cand->save();
 
         return response()->json([
