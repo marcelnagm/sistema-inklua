@@ -179,7 +179,9 @@ class Candidate extends Model {
     }
 
     public function toArray($public = false) {
+        
         $data = parent::toArray();
+       
         if ($public == true) {
             foreach (Candidate::$public as $u) {
                 unset($data[$u]);
@@ -189,10 +191,7 @@ class Candidate extends Model {
             $data['pcd_type_id'] = $this->pcd_typo()->type;
         } else
             $data['pcd_type_id'] = 'Nennhuma';
-
-
-        $data['city'] =  isset($data['city'] ) ? $data['city'] . ' - ' . $data['state_id'] : 'Não Indetificado';
-
+        
         return $data;
     }
 

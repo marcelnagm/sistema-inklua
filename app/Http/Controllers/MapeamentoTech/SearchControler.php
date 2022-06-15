@@ -42,8 +42,10 @@ class SearchControler extends Controller {
         }
 
         $temp = array();
-        foreach ($this->candidates as $cand) {
-            $temp[] = $cand->toArray(true);
+        foreach ($this->candidates as $cand) {          
+            $data = $cand->toArray(true);
+            $data['city'] = $cand->city .' - '.State::find($cand->state_id)->UF;
+            $temp[] = $data;
         }
         $this->candidates = $temp;
 //        dd($result['param']);
@@ -74,7 +76,9 @@ class SearchControler extends Controller {
 //        dd ($candidates );
         $temp = array();
         foreach ($candidates->paginate(10)->items() as $cand) {
-            $temp[] = $cand->toArray(true);
+            $data = $cand->toArray(true);
+            $data['city'] = $cand->city .' - '.State::find($cand->state_id)->UF;
+                $temp[] = $data;
         }
         $candidates = $temp;
 
