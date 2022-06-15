@@ -189,6 +189,8 @@ class Candidate extends Model {
         if($this->pcd_type_id != null){
         $data['pcd_type_id'] = $this->pcd_typo()->type;
         }else $data['pcd_type_id'] = 'Nennhuma';
+        
+        $data['state_id'] = $this->state() ? $this->state()->UF : '';
         return $data;
     }
     
