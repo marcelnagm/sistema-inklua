@@ -96,6 +96,7 @@ class Candidate extends Model {
         'id',
         'remote',
         'role_id',
+        'city',
         'state_id',
         'status_id',
         'race_id',
@@ -186,34 +187,36 @@ class Candidate extends Model {
                 unset($data[$u]);
             }
         }
-        if($this->pcd_type_id != null){
-        $data['pcd_type_id'] = $this->pcd_typo()->type;
-        }else $data['pcd_type_id'] = 'Nennhuma';
-        
+        if ($this->pcd_type_id != null) {
+            $data['pcd_type_id'] = $this->pcd_typo()->type;
+        } else
+            $data['pcd_type_id'] = 'Nennhuma';
+//        dd( $data['city'] );
         $data['state_id'] = $this->state() ? $this->state()->UF : '';
-        $data['city'] =  $data['city']. ' - '. $data['state_id']  ;
+        if (isset($data['city'])) {
+            $data['city'] = $data['city'] . ' - ' . $data['state_id'];
+        }
         return $data;
     }
-    
-     public function save(array $attributes = [], array $options = []) {
+
+    public function save(array $attributes = [], array $options = []) {
 
         if (isset($attributes['payment'])) {
-            if(str_contains($attributes['payment'], '.'))
-            $attributes['payment'] = $attributes['payment'] * 1000  ;
+            if (str_contains($attributes['payment'], '.'))
+                $attributes['payment'] = $attributes['payment'] * 1000;
         }
         parent::save($attributes, $options);
     }
-    
-     public function update(array $attributes = [], array $options = []) {
+
+    public function update(array $attributes = [], array $options = []) {
 //        dd($attributes);
-     
+
         if (isset($attributes['payment'])) {
-            if(str_contains($attributes['payment'], '.'))
-            $attributes['payment'] = $attributes['payment'] * 1000  ;
+            if (str_contains($attributes['payment'], '.'))
+                $attributes['payment'] = $attributes['payment'] * 1000;
         }
 
         parent::update($attributes, $options);
     }
 
 }
-    
