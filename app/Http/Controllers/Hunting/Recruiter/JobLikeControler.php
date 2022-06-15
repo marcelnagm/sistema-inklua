@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Content;
 use App\Models\InkluaUser;
 use App\Models\User;
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 use App\Mail\NotifyMail;
 
 class JobLikeControler extends Controller {

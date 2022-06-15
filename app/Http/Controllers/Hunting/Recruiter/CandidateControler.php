@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Hunting\Recruiter;
 
-use App\Models\Candidate;
+use App\Models\CandidateHunting as Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;

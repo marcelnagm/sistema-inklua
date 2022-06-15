@@ -35,7 +35,7 @@ class CandidateExperience extends Model {
         'end_at'
     ];
     static $rules = array(
-        'candidate_id' => 'required|max:255',
+        
         'role' => 'required|max:255',
         'company' => 'required|max:255',
         'description' => 'nullable',

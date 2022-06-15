@@ -29,7 +29,6 @@ class CandidateEducation extends Model {
         'end_at'
     ];
     static $rules = array(
-        'candidate_id' => 'required|max:255',
         'level_education_id' => 'required|max:255',
         'institute' => 'required|max:255',
         'course' => 'required|max:255',
