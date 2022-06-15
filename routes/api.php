@@ -155,6 +155,18 @@ Route::post('/pcd_type', function () use ($router) {
     return PcdType::all();
 });
 
+Route::post('/races', function () use ($router) {
+    return App\Models\CandidateRace::all();
+});
+
+Route::post('/genders', function () use ($router) {
+    return App\Models\CandidateGender::all();
+});
+
+Route::post('/level_education', function () use ($router) {
+    return App\Models\LevelEducation::all();
+});
+
 // Rotas API Mapeamento Tech
 
 $router->post('/search', 'App\Http\Controllers\MapeamentoTech\SearchControler@index_search');

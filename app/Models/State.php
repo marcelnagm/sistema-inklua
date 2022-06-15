@@ -19,10 +19,7 @@ class State extends Model {
     protected $table = 'state';
     protected $fillable = [
         'name',
-        'uf',
-        'ibge',
-        'pais',
-        'ddd',
+        'UF',
     ];
     
 //    protected $hidden = [ ‘password’ ];
