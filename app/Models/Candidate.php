@@ -96,7 +96,6 @@ class Candidate extends Model {
         'id',
         'remote',
         'role_id',
-        'city',
         'state_id',
         'status_id',
         'race_id',
@@ -191,11 +190,9 @@ class Candidate extends Model {
             $data['pcd_type_id'] = $this->pcd_typo()->type;
         } else
             $data['pcd_type_id'] = 'Nennhuma';
-//        dd( $data['city'] );
-        $data['state_id'] = $this->state() ? $this->state()->UF : '';
-        if (isset($data['city'])) {
-            $data['city'] = $data['city'] . ' - ' . $data['state_id'];
-        }
+
+        $data['city'] =  isset($data['city'] ) ? $data['city'] . ' - ' . $data['state_id'] : 'Não Indetificado';
+
         return $data;
     }
 
