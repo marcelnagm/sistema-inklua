@@ -191,6 +191,7 @@ class Candidate extends Model {
         }else $data['pcd_type_id'] = 'Nennhuma';
         
         $data['state_id'] = $this->state() ? $this->state()->UF : '';
+        $data['city'] =  $data['city']. ' - '. $data['state_id']  ;
         return $data;
     }
     
