@@ -120,8 +120,8 @@ Route::group(['middleware' => ['api']], function () {
 
 Route::group(['middleware' => ['api']], function ($router) {
 
-    Route::post('/candidate/store/', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@store');
-    Route::put('/candidate/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@update');
+    Route::post('/candidate/store', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@store');
+    Route::put('/candidate/update', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@update');
     Route::delete('/candidate/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@destroy');
 
     Route::post('/education', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@index');

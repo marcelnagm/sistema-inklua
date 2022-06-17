@@ -6,37 +6,42 @@ use App\Models\CandidateEducation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\checkUserCandidate;
 
 class CandidateEducationControler extends Controller {
 
+    public function __construct() {
+        $this->middleware('App\Http\Middleware\checkUserCandidate');
+    }
 
     /**
      *   Retorna um Json com todos os registos
      * @return Json 
      */
-    public function index(Request $request) {        
-        
-           $user = auth()->guard('api')->user();
-        return CandidateEducation::where('candidate_id',$user->candidatehunting()->id )
-                ->orderBy('level_education_id','DESC')
-                ->orderBy('end_at','DESC')
-                
-                ->get();
+    public function index(Request $request) {
+
+        $user = auth()->guard('api')->user();
+
+        return CandidateEducation::where('candidate_id', $user->candidatehunting()->id)
+                        ->orderBy('level_education_id', 'DESC')
+                        ->orderBy('end_at', 'DESC')
+                        ->get();
     }
-    
+
     /*
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response retorna um json notificando que foi criado ou uma mensagem de erro de validação de campo
      */
+
     public function store(Request $request) {
 
         $data = $this->validate($request, CandidateEducation::$rules);
 //        dd ($data);
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
-$user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
         $cand = new CandidateEducation($data);
-        $cand->candidate_id = $user->candidatehunting()->id   ;
+        $cand->candidate_id = $user->candidatehunting()->id;
         $cand->save();
 
         return response()->json([
@@ -52,7 +57,7 @@ $user = auth()->guard('api')->user();
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id) {
-        return CandidateEducation::find( $id);
+        return CandidateEducation::find($id);
     }
 
     /**
@@ -78,17 +83,15 @@ $user = auth()->guard('api')->user();
      * @return \Illuminate\Http\Response Json com mensagem de sucesso ou mensagem de erro de validação
      */
     public function update(Request $request, $id) {
-        $candidate = CandidateEducation::find( $id);
+        $candidate = CandidateEducation::find($id);
         $user = auth()->guard('api')->user();
         $candidate->update($this->validate($request, CandidateEducation::$rules));
-        
+
         return response()->json([
                     'status' => true,
                     'msg' => 'Candidate education successfully updated!',
         ]);
     }
-
-  
 
     /**
      * Remove o candidato especificado
@@ -97,8 +100,7 @@ $user = auth()->guard('api')->user();
      */
     public function destroy($id) {
 
-        return $candidate = CandidateEducation::find( $id)->delete();
+        return $candidate = CandidateEducation::find($id)->delete();
     }
-
 
 }

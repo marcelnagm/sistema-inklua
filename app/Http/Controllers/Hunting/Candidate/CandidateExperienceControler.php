@@ -9,29 +9,33 @@ use Illuminate\Support\Facades\Auth;
 
 class CandidateExperienceControler extends Controller {
 
-
+    public function __construct() {
+        $this->middleware('App\Http\Middleware\checkUserCandidate');
+    }
+    
     /**
      *   Retorna um Json com todos os registos
      * @return Json 
      */
-    public function index(Request $request) {   
-        $user = auth()->guard('api')->user();
-        return CandidateExperience::where('candidate_id',$user->candidatehunting()->id )->orderBy('start_at','ASC')->get();
+    public function index(Request $request) {
+        $user = auth()->guard('api')->user();        
+        return CandidateExperience::where('candidate_id', $user->candidatehunting()->id)->orderBy('end_at', 'DESC')->get();
     }
-    
+
     /*
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response retorna um json notificando que foi criado ou uma mensagem de erro de validação de campo
      */
+
     public function store(Request $request) {
-$user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
         $data = $this->validate($request, CandidateExperience::$rules);
 //        dd ($data);
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
 
         $cand = new CandidateExperience($data);
-        $cand->candidate_id = $user->candidatehunting()->id   ;
+        $cand->candidate_id = $user->candidatehunting()->id;
         $cand->save();
 
         return response()->json([
@@ -47,7 +51,7 @@ $user = auth()->guard('api')->user();
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id) {
-        return CandidateExperience::find( $id);
+        return CandidateExperience::find($id);
     }
 
     /**
@@ -73,7 +77,7 @@ $user = auth()->guard('api')->user();
      * @return \Illuminate\Http\Response Json com mensagem de sucesso ou mensagem de erro de validação
      */
     public function update(Request $request, $id) {
-        $candidate = CandidateExperience::find( $id);
+        $candidate = CandidateExperience::find($id);
         $candidate->update($this->validate($request, CandidateExperience::$rules));
 
         return response()->json([
@@ -82,8 +86,6 @@ $user = auth()->guard('api')->user();
         ]);
     }
 
-  
-
     /**
      * Remove o candidato especificado
      *     
@@ -91,8 +93,7 @@ $user = auth()->guard('api')->user();
      */
     public function destroy($id) {
 
-        return $candidate = CandidateExperience::find( $id)->delete();
+        return $candidate = CandidateExperience::find($id)->delete();
     }
-
 
 }

@@ -14,6 +14,11 @@ use App\Http\Controllers\Controller;
 
 class JobLikeControler extends Controller {
 
+    public function __construct() {
+        $this->middleware('App\Http\Middleware\checkUserCandidate');
+    }
+    
+    
     /**
      *   Retorna um Json com todos os registos
      * @return Json 
