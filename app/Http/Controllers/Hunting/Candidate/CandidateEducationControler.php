@@ -11,6 +11,7 @@ use App\Http\Middleware\checkUserCandidate;
 class CandidateEducationControler extends Controller {
 
     public function __construct() {
+         $this->middleware('auth:api');
         $this->middleware('App\Http\Middleware\checkUserCandidate');
     }
 

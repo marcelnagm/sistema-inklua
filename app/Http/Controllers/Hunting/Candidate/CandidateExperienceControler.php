@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class CandidateExperienceControler extends Controller {
 
     public function __construct() {
+         $this->middleware('auth:api');
         $this->middleware('App\Http\Middleware\checkUserCandidate');
     }
     
