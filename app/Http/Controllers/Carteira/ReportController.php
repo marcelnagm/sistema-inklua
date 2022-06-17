@@ -33,7 +33,8 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
 // dd($data);
 //       dd($office->inkluaUsersContent()->count());
         $i = 0;
-        $vagas = $office->inkluaUsersContent()->get()->skip(10 * $request->input('page'))->take(10);
+        
+        $vagas = $this->filters($request,$office->inkluaUsersContent()) ;
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = $content->id;
@@ -54,4 +55,36 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
         return $data;
     }
 
+    public function filters(Request $request,$vagas) {
+     
+     
+     
+     if($request->exists('content_id')){
+         $vagas = $vagas->where('id','=',$request->input('content_id'));
+    }else{
+     if($request->exists('date_start')){
+         $vagas = $vagas->where('created_at','>=',$request->input('date_start'));
+     }
+     if($request->exists('date_end')){
+         $vagas = $vagas->where('created_at','<=',$request->input('date_end'));
+     }
+     if($request->exists('title')){
+         $vagas = $vagas->where('title','like','%'.$request->input('title').'%');
+     }
+     if($request->exists('client')){
+         $vagas = $vagas->whereRaw('id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? )', '%'.$request->input('client').'%');
+     }
+     if($request->exists('recruiter')){
+         $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)',array( '%'.$request->input('client').'%', '%'.$request->input('client').'%'));
+     }
+     
+    }    
+     
+     dd(Controller::getEloquentSqlWithBindings($vagas));
+     
+     $vagas = $vagas->get()->skip(10 * $request->input('page'))->take(10);
+     return $vagas;
+    }
+    
+    
 }
