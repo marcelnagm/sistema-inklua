@@ -38,7 +38,7 @@ class InkluaOffice extends Model {
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function inkluaUsers() {
-        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
+        return InkluaUser::where('office_id',$this->id)->orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
     }
 
     public function inkluaUsersActive() {
@@ -47,9 +47,10 @@ class InkluaOffice extends Model {
     }
 
     public function inkluaUsersContent() {
+         InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',1);
         return Content::where('status','publicada')->
                 where('type',1)
-                ->whereIN('user_id', $this->inkluaUsersActive()->get() );
+                ->whereIN('user_id', $this->inkluaUsers()->get() );
     }
     
     /**
