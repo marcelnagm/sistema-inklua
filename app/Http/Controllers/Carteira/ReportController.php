@@ -43,12 +43,18 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
             $data['vagas'][$i]['criado_em'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['salario'] = $content->salary;
             $contentclient = $content->contentclient();
-            $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
-            $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-            $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
-            $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $data['vagas'][$i]['salario'];
-            $i++;
+            if ($contentclient == null) {
+                return response()->json([
+                            'error' => 'Não existe associação de cliente com o content_id -'.$content->id,
+                                ], 500);
+            }
+        }
+        $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
+        $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
+        $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+        $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+        $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $data['vagas'][$i]['salario'];
+        $i++;
         }
 
         dd($data);
@@ -81,10 +87,9 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
 
 //     dd(Controller::getEloquentSqlWithBindings($vagas));
 
-        
-        $vagas = $vagas->get()->skip(10 * ($request->input('page')-1))->take(10);
-        
-        
+
+        $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
+
         return $vagas;
     }
 
