@@ -45,10 +45,10 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
             $contentclient = $content->contentclient();
             if ($contentclient == null) {
                 return response()->json([
-                            'error' => 'Não existe associação de cliente com o content_id -'.$content->id,
+                            'error' => 'Não existe associação de cliente com o content_id -' . $content->id,
                                 ], 500);
             }
-        }
+        
         $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
         $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
         $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
