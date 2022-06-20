@@ -57,7 +57,7 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
         $i++;
         }
 
-        dd($data);
+//        dd($data);
         return $data;
     }
 
