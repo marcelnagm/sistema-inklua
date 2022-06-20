@@ -85,7 +85,7 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
             }
         }
 
-//     dd(Controller::getEloquentSqlWithBindings($vagas));
+     dd(Controller::getEloquentSqlWithBindings($vagas));
 
 
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
