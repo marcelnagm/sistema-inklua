@@ -48,7 +48,7 @@ class InkluaOffice extends Model {
 
     public function inkluaUsersContent() {
          InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',1);
-        return Content::where('status','publicada')->
+        return Content::
                 where('type',1)
                 ->whereIN('user_id', $this->inkluaUsers()->get() );
     }
