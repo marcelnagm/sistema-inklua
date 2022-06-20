@@ -24,9 +24,18 @@ class ReportController extends Controller {
         $office = $request->user()->office();
         $valo = DB::select('select status, sum(carteira) as total,count(status) as count from (
 SELECT contents.id, contents.salary, (contents.salary * (client_condition.tax / 100))* contents_client.vacancy as "carteira", contents.status  FROM `contents`,contents_client,client_condition WHERE contents.id = contents_client.content_id and  client_condition.id = contents_client.client_condition_id
-and contents.user_id in (select user_id from inklua_users where office_id = :office and active = 1)
+and contents.user_id in (select user_id from inklua_users where office_id = :office )
 
 ) as a group by status   ', array('office' => $office->id));
+
+        if ($request->exists('debug2')) {
+            dd('select status, sum(carteira) as total,count(status) as count from (
+SELECT contents.id, contents.salary, (contents.salary * (client_condition.tax / 100))* contents_client.vacancy as "carteira", contents.status  FROM `contents`,contents_client,client_condition WHERE contents.id = contents_client.content_id and  client_condition.id = contents_client.client_condition_id
+and contents.user_id in (select user_id from inklua_users where office_id = ' . $office->id . ' )
+
+) as a group by status');
+        }
+
 
         $data['escritorio'] = $office->name;
         $data['carteira'] = $valo;
@@ -84,8 +93,8 @@ and contents.user_id in (select user_id from inklua_users where office_id = :off
                 $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('client') . '%', '%' . $request->input('client') . '%'));
             }
         }
-        if($request->exists('debug')){
-        dd(Controller::getEloquentSqlWithBindings($vagas));
+        if ($request->exists('debug')) {
+            dd(Controller::getEloquentSqlWithBindings($vagas));
         }
 
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);

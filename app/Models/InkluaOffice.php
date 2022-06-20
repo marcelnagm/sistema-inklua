@@ -49,7 +49,7 @@ class InkluaOffice extends Model {
     public function inkluaUsersContent() {        
         return Content::
                 where('type',1)
-                ->whereIN('user_id', $this->inkluaUsers()->get() );
+                ->whereIN('user_id', $this->inkluaUsers()->get()->pluck('user_id') );
     }
     
     /**
