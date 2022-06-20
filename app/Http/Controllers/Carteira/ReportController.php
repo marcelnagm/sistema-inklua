@@ -22,7 +22,7 @@ class ReportController extends Controller {
 
         $data = array();
         $office = $request->user()->office();
-        $valo = DB::select('       select status, sum(carteira) from (
+        $valo = DB::select('select status, sum(carteira) as total,count(status) as count from (
 SELECT contents.id, contents.salary, (contents.salary * (client_condition.tax / 100))* contents_client.vacancy as "carteira", contents.status  FROM `contents`,contents_client,client_condition WHERE contents.id = contents_client.content_id and  client_condition.id = contents_client.client_condition_id
 and contents.user_id in (select user_id from inklua_users where office_id = :office and active = 1)
 
