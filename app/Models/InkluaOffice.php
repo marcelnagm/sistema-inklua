@@ -42,13 +42,14 @@ class InkluaOffice extends Model {
     }
 
     public function inkluaUsersActive() {
-        return $this->hasMany('App\Models\InkluaUser', 'office_id', 'id')->where('active', '1');
+        return InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',1);
+        
     }
 
     public function inkluaUsersContent() {
         return Content::where('status','publicada')->
                 where('type',1)
-                ->whereIn('user_id', $this->inkluaUsersActive()->get()->pluck('user_id') );
+                ->whereIN('user_id', $this->inkluaUsersActive()->get() );
     }
     
     /**
