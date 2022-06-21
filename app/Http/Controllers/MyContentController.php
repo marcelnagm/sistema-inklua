@@ -21,6 +21,8 @@ class MyContentController extends Controller
         'state',
         'city',
         'description',
+        'application',
+        'application_type',
         'district',
         'benefits',
         'requirements',

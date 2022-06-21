@@ -20,6 +20,7 @@ class Content extends Model
         'image',
         'description',
         'application',
+        'application_type',
         'status',
         'published_at',
         'observation',

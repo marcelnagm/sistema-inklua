@@ -10,11 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\Importer;
 use Storage;
+//vagas internas
+class PositionController extends Controller {
 
-class PositionController extends Controller
-{
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('checkAdminPermission');
     }
 
@@ -23,29 +22,33 @@ class PositionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $logged = Auth::user();
-            
+
         $search_position = $request->input("search_position");
+        $status = $request->input('status') ? $request->input('status') : null;
 
         $positions = Content::where('type', 1)
-                                ->whereNull('user_id')
-                                ->when($search_position, function ($query, $search_position) {
-                                    
-                                    $query->where(function($query) use($search_position) {
-                                        
-                                        return $query->where("title", "like", "%{$search_position}%")
-                                                        ->orWhere("description", "like", "%{$search_position}%");
-                                    });
-                                })
-                                ->orderBy('ordenation', 'desc')
-                                ->orderBy('id', 'desc')
-                                ->paginate(10);
+                ->whereRaw('user_id in (select user_id from inklua_users)')
+                ->when($search_position, function ($query, $search_position) {
+
+                    $query->where(function ($query) use ($search_position) {
+
+                        return $query->where("title", "like", "%{$search_position}%")
+                        ->orWhere("description", "like", "%{$search_position}%");
+                    });
+                })
+                ->when(($status), function ($query) use ($status) {
+                    $query->where('status', $status);
+                })
+                ->orderBy('ordenation', 'desc')
+                ->orderBy('id', 'desc')
+                ->paginate(10);
 
         $data = [
             'positions' => $positions,
             'search_position' => $search_position,
+            'title' => 'Vagas Internas'
         ];
 
         return view('cms.position.position_list', $data);
@@ -56,8 +59,7 @@ class PositionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -67,8 +69,7 @@ class PositionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -78,8 +79,7 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -89,25 +89,34 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $logged = Auth::user();
-        
+
         $position = Content::where('id', $id)->first();
         $groups = Group::get();
-        
 
-        if(!$position || $position->type != 1){
+        if (!$position || $position->type != 1) {
             return redirect()->back()->with("error", "Vaga não encontrada.");
         }
 
         $data = [
-            'position'    => $position,
+            'position' => $position,
             'groups' => $groups,
         ];
 
         return view('cms.position.position_form', $data);
     }
+    
+    public function change(Request $request,$id){
+      
+       $content = Content::where('id', $id)->first();
+       $content->status=$request->input('status');
+       $content->save();        
+      return redirect("admin/vagas/$content->id/edit")->with("success", "Vaga atualizada com sucesso.");
+}
+
+
+
 
     /**
      * Update the specified resource in storage.
@@ -116,46 +125,46 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
+  
         $position = Content::where('id', $id)->first();
 
-        if(!$position || $position->type != 1){
+        if (!$position || $position->type != 1) {
             return redirect()->back()->with("error", "vaga não encontrada.");
         }
-       
+
         $data = $request->only([
             'image',
             'ordenation',
             'group_id',
         ]);
-        
-        if( $request->input('remove_imagem') ){
-            Storage::delete( 'public/positions/'.$position->image );
+
+        if ($request->input('remove_imagem')) {
+            Storage::delete('public/positions/' . $position->image);
             $data['image'] = '';
             $data['image_caption'] = '';
-        }else if( $request->hasFile('image') && $request->file('image')->isValid() ){
+        } else if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $request->file('image')->store('public/positions');
-            $data['image'] =  $request->file('image')->hashName();
+            $data['image'] = $request->file('image')->hashName();
             $data['image_caption'] = $request->image_caption ? $request->image_caption : $request->image->getClientOriginalName();
-            Storage::delete('public/positions/'.$position->image);
+            Storage::delete('public/positions/' . $position->image);
 
             $path = storage_path("app/public/positions/{$data['image']}");
             // Image::make($path)->fit(600, 290)->save(NULL, 75);
         }
-        
+
         $this->validator($request);
 
-        $position->update( $data );
+        $position->update($data);
 
         // Atualiza o ordenation em todos os positions do mesmo grupo
-        if($position->group_id){
-            if($data['ordenation'] != ''){
-                Content::where('group_id', $position->group_id)->update(['ordenation' => $data['ordenation'] ]);
+        if ($position->group_id) {
+            if ($data['ordenation'] != '') {
+                Content::where('group_id', $position->group_id)->update(['ordenation' => $data['ordenation']]);
             }
         }
-        
-        if($request['nextUrl']){
+
+        if ($request['nextUrl']) {
             return redirect($request['nextUrl'])->with("success", "Vaga atualizada com sucesso.");
         }
 
@@ -168,21 +177,20 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
 
-    public function validator($request)
-    {
+    public function validator($request) {
         Validator::make($request->all(), [
-            'image'                         => 'image|max:2048'
+            'image' => 'image|max:2048'
         ])->validate();
     }
 
-    public function importPositions(){
+    public function importPositions() {
         echo "Importação";
         Importer::dispatch();
         return;
     }
+
 }

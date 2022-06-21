@@ -4,7 +4,7 @@
 
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Vagas</h1>
+    <h1 class="h3 mb-2 text-gray-800">{{$title}}</h1>
 
     @if($search_position || !(!$search_position && $positions->isEmpty()))
         <div class="card shadow mb-4">

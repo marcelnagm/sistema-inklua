@@ -31,6 +31,9 @@ Route::middleware(checkAdminPermission::class)->get('/admin', function () {
 })->name('dashboard');
 
 Route::get('admin/vagas/importar', [PositionController::class, 'importPositions']);
+Route::get('admin/vagas/{id}/atualizar', [PositionController::class, 'change'])->name('interno.aprovar');
+Route::get('admin/usuarios/vagas/{id}/atualizar', [UserPositionController::class, 'change'])->name('externo.aprovar');
+Route::resource('admin/usuarios/vagas', UserPositionController::class);
 Route::resource('admin/usuarios/vagas', UserPositionController::class);
 Route::resource('admin/usuarios', UserController::class);
 Route::resource('admin/artigos', ArticleController::class);

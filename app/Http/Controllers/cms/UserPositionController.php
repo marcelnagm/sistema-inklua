@@ -10,6 +10,7 @@ use App\Models\Group;
 use App\Models\User;
 use Carbon\Carbon;
 
+//vagas externas
 class UserPositionController extends Controller
 {
     public function index(Request $request)
@@ -20,7 +21,7 @@ class UserPositionController extends Controller
         $status = $request->input('status') ? $request->input('status') : null;
         
         $positions = Content::where('type', 1)
-                                ->whereNotNull('user_id')
+                                ->whereRaw('user_id not in (select user_id from inklua_users)')
                                 ->when($search_position, function ($query, $search_position) {
                                     
                                     $query->where(function($query) use($search_position) {
@@ -39,7 +40,8 @@ class UserPositionController extends Controller
         $data = [
             'positions' => $positions,
             'search_position' => $search_position,
-            'status' => $status
+            'status' => $status,
+            'title' => 'Vagas Externas'
         ];
 
         return view('cms.position.user_position_list', $data);
@@ -65,8 +67,17 @@ class UserPositionController extends Controller
         return view('cms.position.user_position_form', $data);
     }
 
+       public function change(Request $request,$id){
+      
+       $content = Content::where('id', $id)->first();     
+       $content->status=$request->input('status');     
+       $content->save();               
+      return redirect("admin/usuarios/vagas/$content->id/edit")->with("success", "Vaga atualizada com sucesso.");
+}
+
+    
     public function update(Request $request, $id) 
-    {
+    {      
         $position = Content::where('id', $id)->with('user')->first();
 
         if(!$position || $position->type != 1){
