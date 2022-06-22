@@ -9,6 +9,7 @@ use App\Models\Content;
 use App\Models\Group;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\CandidateEnglishLevel;
 
 //vagas externas
 class UserPositionController extends Controller
@@ -36,7 +37,7 @@ class UserPositionController extends Controller
                                 ->orderBy('ordenation', 'desc')
                                 ->orderBy('id', 'desc')
                                 ->paginate(10);
-
+                                
         $data = [
             'positions' => $positions,
             'search_position' => $search_position,
@@ -62,6 +63,7 @@ class UserPositionController extends Controller
         $data = [
             'position'    => $position,
             'groups' => $groups,
+              'english_levels' => CandidateEnglishLevel::all(),
         ];
 
         return view('cms.position.user_position_form', $data);
