@@ -80,5 +80,9 @@ class Client extends Model
               ->get();
     }
     
+       public function __toString() {       
+            return $this->formal_name . ' - '.$this->fantasy_name;
+       
+    }
 
 }

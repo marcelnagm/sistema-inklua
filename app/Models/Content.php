@@ -21,6 +21,7 @@ class Content extends Model
         'description',
         'application',
         'application_type',
+        'remote',
         'status',
         'published_at',
         'observation',
@@ -64,7 +65,6 @@ class Content extends Model
     
     public function contentclient()
     {     
-//        dd($this->id);
         return ContentClient::where('content_id', $this->id)->first();    
     }
 

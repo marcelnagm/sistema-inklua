@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\Importer;
 use Storage;
+use App\Models\CandidateEnglishLevel;
+
 //vagas internas
 class PositionController extends Controller {
 
@@ -98,25 +100,36 @@ class PositionController extends Controller {
         if (!$position || $position->type != 1) {
             return redirect()->back()->with("error", "Vaga não encontrada.");
         }
+        $contentclient = $position->contentclient();
+        if ($contentclient != null) {
+            $clients = \App\Models\Client::all();
 
-        $data = [
-            'position' => $position,
-            'groups' => $groups,
-        ];
+            $data = [
+                'position' => $position,
+                'groups' => $groups,
+                'english_levels' => CandidateEnglishLevel::all(),
+                'contentclient' => $contentclient,
+                'clients' => $clients,
+                'conditions' => $position->contentclient()->client()->first()->conditions()
+            ];
+        } else {
+            $data = [
+                'position' => $position,
+                'groups' => $groups,
+                'english_levels' => CandidateEnglishLevel::all(),
+            ];
+        }
 
         return view('cms.position.position_form', $data);
     }
-    
-    public function change(Request $request,$id){
-      
-       $content = Content::where('id', $id)->first();
-       $content->status=$request->input('status');
-       $content->save();        
-      return redirect("admin/vagas/$content->id/edit")->with("success", "Vaga atualizada com sucesso.");
-}
 
+    public function change(Request $request, $id) {
 
-
+        $content = Content::where('id', $id)->first();
+        $content->status = $request->input('status');
+        $content->save();
+        return redirect("admin/vagas/$content->id/edit")->with("success", "Vaga atualizada com sucesso.");
+    }
 
     /**
      * Update the specified resource in storage.
@@ -126,7 +139,7 @@ class PositionController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-  
+
         $position = Content::where('id', $id)->first();
 
         if (!$position || $position->type != 1) {
@@ -137,6 +150,19 @@ class PositionController extends Controller {
             'image',
             'ordenation',
             'group_id',
+            'salary',
+            'hours',
+            'title',
+            'remote',
+            'state',
+            'city',
+            'district',
+            'city',
+            'benefits',
+            'requirements',
+            'description',
+            'english_level',
+            'observation',
         ]);
 
         if ($request->input('remove_imagem')) {

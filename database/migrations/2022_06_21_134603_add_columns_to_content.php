@@ -15,6 +15,7 @@ class AddColumnsToContent extends Migration
     {
          Schema::table('contents', function (Blueprint $table) {
             $table->string('application_type')->nullable()->after('application');
+            $table->boolean('remote')->default(0)->nullable()->after('application_type');
            
         });
     }

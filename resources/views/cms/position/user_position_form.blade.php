@@ -2,7 +2,7 @@
 
 @section('content')
 
-
+<!--externos-->
 <div class="row">
     <!-- Area Chart -->
     <div class="col-xl-12">

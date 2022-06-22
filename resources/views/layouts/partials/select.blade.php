@@ -1,6 +1,7 @@
 <select name="{{$name}}" class="form-control" 
         @isset($onchange) onchange="{{$onchange}}" @endisset
         @isset($id) id="{{$id}}" @endisset
+        @isset($readonly) readonly @endisset
         
         >
      <option value="">Selecione uma Opção</option>

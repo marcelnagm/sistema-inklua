@@ -22,68 +22,176 @@
                     @endif
 
                     @csrf
-
-                    <div class="form-row mb-3">
-                        <div class="col-lg-9">
-                            <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Título') }}</label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ isset( $position->title ) && ( $position->title ) ? $position->title : old('title') }}"  autocomplete="title" readonly>
-                                @error('title')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
+                    <div class="col-lg-12">
+                        <div class="form-row mb-3">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="title" class="form-label">{{ __('Título') }}</label>
+                                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ isset( $position->title ) && ( $position->title ) ? $position->title : old('title') }}"  autocomplete="title" >
+                                    @error('title')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="salary" class="form-label">{{ __('Remuneração') }}</label>
+                                    <input id="salary" type="text" class="form-control @error('salary') is-invalid @enderror" name="salary" value="{{ isset( $position->salary ) && ( $position->salary ) ? $position->salary : old('salary') }}"  autocomplete="salary" >
+                                    @error('salary')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>                       
                     </div>
+
 
 
 
                     {{-- Upload de imagens --}}
-                    <div class="form-row mb-3">
-                        <div class="col-lg-12">
-                            <label for="image_caption" class="form-label">{{ __('Imagem') }}</label>
-                            <small>
-                                <br>Tamanho da imagem: 600 x 290px
-                            </small>      
-                        </div>
-                    </div>
-
-                    <div class="form-row mb-3">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input id="image" type="file" data-file-caption-id="image_caption" class="form-control-file input-file-image @error('image') is-invalid @enderror" name="image" value="" autocomplete="image">
-                                @error('image')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div> 
-                        </div>
-                        @if( isset($position->image) && $position->image != '')
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" value="1" name="remove_imagem" class="custom-control-input select-remove" id="remove_imagem"  data-file-input="image">
-                                    <label for="remove_imagem" class="custom-control-label">{{ __('Remover imagem') }}</label>
-                                </div>
-                                @error('remove_imagem')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        @endif    
-                    </div>
-
-                    <div id="img-preview-wrapper">
-                        @if( isset($position->image) && $position->image != '' )
-                        <label for="image-output" class="form-label">Preview de imagem</label>
+                    <div class="col-lg-12">
                         <div class="form-row mb-3">
-                            <div class="col-lg-12">
-                                <img id="image-output" src="/storage/positions/{{$position->image}}"  alt="" class="show-image">
+                            <div class="col-lg-9">
+                                <label for="image_caption" class="form-label">{{ __('Imagem') }}</label>
+                                <small>
+                                    <br>Tamanho da imagem: 600 x 290px
+                                </small>      
                             </div>
                         </div>
-                        @endif
+
+                        <div class="form-row mb-3">
+                            <div class="col-lg-9">
+                                <div class="form-group">
+                                    <input id="image" type="file" data-file-caption-id="image_caption" class="form-control-file input-file-image @error('image') is-invalid @enderror" name="image" value="" autocomplete="image">
+                                    @error('image')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div> 
+                            </div>
+                            @if( isset($position->image) && $position->image != '')
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" value="1" name="remove_imagem" class="custom-control-input select-remove" id="remove_imagem"  data-file-input="image">
+                                        <label for="remove_imagem" class="custom-control-label">{{ __('Remover imagem') }}</label>
+                                    </div>
+                                    @error('remove_imagem')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            @endif    
+                        </div>
+
+                        <div id="img-preview-wrapper">
+                            @if( isset($position->image) && $position->image != '' )
+                            <label for="image-output" class="form-label">Preview de imagem</label>
+                            <div class="form-row mb-3">
+                                <div class="col-lg-12">
+                                    <img id="image-output" src="/storage/positions/{{$position->image}}"  alt="" class="show-image">
+                                </div>
+                            </div>
+                            @endif
+                        </div>
                     </div>
 
                     {{-- Fim upload de imagem--}}
                     <div class="form-row mb-3">
+                        <div class="col-lg-6">
+                            <div class="form-row">
+                                <label for="remote" class="form-label">{{ __('A vaga será') }}</label>
+                                <div class="col-lg-3 custom-control custom-switch">
+                                    <input name="remote" type="radio" class="form-control-sm" @if($position->remote==0) checked @endif value="0">  Presencial                      
+                                </div>
+
+                                <div class="col-lg-3 custom-control custom-switch">
+                                    <input name="remote" type="radio" class="form-control-sm" @if($position->remote==1) checked @endif value="1">  Remoto                      
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="hours" class="form-label">{{ __('Horário') }}</label>
+                                <input id="hours" type="text" class="form-control @error('hours') is-invalid @enderror" name="hours" value="{{ isset( $position->hours ) && ( $position->hours ) ? $position->hours : old('hours') }}"  autocomplete="compleo_code" >
+                                @error('hours')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-row mb-3">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="state" class="form-label">{{ __('Estado') }}</label>
+                                <input id="state" type="text" class="form-control @error('state') is-invalid @enderror" name="state" value="{{ isset($position->state) && ($position->state) ? $position->state : old('state') }}"  autocomplete="state" >                        
+                                @error('state')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                @enderror
+                            </div> 
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="city" class="form-label">{{ __('Cidade') }}</label>
+                                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ isset($position->city) && ($position->city) ? $position->city : old('city') }}"   >
+                                @error('city')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="district" class="form-label">{{ __('Bairro') }}</label>
+                                <input id="district" type="text" class="form-control @error('district') is-invalid @enderror" name="district" value="{{ isset($position->district) && ($position->district) ? $position->district : old('district') }}"  >
+                                @error('district')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="form-row mb-3">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="description" class="form-label">{{ __('Descrição geral da vaga') }}</label>
+                                {{ Form::textarea('description', (isset($position->description)) ? $position->description : old('description'), ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Descricao']) }}
+                                {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-3">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="benefits" class="form-label">{{ __('Descrição dos benefícios') }}</label>
+                                {{ Form::textarea('benefits', (isset($position->benefits)) ? $position->benefits : old('benefits'), ['class' => 'form-control' . ($errors->has('benefits') ? ' is-invalid' : ''), 'placeholder' => 'Benficios']) }}
+                                {!! $errors->first('benefits', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="requirements" class="form-label">{{ __('Descrição dos Requisitos') }}</label>
+                                {{ Form::textarea('requirements', (isset($position->requirements)) ? $position->requirements : old('requirements'), ['class' => 'form-control' . ($errors->has('requirements') ? ' is-invalid' : ''), 'placeholder' => 'requirements']) }}
+                                {!! $errors->first('requirements', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row mb-3">
+                        <div class="col-lg-6">
+                            <div class="form-group">         {{ Form::label('Nível de Inglês') }}
+                                @include('layouts.partials.select',array('list' => $english_levels,'param' => $position->english_level,'name' => 'english_level'))
+
+                                {!! $errors->first('english_level', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3 hidden" @if($position->in_compleo == 0)style="display: none;" @endif>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="compleo_code" class="form-label">{{ __('compleo_code') }}</label>
@@ -95,30 +203,11 @@
                         </div>
                     </div>
 
-                    <div class="form-row mb-3">
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="city" class="form-label">{{ __('Cidade') }}</label>
-                                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ isset($position->city) && ($position->city) ? $position->city : old('city') }}"  autocomplete="city" readonly>
-                                @error('city')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="state" class="form-label">{{ __('Estado') }}</label>
-                                <input id="state" type="text" class="form-control @error('state') is-invalid @enderror" name="state" value="{{ isset($position->state) && ($position->state) ? $position->state : old('state') }}"  autocomplete="state" readonly>                        
-                                @error('state')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
-                            </div> 
-                        </div>
-                    </div>
 
-                    <div class="form-row mb-3">
+
+                    <div class="form-row mb-3 " @if($position->in_compleo == 0)style="display: none;" @endif>
                         <div class="col-lg-3">
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <label for="branch_code" class="form-label">{{ __('branch_code') }}</label>
                                 <input id="branch_code" type="text" class="form-control @error('branch_code') is-invalid @enderror" name="branch_code" value="{{ isset($position->branch_code) && ($position->branch_code) ? $position->branch_code : old('branch_code') }}"  autocomplete="branch_code" readonly>
                                 @error('branch_code')
@@ -126,8 +215,8 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
+                        <div class="col-lg-3" @if($position->in_compleo == 0)style="display: none;" @endif >
+                            <div class="form-group ">
                                 <label for="branch_name" class="form-label">{{ __('branch_name') }}</label>
                                 <input id="branch_name" type="text" class="form-control @error('branch_name') is-invalid @enderror" name="branch_name" value="{{ isset($position->branch_name) && ($position->branch_name) ? $position->branch_name : old('branch_name') }}"  autocomplete="branch_name" readonly>                        
                                 @error('branch_name')
@@ -138,24 +227,53 @@
                     </div>
 
                     <hr>
-
+                  
+                    @isset($contentclient)
+                    <hr>
                     <div class="form-row mb-3">
-                        <div class="col-lg-9">
-                            <div class="form-group">
-                                <label for="description" class="form-label">{{ __('Descrição') }}</label>
-                                @php $description = (isset($position->description)) ? $position->description : old('description') @endphp
-                                {!! $description !!}
-                                @error('description')
+                        <div class="col-lg-3" >
+                            <div class="form-group ">
+                                <label for="vacancy" class="form-label">{{ __('Quantidade de Posições') }}</label>
+                                <input id="vacancy" type="text" class="form-control @error('vacancy') is-invalid @enderror" name="vacancy" value="{{ isset($contentclient->vacancy) && ($contentclient->vacancy) ? $contentclient->vacancy : old('vacancy') }}"  readonly>                        
+                                @error('vacancy')
                                 <div class="invalid-feedback" role="alert">{{ $message }}</div>
                                 @enderror
+                            </div> 
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">    
+                                {{ Form::label('Cliente') }}
+                                @include('layouts.partials.select',array('list' => $clients,'param' => $contentclient->client_id,'name' => 'client_id','readonly' => 'readonly'))
+
+                                {!! $errors->first('english_level', '<div class="invalid-feedback">:message</div>') !!}
                             </div>
                         </div>
-                    </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">    
+                                {{ Form::label('Condições do Cliente') }}
+                                @include('layouts.partials.select',array('list' => $conditions,'param' => $contentclient->client_condition_id,'name' => 'client_condition_id','readonly' => 'readonly'))
 
+                                {!! $errors->first('english_level', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                       
+                    
+                    </div>
+                    @endisset
                     <hr>
 
                     <div class="form-row mb-3">
-                        <div class="col-lg-3">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="observation" class="form-label">{{ __('Observações da vaga[VISIVEL APENAS AO RECRUTADOR]') }}</label>
+                                {{ Form::textarea('observation', (isset($position->observation)) ? $position->observation : old('observation'), ['class' => 'form-control' . ($errors->has('observation') ? ' is-invalid' : ''), 'placeholder' => 'Descricao']) }}
+                                {!! $errors->first('observation', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                       <div class="form-row mb-3">
+                    <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="ordenation" class="form-label">{{ __('Prioridade') }}</label>
                                 <input id="ordenation" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="ordenation" value="{{ isset( $position->ordenation ) && ( $position->ordenation ) ? $position->ordenation : old('ordenation') }}"  autocomplete="ordenation">
@@ -164,36 +282,63 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="group_id" class="form-label">{{ __('Grupo') }}</label>
-                                <select class="form-control @error('group_id') is-invalid @enderror" name="group_id" id="group_id">
-                                    <option value="">Adicionar a um grupo</option>
-                                    @foreach ($groups as $group)
-                                    <option value="{{ $group->id }}" {{ ($position->group_id == $group->id) ? 'selected' : ''}} >{{ $group->title }}</option>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="group_id" class="form-label">{{ __('Grupo') }}</label>
+                            <select class="form-control @error('group_id') is-invalid @enderror" name="group_id" id="group_id">
+                                <option value="">Adicionar a um grupo</option>
+                                @foreach ($groups as $group)
+                                <option value="{{ $group->id }}" {{ ($position->group_id == $group->id) ? 'selected' : ''}} >{{ $group->title }}</option>
 
-                                    @endforeach
-                                </select>                              
-                                @error('group')
+                                @endforeach
+                            </select>                              
+                            @error('group')
+                            <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                            @enderror
+                        </div> 
+                    </div>
+                    </div>
+                    <hr>                    
+                     <div class="form-row mb-3">
+                    <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recruiter" class="form-label">{{ __('Nome do Recrutador') }}</label>
+                                <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter" value="{{  $position->user() !== null ? $position->user()->first()->fullname() : 'Nao definido' }}"  readonly>
+                                @error('ordenation')
                                 <div class="invalid-feedback" role="alert">{{ $message }}</div>
                                 @enderror
-                            </div> 
+                            </div>
                         </div>
-                    </div>
-
-                    <a href="{{ url('') }}/admin/vagas" class="btn btn-secondary">Voltar</a>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                      @if($position->status == 'aguardando_aprovacao')
-                    <a href="{{route('interno.aprovar',$position->id)}}?status=publicada" class="btn btn-success user-position-approve">Aprovar</a>
-                    <a href="{{route('interno.aprovar',$position->id)}}?status=reprovada" class="btn btn-danger user-position-reprove">Reprovar</a>
-                     @endif
-                    @if($position->status == 'publicada')
-                    <a href="{{route('interno.aprovar',$position->id)}}?status=fechada" class="btn btn-dark user-position-approve">Fechar Vaga</a>
-                    @endif
-
-                </form>
+                    <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recruiter" class="form-label">{{ __('Email do Recrutador') }}</label>
+                                <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter_email" value="{{  $position->user()!== null   ? $position->user()->first()->email : 'Nao definido' }}"  readonly>
+                                @error('ordenation')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        </div>
             </div>
+            <div class="col-lg-12">
+
+                <a href="{{ url('') }}/admin/vagas" class="btn btn-secondary">Voltar</a>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                @if($position->status == 'aguardando_aprovacao')
+                <a href="{{route('interno.aprovar',$position->id)}}?status=publicada" class="btn btn-success user-position-approve">Aprovar</a>
+                <a href="{{route('interno.aprovar',$position->id)}}?status=reprovada" class="btn btn-danger user-position-reprove">Reprovar</a>
+                @endif
+                @if($position->status == 'publicada')
+                <a href="{{route('interno.aprovar',$position->id)}}?status=fechada" class="btn btn-dark user-position-approve">Fechar Vaga</a>
+                @endif
+            </div>
+
+            </form>
         </div>
     </div>
+</div>
+</div>
+</div>
+</div>
 </div>
 @endsection
