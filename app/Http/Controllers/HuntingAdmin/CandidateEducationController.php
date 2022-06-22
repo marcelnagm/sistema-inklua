@@ -20,8 +20,7 @@ class CandidateEducationController extends Controller {
      */
     public function index() {
         $candidateEducationHuntings = CandidateEducation::where('candidate_id',$request->input('candidate_id'))
-                ->orderBy('level_education_id','DESC')
-                ->orderBy('end_at','DESC')
+               ->orderByRaw('-end_at ASC, level_education_id DESC')   
                 ->paginate();
 
         return view('cms.hunting-admin.candidate-education.index', compact('candidateEducationHuntings'))

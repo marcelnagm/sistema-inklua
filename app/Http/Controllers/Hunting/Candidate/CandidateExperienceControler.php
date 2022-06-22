@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Auth;
 class CandidateExperienceControler extends Controller {
 
     public function __construct() {
-         $this->middleware('auth:api');
+        $this->middleware('auth:api');
         $this->middleware('App\Http\Middleware\checkUserCandidate');
     }
-    
+
     /**
      *   Retorna um Json com todos os registos
      * @return Json 
      */
     public function index(Request $request) {
-        $user = auth()->guard('api')->user();        
-        return CandidateExperience::where('candidate_id', $user->candidatehunting()->id)->orderBy('end_at', 'DESC')->get();
+        $user = auth()->guard('api')->user();
+        return CandidateExperience::where('candidate_id', $user->candidatehunting()->id)->orderByRaw('-end_at ASC')->get();
     }
 
     /*

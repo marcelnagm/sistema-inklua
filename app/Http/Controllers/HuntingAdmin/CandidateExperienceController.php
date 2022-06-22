@@ -19,7 +19,7 @@ class CandidateExperienceController extends Controller
      */
     public function index()
     {
-        $candidateExperienceHuntings = CandidateExperienceHunting::orderBy('start_at','ASC')->paginate();
+        $candidateExperienceHuntings = CandidateExperienceHunting::orderByRaw('-end_at ASC')->paginate();
 
         return view('cms.hunting-admin.candidate-experience.index', compact('candidateExperienceHuntings'))
             ->with('i', (request()->input('page', 1) - 1) * $candidateExperienceHuntings->perPage());

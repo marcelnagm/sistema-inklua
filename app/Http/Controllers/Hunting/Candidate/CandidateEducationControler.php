@@ -24,8 +24,8 @@ class CandidateEducationControler extends Controller {
         $user = auth()->guard('api')->user();
 
         return CandidateEducation::where('candidate_id', $user->candidatehunting()->id)
-                        ->orderBy('level_education_id', 'DESC')
-                        ->orderBy('end_at', 'DESC')
+                ->orderByRaw('-end_at ASC, level_education_id DESC')        
+                                   
                         ->get();
     }
 
