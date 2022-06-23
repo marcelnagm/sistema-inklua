@@ -45,6 +45,7 @@ class PositionController extends Controller {
                 })
                 ->orderBy('ordenation', 'desc')
                 ->orderBy('id', 'desc')
+                 ->where('status','<>', 'fechada')
                 ->paginate(10);
 
         $data = [

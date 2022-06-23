@@ -11,7 +11,6 @@ use App\Http\Middleware\checkUserCandidate;
 class CandidateEducationControler extends Controller {
 
     public function __construct() {
-         $this->middleware('auth:api');
         $this->middleware('App\Http\Middleware\checkUserCandidate');
     }
 
@@ -85,7 +84,6 @@ class CandidateEducationControler extends Controller {
      */
     public function update(Request $request, $id) {
         $candidate = CandidateEducation::find($id);
-        $user = auth()->guard('api')->user();
         $candidate->update($this->validate($request, CandidateEducation::$rules));
 
         return response()->json([
