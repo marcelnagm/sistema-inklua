@@ -28,7 +28,7 @@ class ReportController extends Controller {
             $valo = clone $vagas;
             $valo->join('contents_client', 'content_id', '=', 'contents.id');
             $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo = $valo->selectRaw('sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ) as total, contents.status ');
+            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status');
             $valo->groupby('status');
             if ($request->exists('debug3')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
@@ -48,7 +48,7 @@ class ReportController extends Controller {
             $valo = clone $vagas;
             $valo->join('contents_client', 'content_id', '=', 'contents.id');
             $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo = $valo->selectRaw('sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ) as total, contents.status ');
+            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status ');
             $valo->groupby('status');
             if ($request->exists('debug5')) {
                 dd(Controller::getEloquentSqlWithBindings($valo));
