@@ -18,7 +18,7 @@ class checkPjTypeUser
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-        if (!$user || $user->type != 'PJ' || $user->admin == 0 ){
+        if (!$user || $user->type != 'PJ'  ){
             return response()->json([
                 'error' => 'Usuario precisa ter CNPJ',
             ], 400);
