@@ -81,11 +81,11 @@ Route::get('/transaction/order', [TransactionController::class, 'order']);
 use App\Http\Middleware\checkUserInkluer;
 
 // rotas novas para aprovacao e cancelamento
-Route::group(['middleware' => ['api','App\Http\Middleware\checkUserInkluer']], function () {
-  
-        Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
-        Route::get('/vaga/fechar/{id}', [MyContentController::class, 'close']);
-        Route::post('/vaga/cancelar/{id}', [MyContentController::class, 'cancel']);   
+Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], function () {
+
+    Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
+    Route::get('/vaga/fechar/{id}', [MyContentController::class, 'close']);
+    Route::post('/vaga/cancelar/{id}', [MyContentController::class, 'cancel']);
 });
 
 //rotas sistema hunting
@@ -184,4 +184,7 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/clients', 'App\Http\Controllers\Carteira\ClientController@all');
     Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
     Route::get('/carteira', 'App\Http\Controllers\Carteira\ReportController@index');
+    Route::get('/escritorios', function () {
+        return App\Models\InkluaOffice::all();
+    });
 });
