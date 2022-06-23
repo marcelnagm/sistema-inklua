@@ -427,5 +427,12 @@ class Content extends Model
         static::deleting(function ($content) {
             $content->transaction()->delete();
         });
-    }       
+    }      
+    
+    
+    public static function inkluaUsersContent() {        
+        return Content::
+                where('type',1)
+                ->whereIN('contents.user_id', InkluaUser::inkluaUsers()->get()->pluck('user_id') );
+    }
 }

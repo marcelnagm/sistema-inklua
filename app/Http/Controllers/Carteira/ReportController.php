@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\checkUserInkluer;
 use Illuminate\Support\Facades\DB;
+use App\Models\Content;
 
 class ReportController extends Controller {
 
@@ -21,29 +22,44 @@ class ReportController extends Controller {
 
 
         $data = array();
-        $office = $request->user()->office();
-        $valo = DB::select('select status, sum(carteira) as total,count(status) as count from (
-SELECT contents.id, contents.salary, (contents.salary * (client_condition.tax / 100))* contents_client.vacancy as "carteira", contents.status  FROM `contents`,contents_client,client_condition WHERE contents.id = contents_client.content_id and  client_condition.id = contents_client.client_condition_id
-and contents.user_id in (select user_id from inklua_users where office_id = :office )
+        if ($request->user()->admin == 1) {
 
-) as a group by status   ', array('office' => $office->id));
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+            $valo = clone $vagas;
+            $valo->join('contents_client', 'content_id', '=', 'contents.id');
+            $valo->join('client_condition', 'content_id', '=', 'contents.id');
+            $valo = $valo->selectRaw('sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ) as total, contents.status ');
+            $valo->groupby('status');
+            if ($request->exists('debug3')) {
+                dd(Controller::getEloquentSqlWithBindings($vagas));
+            }
+            if ($request->exists('debug4')) {
+                dd(Controller::getEloquentSqlWithBindings($valo));
+            }
+            
+            $data['carteira'] = $valo->get();
+        } else {
 
-        if ($request->exists('debug2')) {
-            dd('select status, sum(carteira) as total,count(status) as count from (
-SELECT contents.id, contents.salary, (contents.salary * (client_condition.tax / 100))* contents_client.vacancy as "carteira", contents.status  FROM `contents`,contents_client,client_condition WHERE contents.id = contents_client.content_id and  client_condition.id = contents_client.client_condition_id
-and contents.user_id in (select user_id from inklua_users where office_id = ' . $office->id . ' )
+            $office = $request->user()->office();
+            $data['escritorio'] = $office->name;
 
-) as a group by status');
-        }
-
-
-        $data['escritorio'] = $office->name;
-        $data['carteira'] = $valo;
 // dd($data);
-        $i = 0;
-
-        $vagas = $this->filters($request, $office->inkluaUsersContent());
+            $vagas = $this->filters($request, $office->inkluaUsersContent());
+            $valo = clone $vagas;
+            $valo->join('contents_client', 'content_id', '=', 'contents.id');
+            $valo->join('client_condition', 'content_id', '=', 'contents.id');
+            $valo = $valo->selectRaw('sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ) as total, contents.status ');
+            $valo->groupby('status');
+            if ($request->exists('debug5')) {
+                dd(Controller::getEloquentSqlWithBindings($valo));
+            }
+            $data['carteira'] = $valo->get();
+        }
+        $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
+        
+            $i = 0;
+
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = $content->id;
@@ -52,20 +68,26 @@ and contents.user_id in (select user_id from inklua_users where office_id = ' . 
             $data['vagas'][$i]['criado_em'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['salario'] = $content->salary;
             $contentclient = $content->contentclient();
-            if ($contentclient == null) {
-                return response()->json([
-                            'error' => 'Não existe associação de cliente com o content_id -' . $content->id,
-                                ], 500);
-            }
-
+            if ($contentclient != null) {
             $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
             $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
             $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+            
+            }else{
+            $data['vagas'][$i]['posicoes'] = 'Nao existe o dado';
+            $data['vagas'][$i]['taxa'] = 'Nao existe o dado';
+            $data['vagas'][$i]['cliente'] = 'Nao existe o dado';
+                
+            }
+
             $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+            if ($contentclient != null) {
             $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $data['vagas'][$i]['salario'];
+            }else{
+            $data['vagas'][$i]['carteira'] = 'Nao existe o dado';              
+            }
             $i++;
         }
-
 //        dd($data);
         return $data;
     }
@@ -75,29 +97,32 @@ and contents.user_id in (select user_id from inklua_users where office_id = ' . 
 
 
         if ($request->exists('content_id')) {
-            $vagas = $vagas->where('id', '=', $request->input('content_id'));
+            $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
         } else {
             if ($request->exists('date_start')) {
-                $vagas = $vagas->where('created_at', '>=', $request->input('date_start'));
+                $vagas = $vagas->where('contents.created_at', '>=', $request->input('date_start'));
             }
             if ($request->exists('date_end')) {
-                $vagas = $vagas->where('created_at', '<=', $request->input('date_end'));
+                $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
             }
             if ($request->exists('title')) {
-                $vagas = $vagas->where('title', 'like', '%' . $request->input('title') . '%');
+                $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');
             }
             if ($request->exists('client')) {
-                $vagas = $vagas->whereRaw('id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? )', '%' . $request->input('client') . '%');
+                $vagas = $vagas->whereRaw('contents.id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? )', '%' . $request->input('client') . '%');
             }
             if ($request->exists('recruiter')) {
-                $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('client') . '%', '%' . $request->input('client') . '%'));
+                $vagas = $vagas->whereRaw('contents.user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('client') . '%', '%' . $request->input('client') . '%'));
+            }
+            if ($request->exists('office')) {
+                $vagas = $vagas->whereRaw('contents.user_id in (select user_id as id from inklua_users where office_id = ?)', array($request->input('office')));
             }
         }
         if ($request->exists('debug')) {
             dd(Controller::getEloquentSqlWithBindings($vagas));
         }
 
-        $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
+
 
         return $vagas;
     }

@@ -21,7 +21,7 @@ class checkUserInkluer
 //        dd('hpa');
         $user = Auth::user();
 //        dd($user->toArray());
-       if (!$user->isInklua()) {
+       if (!$user->isInklua() || $user->admin == 0 ) {
             return response()->json([
                         'error' => 'Usuario precisa ser inkluer',
                             ], 400);
