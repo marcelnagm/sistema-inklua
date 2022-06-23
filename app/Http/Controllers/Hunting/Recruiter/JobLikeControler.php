@@ -15,31 +15,30 @@ use App\Mail\NotifyMail;
 
 class JobLikeControler extends Controller {
 
-
     public function index($id) {
-           $user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
 //        dd(Content::find($id)->user_id ,$user->id);
-           $content = Content::findOrFail($id);
-                   if ($content->user_id != $user->id) {
-             return response()->json([
+        $content = Content::findOrFail($id);
+        if ($content->user_id != $user->id) {
+            return response()->json([
                         'status' => false,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
         }
 
         if (InkluaUser::isInternal($user->id)) {
-            return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();                        
+            return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();
         } else {
             return JobLike::where('job_id', $id)->orderBy('created_at')->count();
         }
     }
-    
+
     public function search(Request $request, $id) {
-           $user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
 //        dd(Content::find($id)->user_id ,$user->id);
-           $content = Content::findOrFail($id);
-                   if ($content->user_id != $user->id) {
-             return response()->json([
+        $content = Content::findOrFail($id);
+        if ($content->user_id != $user->id) {
+            return response()->json([
                         'status' => false,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
@@ -47,14 +46,18 @@ class JobLikeControler extends Controller {
         $param = $request->input('key');
         if (InkluaUser::isInternal($user->id)) {
             return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
-                       whereRaw("("
-                        . "full_name like '%$param%'  or "
-                        . "cellphone like '%$param%'  or "
-                        . "id = '$param'  "
-                        . ") ")->
-                    get();                        
+                            whereRaw("("
+                                    . "name like '%$param%'  or "
+                                    . "surname like '%$param%'  or "
+                                    . "cellphone like '%$param%'  or "
+                                    . "id = '$param'  "
+                                    . ") ")->
+                            when($request->exists('order_by'), function ($q) {
+                                return $q->orderBy(request('order_by'), request('ordering_rule'));
+                            })->
+                            get();
         } else {
-             return response()->json([
+            return response()->json([
                         'status' => false,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
