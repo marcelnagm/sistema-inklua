@@ -185,6 +185,6 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
     Route::get('/carteira', 'App\Http\Controllers\Carteira\ReportController@index');
     Route::get('/escritorios', function () {
-        return App\Models\InkluaOffice::all();
+        return App\Models\InkluaOffice::where('active',1)->get();
     });
 });
