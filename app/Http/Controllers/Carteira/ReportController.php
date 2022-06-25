@@ -23,29 +23,17 @@ class ReportController extends Controller {
 
         $data = array();
         if ($request->user()->admin == 1) {
-
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
-            $valo = clone $vagas;
-            $valo->join('contents_client', 'content_id', '=', 'contents.id');
-            $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-            $valo->groupby('status');
-            if ($request->exists('debug3')) {
-                dd(Controller::getEloquentSqlWithBindings($vagas));
-            }
-            if ($request->exists('debug4')) {
-                dd(Controller::getEloquentSqlWithBindings($valo));
-            }
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());           
             
-            $data['carteira'] = $valo->get();
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-// dd($data);
             $vagas = $this->filters($request, $office->inkluaUsersContent());
-            $valo = clone $vagas;
+           
+        }
+         $valo = clone $vagas;
             $valo->join('contents_client', 'content_id', '=', 'contents.id');
             $valo->join('client_condition', 'content_id', '=', 'contents.id');
             $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status ');
@@ -54,7 +42,6 @@ class ReportController extends Controller {
                 dd(Controller::getEloquentSqlWithBindings($valo));
             }
             $data['carteira'] = $valo->get();
-        }
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
         
@@ -63,10 +50,11 @@ class ReportController extends Controller {
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = $content->id;
-            $data['vagas'][$i]['status'] = $content->getStatusName();
+            $data['vagas'][$i]['status_front'] = $content->getStatusFront();            
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
-            $data['vagas'][$i]['criado_em'] = $content->created_at->format('d/m/Y');
-            $data['vagas'][$i]['salario'] = $content->salary;
+            $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
+            $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
+            $data['vagas'][$i]['salario'] =  $content->salary;            
             $contentclient = $content->contentclient();
             if ($contentclient != null) {
             $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
@@ -83,6 +71,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
             if ($contentclient != null) {
             $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $data['vagas'][$i]['salario'];
+            $data['vagas'][$i]['carteira'] = number_format($data['vagas'][$i]['carteira'] ,2);
             }else{
             $data['vagas'][$i]['carteira'] = 'Nao existe o dado';              
             }

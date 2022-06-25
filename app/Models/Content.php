@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Group;
 use App\Models\ContentClient;
 
-class Content extends Model
-{
+class Content extends Model {
+
     use HasFactory;
 
-       protected $fillable = [
+    protected $fillable = [
         'user_id',
         'title',
         'contract_type',
@@ -44,73 +44,68 @@ class Content extends Model
         'benefits',
         'requirements',
         'hours',
-       'english_level'
+        'english_level'
     ];
-
-
     protected $hidden = [
         // 'id'
         'row_n',
         'order_type'
     ];
 
-    public function group(){
+    public function group() {
         return $this->belongsTo('App\Models\Group');
     }
 
-    public function actions()
-    {
+    public function actions() {
         return $this->hasMany(\App\Models\Action::class);
     }
-    
-    public function contentclient()
-    {     
-        return ContentClient::where('content_id', $this->id)->first();    
+
+    public function contentclient() {
+        return ContentClient::where('content_id', $this->id)->first();
     }
 
-    public static function getRandomImage(){
-        $img = random_int(1,16);
+    public static function getRandomImage() {
+        $img = random_int(1, 16);
         return url("/img/{$img}.png");
     }
 
-    public static function getHomeContent(){
+    public static function getHomeContent() {
         $type = request()->input("tipo");
         $user = auth()->guard('api')->user();
-        
 
-        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")                        
-                        ->selectRaw("(
+        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
+                ->selectRaw("(
                                 CASE  
                                     WHEN type = 1 AND group_id IS NOT NULL THEN 1
                                     WHEN type = 1 THEN 2
                                     WHEN type = 3 THEN 3
                                     ELSE 4
                                 END) AS order_type")
-                            ->selectRaw("row_number() OVER ( PARTITION BY order_type ORDER BY ordenation DESC, id DESC) row_n, IFNULL(group_id,UUID()) as unique_group")
-                            ->when($type, function ($query, $type) {
-                                return $query->where("type", $type);
-                            })
-                            ->when($user && $user->wallet, function ($query) use ($user) {
-                                return $query->with(['actions' => function ($query) use ($user) {
-                                    $query->where('wallet_id', $user->wallet->id);
-                                }]);
-                            })
-                            ->groupBy('unique_group')
-                            ->orderBy('row_n')
-                            ->orderBy('order_type')
-                            ->orderBy('ordenation')
-                            ->paginate(12)
-                                    ;
+                ->selectRaw("row_number() OVER ( PARTITION BY order_type ORDER BY ordenation DESC, id DESC) row_n, IFNULL(group_id,UUID()) as unique_group")
+                ->when($type, function ($query, $type) {
+                    return $query->where("type", $type);
+                })
+                ->when($user && $user->wallet, function ($query) use ($user) {
+                    return $query->with(['actions' => function ($query) use ($user) {
+                            $query->where('wallet_id', $user->wallet->id);
+                        }]);
+                })
+                ->groupBy('unique_group')
+                ->orderBy('row_n')
+                ->orderBy('order_type')
+                ->orderBy('ordenation')
+                ->paginate(12)
+        ;
 
         // $content->data = Content::hideFields($content);
         return $content;
     }
 
-    public static function hideFields($data){
+    public static function hideFields($data) {
         return $data->makeHidden(['ordenation', 'compleo_code', 'cod_filial', 'branch_code', 'branch_name', 'updated_at', 'row_n', 'in_compleo']);
     }
 
-        public static function getCities($search = FALSE, $state = FALSE, $city = FALSE){
+    public static function getCities($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("city as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
 //                        ->where('status', 'publicada')
@@ -130,7 +125,7 @@ class Content extends Model
                         ->get();
     }
 
-    public static function getStates($search = FALSE, $state = FALSE, $city = FALSE){
+    public static function getStates($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("state as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
 //                        ->where('status', 'publicada')
@@ -150,7 +145,7 @@ class Content extends Model
                         ->get();
     }
 
-    public static function getHiringModel($search = FALSE, $state = FALSE, $city = FALSE, $contract = FALSE){
+    public static function getHiringModel($search = FALSE, $state = FALSE, $city = FALSE, $contract = FALSE) {
         $counter = [
             [
                 'name' => 'Remoto',
@@ -162,38 +157,38 @@ class Content extends Model
             ]
         ];
 
-        if($contract != 'presencial'){
+        if ($contract != 'presencial') {
             $remote = Content::where("type", 1)
 //                            ->where('status', 'publicada')
-                            ->where("city","")
-                            ->when(($search), function ($query) use ($search) {
-                                $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
-                            })
-                            ->when(($state), function ($query) use ($state) {
-                                $query->where('state', $state);
-                            })
-                            ->when(($city), function ($query) use ($city) {
-                                $query->where('city', $city);
-                            });
+                    ->where("city", "")
+                    ->when(($search), function ($query) use ($search) {
+                        $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
+                    })
+                    ->when(($state), function ($query) use ($state) {
+                        $query->where('state', $state);
+                    })
+                    ->when(($city), function ($query) use ($city) {
+                $query->where('city', $city);
+            });
 
             $counter[0]['positions'] = $remote->count();
         }
 
 
-        if($contract != 'remoto'){
+        if ($contract != 'remoto') {
             $inPerson = Content::where("type", 1)
 //                            ->where('status', 'publicada')
-                            ->whereNotNull("city")
-                            ->where("state", "!=", "")
-                            ->when(($search), function ($query) use ($search) {
-                                $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
-                            })
-                            ->when(($state), function ($query) use ($state) {
-                                $query->where('state', $state);
-                            })
-                            ->when(($city), function ($query) use ($city) {
-                                $query->where('city', $city);
-                            });
+                    ->whereNotNull("city")
+                    ->where("state", "!=", "")
+                    ->when(($search), function ($query) use ($search) {
+                        $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
+                    })
+                    ->when(($state), function ($query) use ($state) {
+                        $query->where('state', $state);
+                    })
+                    ->when(($city), function ($query) use ($city) {
+                $query->where('city', $city);
+            });
 
             $counter[1]['positions'] = $inPerson->count();
         }
@@ -201,13 +196,13 @@ class Content extends Model
         return $counter;
     }
 
-     public static function getCounters($search = FALSE, $state = FALSE, $city = FALSE, $contract = FALSE){
+    public static function getCounters($search = FALSE, $state = FALSE, $city = FALSE, $contract = FALSE) {
         $collections = [
             "cities" => [],
             "states" => []
         ];
 
-        if($contract != 'remoto') {
+        if ($contract != 'remoto') {
             $cities = Content::getCities($search, $state, $city);
             $states = Content::getStates($search, $state, $city);
             $collections = [
@@ -215,80 +210,73 @@ class Content extends Model
                 "states" => $states
             ];
         }
-        
+
         $hiringPosition = Content::getHiringModel($search, $state, $city, $contract);
         $collections["contract_type"] = $hiringPosition;
 
-        return collect([ "counters" => $collections]);
+        return collect(["counters" => $collections]);
     }
 
-    public static function searchPositions($search, $state = NULL, $city = NULL, $contract = NULL){
+    public static function searchPositions($search, $state = NULL, $city = NULL, $contract = NULL) {
 
         $search = request()->input("q");
         $searchEscaped = addslashes($search);
         $city = request()->input("city");
 
         $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
-                                ->where("type", 1)
-                               ->selectRaw("(
+                ->where("type", 1)
+                ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
                                 + match (description) against ('{$searchEscaped}' in boolean mode)
                                 - (ABS(DATEDIFF(`date`, NOW())) / 10)
                             ) as score")
-                            
-                            
-
-                              ->when($search, function ($query) use ($search) {
-                                return $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
-                            })
-
-                            ->when($city, function ($query) use ($city) {
-                                return $query->where("city", $city);
-                            })
-
-                            ->when($state, function ($query) use ($state) {
-                                return $query->where("state", $state);
-                            })
-
-                            ->when($contract == 'remote', function ($query) use ($contract) {
-                                return $query->where(function($query) use($contract) {
-                                    return $query->where(function($query) use($contract) {
-                                                $query
+                ->when($search, function ($query) use ($search) {
+                    return $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
+                })
+                ->when($city, function ($query) use ($city) {
+                    return $query->where("city", $city);
+                })
+                ->when($state, function ($query) use ($state) {
+                    return $query->where("state", $state);
+                })
+                ->when($contract == 'remote', function ($query) use ($contract) {
+                    return $query->where(function ($query) use ($contract) {
+                        return $query->where(function ($query) use ($contract) {
+                            $query
 //                                                ->whereNull("user_id")
-                                                        ->where("city", "")
-                                                        ->where("state", "");
-                                            })
+                            ->where("city", "")
+                            ->where("state", "");
+                        })
 //                                            ->orWhere(function($query) use($contract) {
 //                                                $query
 ////                                                ->whereNotNull("user_id")
 ////                                                        ->where("contract_type", "remoto");
 //                                                        ->where("state", "");
 //                                            })
-                                            ;
-                                    });
-                            })
-
-                            ->when($contract == 'local', function ($query) use ($contract) {
-                                return $query->where(function($query) use($contract) {
-                                        return $query->where(function($query) use($contract) {
-                                                    $query
+                        ;
+                    });
+                })
+                ->when($contract == 'local', function ($query) use ($contract) {
+                    return $query->where(function ($query) use ($contract) {
+                        return $query->where(function ($query) use ($contract) {
+                            $query
 //                                                            ->whereNull("user_id")
-                                                            ->where("city", "!=", "")
-                                                            ->where("state", "!=", "")
-                                                            ;
-                                                })
+                            ->where("city", "!=", "")
+                            ->where("state", "!=", "")
+                            ;
+                        })
 //                                                ->orWhere(function($query) use($contract) {
 //                                                    $query->whereNotNull("user_id")
 //                                                            ->where("contract_type", "presencial");
 //                                                })
-                                                ;
-                                        });
-                            })
-                            ->orderBy('score', 'desc')
-                            ->orderBy('id', 'desc')
-                            ->orderBy('ordenation')
-                            ->paginate(12)
-                                    ;
+                        ;
+                    });
+                })
+                ->orderBy('score', 'desc')
+                ->orderBy('id', 'desc')
+                ->orderBy('ordenation')
+                ->paginate(12)
+        ;
 
 //        dd(\App\Http\Controllers\Controller::getEloquentSqlWithBindings($content));                            
         $content->data = Content::hideFields($content);
@@ -299,30 +287,26 @@ class Content extends Model
     // 1 => position
     // 2 => ad
     // 3 => content
-    
-    
-     public function getApplicationType() {
+
+
+    public function getApplicationType() {
         return ( filter_var($this->application, FILTER_VALIDATE_EMAIL) ) ? 'email' : 'url';
     }
-    
-     public function user(){
+
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function notifications(){
+    public function notifications() {
         return $this->belongsTo(Notification::class);
     }
-    
-   
 
-    public function transaction(){
+    public function transaction() {
         return $this->hasOne(Transaction::class);
     }
-    
-    
 
-     public static function getType($type) {
-        switch($type) {
+    public static function getType($type) {
+        switch ($type) {
             case "position":
                 return 1;
                 break;
@@ -334,8 +318,9 @@ class Content extends Model
                 break;
         }
     }
-      public function getStatusName() {
-        switch($this->status) {
+
+    public function getStatusName() {
+        switch ($this->status) {
             case "aguardando_aprovacao":
                 return 'Aguardando aprovação';
                 break;
@@ -359,23 +344,22 @@ class Content extends Model
                 break;
         }
     }
-    
+
     public function checkExistenceOfPositionByCnpj() {
         $user = $this->user;
 
-        if(!$user) {
+        if (!$user) {
             return false;
         }
 
         return Content::where('id', '!=', $this->id)
-                            ->where(function($query){
-                                $query->where('status', 'publicada')
-                                        ->orWhere('status', 'aguardando_pagamento');
-                            })
-                            ->whereHas('user', function($q) use($user)
-                            {
-                                $q->where('usegetrs.cnpj', $user->cnpj);
-                            })->exists();
+                        ->where(function ($query) {
+                            $query->where('status', 'publicada')
+                            ->orWhere('status', 'aguardando_pagamento');
+                        })
+                        ->whereHas('user', function ($q) use ($user) {
+                            $q->where('usegetrs.cnpj', $user->cnpj);
+                        })->exists();
     }
 
     public function notifyPositionCreated() {
@@ -423,16 +407,78 @@ class Content extends Model
         Mail::send(new PositionPublished($this));
     }
 
-    protected static function booted(){
+    public function getStatusFront() {
+        switch ($this->status) {
+            case "aguardando_aprovacao":
+                return array(
+                    'title' => 'Aguardando',
+                    'color' => "Default",
+                    'value' => $this->getStatusName(),
+                    'ref' => '03'
+                );
+                break;
+            case "aguardando_pagamento":
+                return array(
+                    'title' => 'Aguardando',
+                    'color' => "Default",
+                    'value' => $this->getStatusName(),
+                    'ref' => '03'
+                );
+                break;
+            case "publicada":
+             return array(
+                    'title' => 'Recrutando',
+                    'color' => "Default",
+                    'value' => $this->getStatusName(),
+                    'ref' => '02'
+                );
+
+                break;
+            case "reprovada":
+             return array(
+                    'title' => 'Cancelado',
+                    'color' => "Primary",
+                    'value' => $this->getStatusName(),
+                    'ref' => '01'
+                );               
+                break;
+            case "expirada":
+             return array(
+                    'title' => 'Cancelado',
+                    'color' => "Primary",
+                    'value' => $this->getStatusName(),
+                    'ref' => '01'
+                );               
+                break;
+            case "fechada":
+                return array(
+                    'title' => 'Concluída',
+                    'color' => "Secondary",
+                    'value' => $this->getStatusName(),
+                    'ref' => '04'
+                );               
+                break;
+            case "cancelada":
+                return array(
+                    'title' => 'Cancelado',
+                    'color' => "Primary",
+                    'value' => $this->getStatusName(),
+                    'ref' => '01'
+                );               
+                break;
+        }
+    }
+
+    protected static function booted() {
         static::deleting(function ($content) {
             $content->transaction()->delete();
         });
-    }      
-    
-    
-    public static function inkluaUsersContent() {        
-        return Content::
-                where('type',1)
-                ->whereIN('contents.user_id', InkluaUser::inkluaUsers()->get()->pluck('user_id') );
     }
+
+    public static function inkluaUsersContent() {
+        return Content::
+                        where('type', 1)
+                        ->whereIN('contents.user_id', InkluaUser::inkluaUsers()->get()->pluck('user_id'));
+    }
+
 }

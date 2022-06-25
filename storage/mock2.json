@@ -1,0 +1,20 @@
+{
+    "id": 6787,
+    "status_front": {
+        "title": "Cancelado", //Cancelado = "Cancelada" / Publicada = "Recrutando" / Aguardando_aprovacao = “Aguardando” / Fechada = “Concluída”
+        "color": "Primary", // Cancelado = "Secondary" / Publicada e Aguardado_aprovação = "Default" / Fechada = "Secondary" 
+        "value": "Fechada", // Fechada // Aguardado_aprovação / Publicada / Cancelado -> o que vem do status do back
+        "ref": 1, // Cancelado = 01 / Publicada = 02 / Aguardado_aprovação = 03 / Fechada = 04
+    },
+    "titulo_vagas": "Empacotador 22",
+    "criado_em": {
+        "value": "01/02/2022",
+        "ref": 1 // Timestamp para seguirmos uma order crescente e decrescente
+    },
+    "salario": 2000.00, //Com formatação e 2 casas após o ponto
+    "posicoes": 1, //Valor inteiro, sem virgulas
+    "taxa": 130, //Valor por inteiro, sem ponto e casas
+    "cliente": "Itaú",
+    "recrutador": "Guilherme Serrano",
+    "carteira": 5000.00 //Com formatação e 2 casas após o ponto
+},
