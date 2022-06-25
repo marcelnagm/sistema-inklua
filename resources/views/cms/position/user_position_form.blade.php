@@ -131,34 +131,34 @@
                             <div class="form-group">
                                         <label for="state" class="form-label">{{ __('Estado') }}</label>
                                         <select class="form-control @error('state') is-invalid @enderror" name="state" id="state">
-                                            <option value="" disabled {{ (old('state') == '') ? 'selected' : '' }}>Selecione um estado</option>
-                                            <option value="AC" {{ (old('state') == 'AC') ? 'selected' : '' }}>Acre</option>
-                                            <option value="AL" {{ (old('state') == 'AL') ? 'selected' : '' }}>Alagoas</option>
-                                            <option value="AP" {{ (old('state') == 'AP') ? 'selected' : '' }}>Amapá</option>
-                                            <option value="AM" {{ (old('state') == 'AM') ? 'selected' : '' }}>Amazonas</option>
-                                            <option value="BA" {{ (old('state') == 'BA') ? 'selected' : '' }}>Bahia</option>
-                                            <option value="CE" {{ (old('state') == 'CE') ? 'selected' : '' }}>Ceará</option>
-                                            <option value="DF" {{ (old('state') == 'DF') ? 'selected' : '' }}>Distrito Federal</option>
-                                            <option value="ES" {{ (old('state') == 'ES') ? 'selected' : '' }}>Espírito Santo</option>
-                                            <option value="GO" {{ (old('state') == 'GO') ? 'selected' : '' }}>Goiás</option>
-                                            <option value="MA" {{ (old('state') == 'MA') ? 'selected' : '' }}>Maranhão</option>
-                                            <option value="MT" {{ (old('state') == 'MT') ? 'selected' : '' }}>Mato Grosso</option>
-                                            <option value="MS" {{ (old('state') == 'MS') ? 'selected' : '' }}>Mato Grosso do Sul</option>
-                                            <option value="MG" {{ (old('state') == 'MG') ? 'selected' : '' }}>Minas Gerais</option>
-                                            <option value="PA" {{ (old('state') == 'PA') ? 'selected' : '' }}>Pará</option>
-                                            <option value="PB" {{ (old('state') == 'PB') ? 'selected' : '' }}>Paraíba</option>
-                                            <option value="PR" {{ (old('state') == 'PR') ? 'selected' : '' }}>Paraná</option>
-                                            <option value="PE" {{ (old('state') == 'PE') ? 'selected' : '' }}>Pernambuco</option>
-                                            <option value="PI" {{ (old('state') == 'PI') ? 'selected' : '' }}>Piauí</option>
-                                            <option value="RJ" {{ (old('state') == 'RJ') ? 'selected' : '' }}>Rio de Janeiro</option>
-                                            <option value="RN" {{ (old('state') == 'RN') ? 'selected' : '' }}>Rio Grande do Norte</option>
-                                            <option value="RS" {{ (old('state') == 'RS') ? 'selected' : '' }}>Rio Grande do Sul</option>
-                                            <option value="RO" {{ (old('state') == 'RO') ? 'selected' : '' }}>Rondônia</option>
-                                            <option value="RR" {{ (old('state') == 'RR') ? 'selected' : '' }}>Roraima</option>
-                                            <option value="SC" {{ (old('state') == 'SC') ? 'selected' : '' }}>Santa Catarina</option>
-                                            <option value="SP" {{ (old('state') == 'SP') ? 'selected' : '' }}>São Paulo</option>
-                                            <option value="SE" {{ (old('state') == 'SE') ? 'selected' : '' }}>Sergipe</option>
-                                            <option value="TO" {{ (old('state') == 'TO') ? 'selected' : '' }}>Tocantins</option>
+                                            <option value="" disabled {{ ($position->state== '') ? 'selected' : '' }}>Selecione um estado</option>
+                                            <option value="AC" {{ ($position->state== 'AC') ? 'selected' : '' }}>Acre</option>
+                                            <option value="AL" {{ ($position->state== 'AL') ? 'selected' : '' }}>Alagoas</option>
+                                            <option value="AP" {{ ($position->state== 'AP') ? 'selected' : '' }}>Amapá</option>
+                                            <option value="AM" {{ ($position->state== 'AM') ? 'selected' : '' }}>Amazonas</option>
+                                            <option value="BA" {{ ($position->state== 'BA') ? 'selected' : '' }}>Bahia</option>
+                                            <option value="CE" {{ ($position->state== 'CE') ? 'selected' : '' }}>Ceará</option>
+                                            <option value="DF" {{ ($position->state== 'DF') ? 'selected' : '' }}>Distrito Federal</option>
+                                            <option value="ES" {{ ($position->state== 'ES') ? 'selected' : '' }}>Espírito Santo</option>
+                                            <option value="GO" {{ ($position->state== 'GO') ? 'selected' : '' }}>Goiás</option>
+                                            <option value="MA" {{ ($position->state== 'MA') ? 'selected' : '' }}>Maranhão</option>
+                                            <option value="MT" {{ ($position->state== 'MT') ? 'selected' : '' }}>Mato Grosso</option>
+                                            <option value="MS" {{ ($position->state== 'MS') ? 'selected' : '' }}>Mato Grosso do Sul</option>
+                                            <option value="MG" {{ ($position->state== 'MG') ? 'selected' : '' }}>Minas Gerais</option>
+                                            <option value="PA" {{ ($position->state== 'PA') ? 'selected' : '' }}>Pará</option>
+                                            <option value="PB" {{ ($position->state== 'PB') ? 'selected' : '' }}>Paraíba</option>
+                                            <option value="PR" {{ ($position->state== 'PR') ? 'selected' : '' }}>Paraná</option>
+                                            <option value="PE" {{ ($position->state== 'PE') ? 'selected' : '' }}>Pernambuco</option>
+                                            <option value="PI" {{ ($position->state== 'PI') ? 'selected' : '' }}>Piauí</option>
+                                            <option value="RJ" {{ ($position->state== 'RJ') ? 'selected' : '' }}>Rio de Janeiro</option>
+                                            <option value="RN" {{ ($position->state== 'RN') ? 'selected' : '' }}>Rio Grande do Norte</option>
+                                            <option value="RS" {{ ($position->state== 'RS') ? 'selected' : '' }}>Rio Grande do Sul</option>
+                                            <option value="RO" {{ ($position->state== 'RO') ? 'selected' : '' }}>Rondônia</option>
+                                            <option value="RR" {{ ($position->state== 'RR') ? 'selected' : '' }}>Roraima</option>
+                                            <option value="SC" {{ ($position->state== 'SC') ? 'selected' : '' }}>Santa Catarina</option>
+                                            <option value="SP" {{ ($position->state== 'SP') ? 'selected' : '' }}>São Paulo</option>
+                                            <option value="SE" {{ ($position->state== 'SE') ? 'selected' : '' }}>Sergipe</option>
+                                            <option value="TO" {{ ($position->state== 'TO') ? 'selected' : '' }}>Tocantins</option>
                                         </select> 
                                         @error('state')
                                         <div class="invalid-feedback" role="alert">{{ $message }}</div>
