@@ -55,7 +55,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
             $data['vagas'][$i]['salario'] =  $content->salary;            
-            $data['vagas'][$i]['salario'] = round(floatval($content->salary) ,2);            
+//            $data['vagas'][$i]['salario'] = round(floatval($content->salary) ,2);            
             $contentclient = $content->contentclient();
             if ($contentclient != null) {
             $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
