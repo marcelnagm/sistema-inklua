@@ -47,10 +47,17 @@ class Content extends Model {
         'english_level'
     ];
     protected $hidden = [
-        // 'id'
+// 'id'
         'row_n',
         'order_type'
     ];
+    static $status = array(
+        "aguardando_aprovacao", "aguardando_pagamento", "publicada"
+        , "reprovada" .
+        "expirada",
+        "fechada",
+        "cancelada"
+    );
 
     public function group() {
         return $this->belongsTo('App\Models\Group');
@@ -97,7 +104,7 @@ class Content extends Model {
                 ->paginate(12)
         ;
 
-        // $content->data = Content::hideFields($content);
+// $content->data = Content::hideFields($content);
         return $content;
     }
 
@@ -283,10 +290,10 @@ class Content extends Model {
         return $content;
     }
 
-    // Types
-    // 1 => position
-    // 2 => ad
-    // 3 => content
+// Types
+// 1 => position
+// 2 => ad
+// 3 => content
 
 
     public function getApplicationType() {
@@ -426,7 +433,7 @@ class Content extends Model {
                 );
                 break;
             case "publicada":
-             return array(
+                return array(
                     'title' => 'Recrutando',
                     'color' => "Default",
                     'value' => $this->getStatusName(),
@@ -435,20 +442,20 @@ class Content extends Model {
 
                 break;
             case "reprovada":
-             return array(
+                return array(
                     'title' => 'Cancelado',
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
                     'ref' => 01
-                );               
+                );
                 break;
             case "expirada":
-             return array(
+                return array(
                     'title' => 'Cancelado',
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
                     'ref' => 01
-                );               
+                );
                 break;
             case "fechada":
                 return array(
@@ -456,7 +463,7 @@ class Content extends Model {
                     'color' => "Secondary",
                     'value' => $this->getStatusName(),
                     'ref' => 04
-                );               
+                );
                 break;
             case "cancelada":
                 return array(
@@ -464,7 +471,7 @@ class Content extends Model {
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
                     'ref' => 01
-                );               
+                );
                 break;
         }
     }

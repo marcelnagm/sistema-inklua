@@ -127,7 +127,7 @@
 
                     <hr>
                     <div class="form-row mb-3">
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                         <label for="state" class="form-label">{{ __('Estado') }}</label>
                                         <select class="form-control @error('state') is-invalid @enderror" name="state" id="state">
@@ -165,7 +165,7 @@
                                         @enderror
                                     </div> 
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="city" class="form-label">{{ __('Cidade') }}</label>
                                 <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ isset($position->city) && ($position->city) ? $position->city : old('city') }}"   >
@@ -174,7 +174,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="district" class="form-label">{{ __('Bairro') }}</label>
                                 <input id="district" type="text" class="form-control @error('district') is-invalid @enderror" name="district" value="{{ isset($position->district) && ($position->district) ? $position->district : old('district') }}"  >
@@ -332,11 +332,22 @@
                             <div class="form-group">
                                 <label for="status" class="form-label">{{ __('Status: ') }}</label>
                                 {!! $position->getStatusName() !!}
+                                 <select name="status" class="form-control" 
+        
+                @foreach ($status as $key)
+                <option value="{{ $key }}"
+                @if ($key == 
+                $position->status)
+                    selected="selected"
+                    @endif
+                    >{{ $key }}</option>
+                @endforeach
+            </select>
+
                             </div>
                         </div>
                     </div>
-                    <input id="status" type="hidden" name="status" value="{{ isset( $position->status ) && ( $position->status ) ? $position->status : old('status') }}">
-
+                  
                     <a href="{{ url('') }}/admin/usuarios/vagas" class="btn btn-secondary">Voltar</a>
                     @if($position->status == 'aguardando_aprovacao')
                     <a href="{{route('externo.aprovar',$position->id)}}?status=aguardando_pagamento" class="btn btn-success user-position-approve">Aprovar</a>

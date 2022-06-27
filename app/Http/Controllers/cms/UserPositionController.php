@@ -64,6 +64,7 @@ class UserPositionController extends Controller
             'position'    => $position,
             'groups' => $groups,
               'english_levels' => CandidateEnglishLevel::all(),
+            'status' => Content::$status
         ];
 
         return view('cms.position.user_position_form', $data);
@@ -87,30 +88,30 @@ class UserPositionController extends Controller
         }
 
         $data = $request->except([
-            'status',
+       
             'image'
         ]);
-
-        if($position->status == 'aguardando_aprovacao') {
-            if($request->input('status') == 'publicada') {
-                $positionOwner = $position->user;
-                if($position->checkExistenceOfPositionByCnpj($positionOwner->cnpj)) {
-                    $data['status'] = 'aguardando_pagamento';
-                    $position->update( $data );
-                    $position->notifyPositionApproved();
-                }else {
-                    $data['status'] = 'publicada';
-                    $data['published_at'] = Carbon::now()->format('Y-m-d');
-                    $position->update( $data );
-                    $position->notifyPositionPublished();
-                }
-            }elseif($request->input('status') == 'reprovada') {
-                $data['status'] = 'reprovada';
-                $position->update( $data );
-            }
-        }else {
+//dd( $data['status']);
+//        if($position->status == 'aguardando_aprovacao') {
+//            if($request->input('status') == 'publicada') {
+//                $positionOwner = $position->user;
+//                if($position->checkExistenceOfPositionByCnpj($positionOwner->cnpj)) {
+//                    $data['status'] = 'aguardando_pagamento';
+//                    $position->update( $data );
+//                    $position->notifyPositionApproved();
+//                }else {
+//                    $data['status'] = 'publicada';
+//                    $data['published_at'] = Carbon::now()->format('Y-m-d');
+//                    $position->update( $data );
+//                    $position->notifyPositionPublished();
+//                }
+//            }elseif($request->input('status') == 'reprovada') {
+//                $data['status'] = 'reprovada';
+//                $position->update( $data );
+//            }
+//        }else {
             $position->update( $data );
-        }
+//        }
 
 
         // Atualiza o ordenation em todos os positions do mesmo grupo

@@ -2,7 +2,7 @@
 
 @section('content')
 
-
+<!--interna-->
 <div class="row">
 
     <!-- Area Chart -->
@@ -123,7 +123,7 @@
 
                     <hr>
                     <div class="form-row mb-3">
-                      <div class="col-lg-5">
+                      <div class="col-lg-4">
                             <div class="form-group">
                                         <label for="state" class="form-label">{{ __('Estado') }}</label>
                                         <select class="form-control @error('state') is-invalid @enderror" name="state" id="state">
@@ -161,7 +161,7 @@
                                         @enderror
                                     </div> 
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4 float-right">
                             <div class="form-group">
                                 <label for="city" class="form-label">{{ __('Cidade') }}</label>
                                 <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ isset($position->city) && ($position->city) ? $position->city : old('city') }}"   >
@@ -170,7 +170,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4 float-right">
                             <div class="form-group">
                                 <label for="district" class="form-label">{{ __('Bairro') }}</label>
                                 <input id="district" type="text" class="form-control @error('district') is-invalid @enderror" name="district" value="{{ isset($position->district) && ($position->district) ? $position->district : old('district') }}"  >
@@ -258,7 +258,7 @@
                     <hr>
                   
                     @isset($contentclient)
-                    <hr>
+                  
                     <div class="form-row mb-3">
                         <div class="col-lg-3" >
                             <div class="form-group ">
