@@ -55,11 +55,12 @@ class ReportController extends Controller {
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
             $data['vagas'][$i]['salario'] =  $content->salary;            
-            $data['vagas'][$i]['salario'] = number_format($content->salary,2,'.','.') ;            
+            $data['vagas'][$i]['salario'] = 'R$'.number_format($content->salary,2,'.','.') ;                        
             $contentclient = $content->contentclient();
             if ($contentclient != null) {
             $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
             $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
+           
             $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
             
             }else{
@@ -71,8 +72,9 @@ class ReportController extends Controller {
 
             $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
             if ($contentclient != null) {
-            $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $content->salary;
-            $data['vagas'][$i]['carteira'] =  number_format(floatval($data['vagas'][$i]['carteira'] ),2,'.','.');
+            $data['vagas'][$i]['carteira'] = ($data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
+            $data['vagas'][$i]['carteira'] =  'R$'.number_format(floatval($data['vagas'][$i]['carteira'] ),2,'.','.');
+            $data['vagas'][$i]['taxa'] = $data['vagas'][$i]['taxa'].'%';
             }else{
             $data['vagas'][$i]['carteira'] = 'Nao existe o dado';              
             }
