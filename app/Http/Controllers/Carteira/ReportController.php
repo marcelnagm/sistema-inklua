@@ -55,6 +55,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
             $data['vagas'][$i]['salario'] =  $content->salary;            
+            $data['vagas'][$i]['salario'] = floatval($content->salary) ;            
             $contentclient = $content->contentclient();
             if ($contentclient != null) {
             $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
@@ -71,7 +72,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
             if ($contentclient != null) {
             $data['vagas'][$i]['carteira'] = $data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100) * $data['vagas'][$i]['salario'];
-            $data['vagas'][$i]['carteira'] = number_format($data['vagas'][$i]['carteira'] ,2);
+            $data['vagas'][$i]['carteira'] =  round($data['vagas'][$i]['carteira'] ,2);
             }else{
             $data['vagas'][$i]['carteira'] = 'Nao existe o dado';              
             }

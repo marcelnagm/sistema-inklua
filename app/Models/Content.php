@@ -414,7 +414,7 @@ class Content extends Model {
                     'title' => 'Aguardando',
                     'color' => "Default",
                     'value' => $this->getStatusName(),
-                    'ref' => '03'
+                    'ref' => 03
                 );
                 break;
             case "aguardando_pagamento":
@@ -422,7 +422,7 @@ class Content extends Model {
                     'title' => 'Aguardando',
                     'color' => "Default",
                     'value' => $this->getStatusName(),
-                    'ref' => '03'
+                    'ref' => 03
                 );
                 break;
             case "publicada":
@@ -430,7 +430,7 @@ class Content extends Model {
                     'title' => 'Recrutando',
                     'color' => "Default",
                     'value' => $this->getStatusName(),
-                    'ref' => '02'
+                    'ref' => 02
                 );
 
                 break;
@@ -439,7 +439,7 @@ class Content extends Model {
                     'title' => 'Cancelado',
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
-                    'ref' => '01'
+                    'ref' => 01
                 );               
                 break;
             case "expirada":
@@ -447,7 +447,7 @@ class Content extends Model {
                     'title' => 'Cancelado',
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
-                    'ref' => '01'
+                    'ref' => 01
                 );               
                 break;
             case "fechada":
@@ -455,7 +455,7 @@ class Content extends Model {
                     'title' => 'Concluída',
                     'color' => "Secondary",
                     'value' => $this->getStatusName(),
-                    'ref' => '04'
+                    'ref' => 04
                 );               
                 break;
             case "cancelada":
@@ -463,7 +463,7 @@ class Content extends Model {
                     'title' => 'Cancelado',
                     'color' => "Primary",
                     'value' => $this->getStatusName(),
-                    'ref' => '01'
+                    'ref' => 01
                 );               
                 break;
         }
