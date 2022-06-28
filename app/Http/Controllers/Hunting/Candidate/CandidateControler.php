@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Validator;
 class CandidateControler extends Controller {
 
     public function __construct() {
-         $this->middleware('auth:api');
-        $this->middleware('App\Http\Middleware\checkUserCandidate', ['only' => ['update', 'destroy']]);
+        $this->middleware('auth:api');
+        $this->middleware('App\Http\Middleware\checkUserCandidate', ['only' => ['update', 'destroy','show']]);
     }
 
     public function store(Request $request) {
@@ -110,6 +110,12 @@ class CandidateControler extends Controller {
         $response = Validator::make($data, Candidate::$rules);
 
         return $response;
+    }
+
+    public function show(Request $request) {
+        $user = auth()->guard('api')->user();
+        $cand = Candidate::where('user_id', $user->id)->first();
+        return $cand;
     }
 
 }

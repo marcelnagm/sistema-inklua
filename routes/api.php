@@ -99,8 +99,8 @@ use App\Http\Controllers\Hunting\Recruiter\CandidateExperienceControler;
 
 Route::group(['middleware' => ['api']], function () {
 
-    Route::post('/admin/hunting/candidate', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@index');
-    Route::post('/admin/hunting/candidate/{id}', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@show');
+    Route::get('/admin/hunting/candidate', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@index');
+    Route::get('/admin/hunting/candidate/{id}', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@show');
 
     Route::post('/admin/hunting/education', 'App\Http\Controllers\Hunting\Recruiter\CandidateEducationControler@index');
 
@@ -113,25 +113,26 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/admin/hunting/search', 'App\Http\Controllers\Hunting\Recruiter\SearchControler@index_search');
 
-    Route::post('/admin/hunting/job/recruiter/{id}', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@index');
+    Route::get('/admin/hunting/job/recruiter/{id}', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@index');
     Route::post('/admin/hunting/job/recruiter/{id}/search', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@search');
 //Route::delete('/job/{id}', 'JobLikeControler@destroy');
 });
 
 Route::group(['middleware' => ['api']], function ($router) {
 
+    Route::get('/candidate/me', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@show');
     Route::post('/candidate/store', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@store');
     Route::put('/candidate/update', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@update');
     Route::delete('/candidate/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateControler@destroy');
 
-    Route::post('/education', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@index');
+    Route::get('/education', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@index');
     Route::post('/education/store/', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@store');
     Route::post('/education/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@show');
     Route::put('/education/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@update');
     Route::post('/education/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@update');
     Route::delete('/education/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@destroy');
 
-    Route::post('/work', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@index');
+    Route::get('/work', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@index');
     Route::post('/work/store/', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@store');
     Route::post('/work/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@show');
     Route::put('/work/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@update');
