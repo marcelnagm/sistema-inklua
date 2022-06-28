@@ -188,7 +188,7 @@
                  
 
                     <div class="form-row mb-3">
-                        <div class="col-lg-9">
+                        <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="description" class="form-label">{{ __('Descrição') }}</label>
                                 <textarea id="descri" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description">{{ (isset($position->description)) ? $position->description : old('description') }}</textarea>
@@ -332,15 +332,11 @@
                             <div class="form-group">
                                 <label for="status" class="form-label">{{ __('Status: ') }}</label>
                                 {!! $position->getStatusName() !!}
-                                 <select name="status" class="form-control" 
-        
-                @foreach ($status as $key)
+                                <select name="status" class="form-control"         >
+                                         @foreach ($status as $key => $value)
                 <option value="{{ $key }}"
-                @if ($key == 
-                $position->status)
-                    selected="selected"
-                    @endif
-                    >{{ $key }}</option>
+                @if ($key ==  $position->status)   selected="selected"     @endif
+                    > {{$value }}</option>
                 @endforeach
             </select>
 
