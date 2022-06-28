@@ -51,9 +51,11 @@ class Content extends Model {
         'row_n',
         'order_type'
     ];
-    static $status = array(
-        "aguardando_aprovacao", "aguardando_pagamento", "publicada"
-        , "reprovada" .
+    static $status = array(        
+        "aguardando_aprovacao",
+        "aguardando_pagamento",
+        "publicada"
+        , "reprovada" ,
         "expirada",
         "fechada",
         "cancelada"
@@ -488,4 +490,41 @@ class Content extends Model {
                         ->whereIN('contents.user_id', InkluaUser::inkluaUsers()->get()->pluck('user_id'));
     }
 
+    public static function  StatusName($status) {
+        switch ($status) {
+            case "aguardando_aprovacao":
+                return 'Aguardando aprovação';
+                break;
+            case "aguardando_pagamento":
+                return 'Aguardando pagamento';
+                break;
+            case "publicada":
+                return 'Publicada';
+                break;
+            case "reprovada":
+                return 'Reprovada';
+                break;
+            case "expirada":
+                return 'Expirada';
+                break;
+            case "fechada":
+                return 'Fechada';
+                break;
+            case "cancelada":
+                return 'Cancelada';
+                break;
+        }
+    }
+    public static function ListStatusName(){
+        $status = array();
+        
+        
+        foreach (self::$status as $sta){
+         $status[$sta ] = self::StatusName($sta);   
+        }
+//         dd($status );
+        return $status;
+       
+    }
+    
 }

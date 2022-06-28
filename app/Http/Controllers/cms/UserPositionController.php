@@ -64,7 +64,7 @@ class UserPositionController extends Controller
             'position'    => $position,
             'groups' => $groups,
               'english_levels' => CandidateEnglishLevel::all(),
-            'status' => Content::$status
+            'status' => Content::ListStatusName()
         ];
 
         return view('cms.position.user_position_form', $data);
