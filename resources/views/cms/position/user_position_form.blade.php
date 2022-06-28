@@ -191,7 +191,7 @@
                         <div class="col-lg-9">
                             <div class="form-group">
                                 <label for="description" class="form-label">{{ __('Descrição') }}</label>
-                                <textarea id="description" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description">{{ (isset($position->description)) ? $position->description : old('description') }}</textarea>
+                                <textarea id="descri" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description">{{ (isset($position->description)) ? $position->description : old('description') }}</textarea>
                                 @error('description')
                                 <div class="invalid-feedback" role="alert">{{ $message }}</div>
                                 @enderror
