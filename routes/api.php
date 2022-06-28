@@ -146,19 +146,19 @@ Route::group(['middleware' => ['api']], function ($router) {
 
 //Rotas nao protegidas
 
-Route::post('/city', 'App\Http\Controllers\MapeamentoTech\CityControler@index');
-Route::post('/city/uf/', 'App\Http\Controllers\MapeamentoTech\CityControler@uf');
-Route::post('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_name');
+Route::get('/city', 'App\Http\Controllers\MapeamentoTech\CityControler@index');
+Route::get('/city/uf/', 'App\Http\Controllers\MapeamentoTech\CityControler@uf');
+Route::get('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_name');
 
-Route::post('/state', function () use ($router) {
+Route::get('/state', function () use ($router) {
     return State::all();
 });
 
-Route::post('/pcd_type', function () use ($router) {
+Route::get('/pcd_type', function () use ($router) {
     return PcdType::all();
 });
 
-Route::post('/races', function () use ($router) {
+Route::get('/races', function () use ($router) {
     return App\Models\CandidateRace::all();
 });
 
@@ -166,7 +166,7 @@ Route::post('/genders', function () use ($router) {
     return App\Models\CandidateGender::all();
 });
 
-Route::post('/level_education', function () use ($router) {
+Route::get('/level_education', function () use ($router) {
     return App\Models\LevelEducation::all();
 });
 
