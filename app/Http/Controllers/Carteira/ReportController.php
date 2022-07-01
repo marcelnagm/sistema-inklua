@@ -64,9 +64,9 @@ class ReportController extends Controller {
             $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
             
             }else{
-            $data['vagas'][$i]['posicoes'] = 'Nao existe o dado';
-            $data['vagas'][$i]['taxa'] = 'Nao existe o dado';
-            $data['vagas'][$i]['cliente'] = 'Nao existe o dado';
+            $data['vagas'][$i]['posicoes'] = '-';
+            $data['vagas'][$i]['taxa'] = '-';
+            $data['vagas'][$i]['cliente'] = '-';
                 
             }
 
@@ -76,7 +76,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['carteira'] =  'R$'.number_format(floatval($data['vagas'][$i]['carteira'] ),2,'.','.');
             $data['vagas'][$i]['taxa'] = $data['vagas'][$i]['taxa'].'%';
             }else{
-            $data['vagas'][$i]['carteira'] = 'Nao existe o dado';              
+            $data['vagas'][$i]['carteira'] = '-';              
             }
             $i++;
         }
