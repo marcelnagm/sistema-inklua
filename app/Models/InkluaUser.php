@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\InkluaOffice;
 use App\Models\User;
 use App\Models\OfficeRole;
+use Illuminate\Support\Facades\Auth;
 
 class InkluaUser extends Model {
 
@@ -23,6 +24,21 @@ protected $dates = [
         'start_at',
         'end_at'
     ];
+ public static function boot()
+    {
+       parent::boot();
+       static::creating(function($model)
+       {
+           $user = Auth::user();
+           $model->created_by = $user->id;
+           $model->updated_by = $user->id;
+       });
+       static::updating(function($model)
+       {
+           $user = Auth::user();
+           $model->updated_by = $user->id;
+       });
+   }
 
     public function office() {
         return InkluaOffice::find($this->office_id);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ClientCondition;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Client
@@ -57,7 +58,23 @@ class Client extends Model
      */
     protected $fillable = ['cnpj','formal_name','fantasy_name','sector','local_label','active','state_id', 'obs'];
 
-
+ public static function boot()
+    {
+       parent::boot();
+       static::creating(function($model)
+       {
+           $user = Auth::user();
+           $model->created_by = $user->id;
+           $model->updated_by = $user->id;
+       });
+       static::updating(function($model)
+       {
+           $user = Auth::user();
+           $model->updated_by = $user->id;
+       });
+   }
+    
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

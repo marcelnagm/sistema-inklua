@@ -130,6 +130,11 @@ class Candidate extends Model {
         return CandidateEnglishLevel::find($this->english_level);
     }
 
+      public function user() {
+        return User::find($this->user_id);
+    }
+
+    
     public function race() {
         return CandidateRace::find($this->race_id);
     }

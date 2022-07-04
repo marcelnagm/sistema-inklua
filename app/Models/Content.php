@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Group;
 use App\Models\ContentClient;
 
@@ -61,6 +62,23 @@ class Content extends Model {
         "cancelada"
     );
 
+    public static function boot()
+    {
+       parent::boot();
+       static::creating(function($model)
+       {
+           $user = Auth::user();
+           $model->created_by = $user->id;
+           $model->updated_by = $user->id;
+       });
+       static::updating(function($model)
+       {
+           $user = Auth::user();
+           $model->updated_by = $user->id;
+       });
+   }
+    
+    
     public function group() {
         return $this->belongsTo('App\Models\Group');
     }

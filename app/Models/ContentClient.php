@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
 use App\Models\ClientCondition;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ContentClient
@@ -33,7 +34,22 @@ class ContentClient extends Model
      * @var array
      */
     protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy'];
-
+    
+     public static function boot()
+    {
+       parent::boot();
+       static::creating(function($model)
+       {
+           $user = Auth::user();
+           $model->created_by = $user->id;
+           $model->updated_by = $user->id;
+       });
+       static::updating(function($model)
+       {
+           $user = Auth::user();
+           $model->updated_by = $user->id;
+       });
+   }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
