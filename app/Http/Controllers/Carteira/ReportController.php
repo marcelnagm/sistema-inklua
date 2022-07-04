@@ -92,7 +92,9 @@ class ReportController extends Controller {
             $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
         } else {
             if ($request->exists('date_start')) {
-                $vagas = $vagas->where('contents.created_at', '>=', $request->input('date_start')); 
+                $vagas = $vagas->whereRaw('(contents.created_at  >= "'. $request->input('date_start').'"'
+                        . ' or (status="publicada" and  contents.created_at  <= "'. $request->input('date_start').'")'
+                        . ')'); 
             }
             if ($request->exists('date_end')) {
                 $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
