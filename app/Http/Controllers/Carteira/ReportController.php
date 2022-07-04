@@ -92,7 +92,7 @@ class ReportController extends Controller {
             $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
         } else {
             if ($request->exists('date_start')) {
-                $vagas = $vagas->where('contents.created_at', '>=', $request->input('date_start'));
+                $vagas = $vagas->where('contents.created_at', '>=', $request->input('date_start')); 
             }
             if ($request->exists('date_end')) {
                 $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
@@ -108,6 +108,9 @@ class ReportController extends Controller {
             }
             if ($request->exists('office')) {
                 $vagas = $vagas->whereRaw('contents.user_id in (select user_id as id from inklua_users where office_id = ?)', array($request->input('office')));
+            }
+            if ($request->exists('status')) {
+                $vagas = $vagas->where('contents.status',$request->input('status'));
             }
         }
         if ($request->exists('debug')) {
