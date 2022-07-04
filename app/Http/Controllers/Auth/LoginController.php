@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Carbon;
 
 class LoginController extends Controller
 {
@@ -41,9 +41,12 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user &&
-            Hash::check($request->password, $user->password)) {;
+            Hash::check($request->password, $user->password)) {
 
             $user->getWallet();
+            
+            $user->last_login_at = Carbon::now();
+            $user->save();
             return response()->json(
                 [
                     "user" => $user,
