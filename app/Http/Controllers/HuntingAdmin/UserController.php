@@ -106,7 +106,7 @@ class UserController extends Controller {
 
     public function grant(Request $request, $id) {
 //        dd($request);        
-
+        $user = User::find($id);
 
         if (in_array($request->input('role_id'), array(1, 2))) {
             $ink = InkluaUser::
@@ -118,11 +118,27 @@ class UserController extends Controller {
                 return redirect('users/' . $user->id)
                                 ->with('error', "Já existe um lider/PFL para este escritorio, o $name  deve ser revogado para esta acao continuar");
             }
-
+                
             $user->promote($request);
 
             return redirect('users/' . $user->id)->with('success', 'Usuario atribuido a um escritorio');
-        } else {
+        } else
+        if (!in_array($request->input('role_id'), array(1, 2))) {
+            $ink = InkluaUser::
+                            where('office_id', $request->input('office_id'))->                            
+                            where('user_id', $user->id)->                            
+                            where('active', 1)->first();
+            if ($ink != null) {
+                
+                return redirect('users/' . $user->id)
+                                ->with('error', "Já existe uma vinculacao a um escritorio");
+            }
+                
+            $user->promote($request);
+            return redirect('users/' . $user->id)->with('success', 'Usuario atribuido a um escritorio');
+
+        }
+        else {
             return redirect()->route('users.index')
                             ->with('success', 'Usuario atribuido a um escritorio');
         }
