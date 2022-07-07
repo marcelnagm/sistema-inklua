@@ -15,12 +15,12 @@ use App\Mail\NotifyMail;
 
 class JobLikeControler extends Controller {
 
-    public function index(Request $request,$id) {
+    public function index(Request $request, $id) {
         $user = auth()->guard('api')->user();
-        
+
         $content = Content::findOrFail($id);
-        if($request->exists('debug')){
-        dd('dono do content:'.$content->user_id ,'usuario:'.$user->id);
+        if ($request->exists('debug')) {
+            dd('dono do content:' . $content->user_id, 'usuario:' . $user->id);
         }
         if ($content->user_id != $user->id) {
             return response()->json([
@@ -30,7 +30,21 @@ class JobLikeControler extends Controller {
         }
 
         if (InkluaUser::isInternal($user->id)) {
-            return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();
+            if ($request->exists('key')) {
+                $param = $request->input('key');
+                return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
+                                whereRaw("("
+                                        . "name like '%$param%'  or "
+                                        . "surname like '%$param%'  or "
+                                        . "cellphone like '%$param%'  or "
+                                        . "id = '$param'  "
+                                        . ") ")->
+                                when($request->exists('order_by'), function ($q) {
+                                    return $q->orderBy(request('order_by'), request('ordering_rule'));
+                                })->
+                                get();
+            } else
+                return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();
         } else {
             return JobLike::where('job_id', $id)->orderBy('created_at')->count();
         }
