@@ -15,10 +15,13 @@ use App\Mail\NotifyMail;
 
 class JobLikeControler extends Controller {
 
-    public function index($id) {
+    public function index(Request $request,$id) {
         $user = auth()->guard('api')->user();
-//        dd(Content::find($id)->user_id ,$user->id);
+        
         $content = Content::findOrFail($id);
+        if($request->exists('debug')){
+        dd('dono do content:'.$content->user_id ,'usuario:'.$user->id);
+        }
         if ($content->user_id != $user->id) {
             return response()->json([
                         'status' => false,
