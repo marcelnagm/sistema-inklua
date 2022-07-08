@@ -20,6 +20,7 @@ use App\Models\CandidateReport;
 use App\Models\CandidateGender;
 use App\Models\CandidateRace;
 use Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CandidateHunting extends Model {
 
@@ -128,12 +129,31 @@ class CandidateHunting extends Model {
         }
     }
 
+    public function age() {
+        return \Carbon\Carbon::parse($this->birth_date)->age;
+    }
+
     public function full_name() {
         return $this->name . ' ' . $this->surname;
     }
 
     public function payment_formatted() {
         return number_format($this->payment, 2, ',', '.');
+    }
+
+    public function status_name() {
+        switch ($this->status) {
+            case -1:
+                return 'BLOCKED';
+            case 0:
+                return "AVAILABLE";
+            default: {
+                    if ($this->status == auth()->guard('api')->user()->id)
+                        return 'YOURS';
+                    else
+                        return "TAKEN";
+                }
+        }
     }
 
     public function state() {
@@ -152,6 +172,10 @@ class CandidateHunting extends Model {
         return CandidateEducation::where('candidate_id', $this->id)->orderBy('level_education_id')->get();
     }
 
+    public function education_max() {
+        return CandidateEducation::where('candidate_id', $this->id)->orderBy('level_education_id')->get()->pluck('level_education_id')->max();
+    }
+
     public function report() {
         return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at', 'DESC')->get();
     }
@@ -160,20 +184,24 @@ class CandidateHunting extends Model {
         return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get();
     }
 
+    public function last_experience() {
+        return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get()->last();
+    }
+
     public function save_pcd_report($pcd_report, $ext) {
 
         if (Storage::exists("docs/$this->gid"))
             Storage::makeDirectory("docs/$this->gid");
 
         Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
-        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";      
+        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
     }
 
     public function save_cv_path($cv_path, $ext) {
 
         if (Storage::exists("docs/$this->gid"))
             Storage::makeDirectory("docs/$this->gid");
-        
+
         Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
         $this->cv_path = "docs/$this->gid/cv.$ext";
     }
@@ -204,8 +232,8 @@ class CandidateHunting extends Model {
     public function save(array $attributes = [], array $options = []) {
 
         if (isset($attributes['payment'])) {
-            if(str_contains($attributes['payment'], '.'))
-            $attributes['payment'] = $attributes['payment'] * 1000  ;
+            if (str_contains($attributes['payment'], '.'))
+                $attributes['payment'] = $attributes['payment'] * 1000;
         }
         parent::save($attributes, $options);
     }
@@ -216,8 +244,8 @@ class CandidateHunting extends Model {
             $attributes['birth_date'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['birth_date']);
         }
         if (isset($attributes['payment'])) {
-            if(str_contains($attributes['payment'], '.'))
-            $attributes['payment'] = $attributes['payment'] * 1000  ;
+            if (str_contains($attributes['payment'], '.'))
+                $attributes['payment'] = $attributes['payment'] * 1000;
         }
 
         parent::update($attributes, $options);

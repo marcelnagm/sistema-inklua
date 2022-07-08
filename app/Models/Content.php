@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Group;
 use App\Models\ContentClient;
+use App\Models\JobLike;
 
 class Content extends Model {
 
@@ -55,7 +56,8 @@ class Content extends Model {
     static $status = array(        
         "aguardando_aprovacao",
         "aguardando_pagamento",
-        "publicada"
+        "publicada",
+        "reposicao"
         , "reprovada" ,
         "expirada",
         "fechada",
@@ -354,6 +356,9 @@ class Content extends Model {
             case "aguardando_pagamento":
                 return 'Aguardando pagamento';
                 break;
+            case "reposicao":
+                return 'Reposição';
+                break;
             case "publicada":
                 return 'Publicada';
                 break;
@@ -516,6 +521,9 @@ class Content extends Model {
             case "aguardando_pagamento":
                 return 'Aguardando pagamento';
                 break;
+            case "reposicao":
+                return 'Reposição';
+                break;
             case "publicada":
                 return 'Publicada';
                 break;
@@ -543,6 +551,14 @@ class Content extends Model {
 //         dd($status );
         return $status;
        
+    }
+ 
+    public function getLikesCount(){
+        return JobLike::where('job_id', $this->id)->orderBy('created_at')->count();
+    }
+    
+    public function getLikes(){
+         return Candidate::whereIn('id', JobLike::where('job_id', $this->id)->orderBy('created_at')->pluck('candidate_id'))->get();
     }
     
 }

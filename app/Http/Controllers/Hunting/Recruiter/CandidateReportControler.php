@@ -43,7 +43,7 @@ class CandidateReportControler extends Controller {
 
         $cand = Candidate::find($data['candidate_id']);
         if ($cand->status != -1) {
-            if ($cand->status == 0) {
+            if ($cand->status == 0 || $cand->status==null) {
                 $cand = new CandidateReport($data);
 
                 $cand->save();

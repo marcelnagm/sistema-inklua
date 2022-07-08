@@ -32,8 +32,8 @@ class JobLikeControler extends Controller {
         if (InkluaUser::isInternal($user->id)) {
             if ($request->exists('key')) {
                 $param = $request->input('key');
-                return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
-                                whereRaw("("
+                $cand =  JobLike::where('job_id', $id)->
+                                 whereRaw("candidate_id in (select id from candidate_hunting where "
                                         . "name like '%$param%'  or "
                                         . "surname like '%$param%'  or "
                                         . "cellphone like '%$param%'  or "
@@ -41,13 +41,24 @@ class JobLikeControler extends Controller {
                                         . ") ")->
                                 when($request->exists('order_by'), function ($q) {
                                     return $q->orderBy(request('order_by'), request('ordering_rule'));
-                                })->
-                                get();
+                                });
             } else
-                return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->get();
+                $cand =  JobLike::where('job_id', $id);
+            $cand =  $cand->get()->skip(6 * ($request->input('page') - 1))->take(6);
+//           dd($cand); 
+           $data = array();
+           $data['data']['current_page']=  $request->input('page') ;
+           $data['data']['last_page']= round($cand->count()/2,0); 
+           foreach($cand as $c){
+           $data['data']['likes'][] = $c->toArray();
+           }
+//           dd($data);
+            return $data;
         } else {
             return JobLike::where('job_id', $id)->orderBy('created_at')->count();
         }
+        
+        
     }
 
     public function search(Request $request, $id) {

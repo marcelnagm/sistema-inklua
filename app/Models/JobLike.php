@@ -16,6 +16,8 @@ namespace App\Models;
  */
 use Illuminate\Database\Eloquent\Model;
 use App\Mail\NotifyMail;
+use App\Models\Content;
+use App\Models\CandidateHunting;
 
 class JobLike extends Model {
     
@@ -38,6 +40,54 @@ class JobLike extends Model {
            return response()->success('Great! Successfully send in your mail');
          }
      
+        
+    }
+   
+    public function candidate() {
+        return CandidateHunting::find($this->candidate_id);
+    }
+    
+    public function content(){
+        return Content::find($this->content_id);
+    }
+    
+    public function toArray() {
+//        parent::toArray();
+//          id: 1,
+//        age: 18,
+//        salary_expectation: 5000,
+//        education_level: "Fundamental Completo",
+//        disability: "Deficiência múltipla",
+//        last_experience: {
+//          title: "Auxiliar Administrativo",
+//        },
+//        state: "SP",
+//        city: "São Paulo",
+//        status: "TAKEN",
+//        name: "João",
+//        recruiter: { name: "Jorge Amado" },
+//      }
+        
+       $candidate = $this->candidate(); 
+       $last_experience = $candidate->last_experience();
+       
+//       dd($last_experience);
+      return array(
+          'id' => $this->id,
+          'age' => $candidate->age(),
+          'salary' => $candidate->payment,
+          'education_level' => LevelEducation::find($candidate->education_max()).'' ,
+          'disability' => $candidate->pcd_typo().'' ,
+          'last_experience' => array('title' => $last_experience ? $last_experience->role : 'Nenhum' ) ,
+          'state' => $candidate->state()->UF,
+          'city' => $candidate->city()->name,
+          'status' => $candidate->status_name(),
+          'name' => $candidate->full_name()
+          
+          
+      ) ; 
+        
+        
         
     }
     

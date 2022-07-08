@@ -151,6 +151,17 @@ class MyContentController extends Controller
     }
 
     
+public function repos($id){
+      
+       $content = Content::where('id', $id)->first();
+       $content->status='reposicao';
+       $content->save();                      
+         return response()->json([
+                    'message' => 'Vaga Reposta',
+                    'content_id' => $content->id
+        ]);
+}
+
 public function approve($id){
       
        $content = Content::where('id', $id)->first();

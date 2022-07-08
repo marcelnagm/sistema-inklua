@@ -26,9 +26,10 @@ class LevelEducation extends Model {
     
 //    protected $hidden = [ ‘password’ ];
     
-    public function __toString() {
-        return $this->name;
+        public function __toString() {
+        return ucfirst($this->name);
     }
+
     
     
 }
