@@ -114,12 +114,12 @@ class ReportController extends Controller {
             if ($request->exists('key')) {
                 $vagas = $vagas->whereRaw('(contents.user_id in (select user_id as id from inklua_users where office_id = ?) or '
                         . 'contents.id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? ) or '
-                        . 'contents.title like "?" or '
+                        . 'contents.title like ? or '
                         . 'contents.id = ?'
                         . ')',
                         array($request->input('key'),
                             '%' . $request->input('key') . '%', '%' . $request->input('key') . '%',
-                            '%' . $request->input('key') . '%',
+//                            '%' . $request->input('key') . '%',
                             $request->input('key')
                     )
                         );
