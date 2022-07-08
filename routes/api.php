@@ -83,6 +83,8 @@ use App\Http\Middleware\checkUserInkluer;
 // rotas novas para aprovacao e cancelamento
 Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], function () {
 
+    Route::get('/vaga/reposicao/{id}', [MyContentController::class, 'repos']);
+    Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
     Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
     Route::get('/vaga/fechar/{id}', [MyContentController::class, 'close']);
     Route::post('/vaga/cancelar/{id}', [MyContentController::class, 'cancel']);
@@ -130,14 +132,14 @@ Route::group(['middleware' => ['api']], function ($router) {
     Route::post('/education/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@show');
     Route::put('/education/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@update');
     Route::post('/education/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@update');
-    Route::delete('/education/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@destroy');
+    Route::post('/education/{id}/delete', 'App\Http\Controllers\Hunting\Candidate\CandidateEducationControler@destroy');
 
     Route::get('/work', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@index');
     Route::post('/work/store/', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@store');
     Route::post('/work/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@show');
     Route::put('/work/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@update');
     Route::post('/work/{id}/update', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@update');
-    Route::delete('/work/{id}', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@destroy');
+    Route::post('/work/{id}/delete', 'App\Http\Controllers\Hunting\Candidate\CandidateExperienceControler@destroy');
 
     Route::post('/job/like/', 'App\Http\Controllers\Hunting\Candidate\JobLikeControler@store');
     Route::get('/job/exist/', 'App\Http\Controllers\Hunting\Candidate\JobLikeControler@exist');
@@ -190,4 +192,11 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/escritorios', function () {
         return App\Models\InkluaOffice::where('active',1)->get();
     });
+});
+
+//Rotas Perfil Lider
+Route::group(['middleware' => ['api']], function () {
+
+    Route::get('/vagas/publicadas', 'App\Http\Controllers\Lider\ReportController@index');
+    
 });
