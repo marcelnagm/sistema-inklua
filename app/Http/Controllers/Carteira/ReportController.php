@@ -23,60 +23,56 @@ class ReportController extends Controller {
 
         $data = array();
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());           
-            
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent());
-           
         }
-         $valo = clone $vagas;
-            $valo->join('contents_client', 'content_id', '=', 'contents.id');
-            $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-            $valo->groupby('status');
-            if ($request->exists('debug5')) {
-                dd(Controller::getEloquentSqlWithBindings($valo));
-            }
-            $data['carteira'] = $valo->get();
+        $valo = clone $vagas;
+        $valo->join('contents_client', 'content_id', '=', 'contents.id');
+        $valo->join('client_condition', 'content_id', '=', 'contents.id');
+        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
+        $valo->groupby('status');
+        if ($request->exists('debug5')) {
+            dd(Controller::getEloquentSqlWithBindings($valo));
+        }
+        $data['carteira'] = $valo->get();
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
-        
-            $i = 0;
+
+        $i = 0;
 
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = $content->id;
-            $data['vagas'][$i]['status_front'] = $content->getStatusFront();            
+            $data['vagas'][$i]['status_front'] = $content->getStatusFront();
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
-            $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
-            $data['vagas'][$i]['salario'] =  $content->salary;            
-            $data['vagas'][$i]['salario'] = 'R$'.number_format($content->salary,2,'.','.') ;                        
+            $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
+            $data['vagas'][$i]['salario'] = $content->salary;
+            $data['vagas'][$i]['salario'] = 'R$' . number_format($content->salary, 2, '.', '.');
             $contentclient = $content->contentclient();
             if ($contentclient != null) {
-            $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
-            $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-           
-            $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
-            
-            }else{
-            $data['vagas'][$i]['posicoes'] = '-';
-            $data['vagas'][$i]['taxa'] = '-';
-            $data['vagas'][$i]['cliente'] = '-';
-                
+                $data['vagas'][$i]['posicoes'] = $contentclient->vacancy;
+                $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
+
+                $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+            } else {
+                $data['vagas'][$i]['posicoes'] = '-';
+                $data['vagas'][$i]['taxa'] = '-';
+                $data['vagas'][$i]['cliente'] = '-';
             }
 
             $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
             if ($contentclient != null) {
-            $data['vagas'][$i]['carteira'] = ($data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
-            $data['vagas'][$i]['carteira'] =  'R$'.number_format(floatval($data['vagas'][$i]['carteira'] ),2,'.','.');
-            $data['vagas'][$i]['taxa'] = $data['vagas'][$i]['taxa'].'%';
-            }else{
-            $data['vagas'][$i]['carteira'] = '-';              
+                $data['vagas'][$i]['carteira'] = ($data['vagas'][$i]['posicoes'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
+                $data['vagas'][$i]['carteira'] = 'R$' . number_format(floatval($data['vagas'][$i]['carteira']), 2, '.', '.');
+                $data['vagas'][$i]['taxa'] = $data['vagas'][$i]['taxa'] . '%';
+            } else {
+                $data['vagas'][$i]['carteira'] = '-';
             }
             $i++;
         }
@@ -91,13 +87,20 @@ class ReportController extends Controller {
         if ($request->exists('content_id')) {
             $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
         } else {
-            if ($request->exists('date_start')) {
-                $vagas = $vagas->whereRaw('(contents.created_at  >= "'. $request->input('date_start').'"'
-                        . ' or (status="publicada" and  contents.created_at  <= "'. $request->input('date_start').'")'
-                        . ')'); 
-            }
-            if ($request->exists('date_end')) {
-                $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
+            if ($request->exists('date_start') && $request->exists('date_end')) {
+                $vagas = $vagas->whereRaw('(contents.created_at between "' . $request->input('date_start') . '" and '
+                        .'"' . $request->input('date_end') . '"'
+                        . ' or (status="publicada" and  contents.created_at  <= "' . $request->input('date_start') . '")'
+                        . ')');
+            } else {
+                if ($request->exists('date_start')) {
+                    $vagas = $vagas->whereRaw('(contents.created_at  >= "' . $request->input('date_start') . '"'
+                            . ' or (status="publicada" and  contents.created_at  <= "' . $request->input('date_start') . '")'
+                            . ')');
+                }
+                if ($request->exists('date_end')) {
+                    $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
+                }
             }
             if ($request->exists('title')) {
                 $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');
@@ -116,18 +119,18 @@ class ReportController extends Controller {
                         . 'contents.id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? ) or '
                         . 'contents.title like ? or '
                         . 'contents.id = ?  or  '
-                        . 'contents.user_id in (select user_id from inklua_users where user_id in (select id from users where name like ?))' 
+                        . 'contents.user_id in (select user_id from inklua_users where user_id in (select id from users where name like ?))'
                         . ')',
                         array($request->input('key'),
                             '%' . $request->input('key') . '%', '%' . $request->input('key') . '%',
 //                            '%' . $request->input('key') . '%',
                             $request->input('key'),
-                                  '%' . $request->input('key') . '%'
-                    )
-                        );
+                            '%' . $request->input('key') . '%'
+                        )
+                );
             }
             if ($request->exists('status')) {
-                $vagas = $vagas->where('contents.status',$request->input('status'));
+                $vagas = $vagas->where('contents.status', $request->input('status'));
             }
         }
         if ($request->exists('debug')) {
