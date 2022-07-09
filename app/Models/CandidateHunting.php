@@ -214,7 +214,7 @@ class CandidateHunting extends Model {
         $data['state'] = $this->state() . '';
         $data['city'] = $this->city() . '';
         $data['payment'] = $this->payment_formatted() . '';
-        $data['bith_date'] = $this->birth_date->format('d/m/Y') . '';
+        $data['bith_date'] = $this->birth_date->format('d/m/Y') ;
         $data['pcd_type'] = $this->pcd_typo();
         $data['cellphone'] = $this->phone();
         $data['english_level'] = $this->english_level_obj() . '';
