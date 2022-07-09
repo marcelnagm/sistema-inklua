@@ -30,7 +30,10 @@ class CandidateControler extends Controller {
     public function show(Request $request, $id) {
            $user = auth()->guard('api')->user();
         if (InkluaUser::isInternal($user->id)) {
-            return Candidate::where('gid', $id)->first()->compact();
+          $data = Candidate::where('gid', $id)->first()->compact();
+          $data['cv_path'] = route('hunt.api.cv',$data['id']);
+          $data['pcd_report'] = route('hunt.api.pcd_report',$data['id']);
+            return $data;
         } else {
             return response()->json([
                         'status' => false,
@@ -39,5 +42,19 @@ class CandidateControler extends Controller {
         }
     }
 
+    
+    public function cv($id) {
+        $candidateHunting = CandidateHunting::find($id);
+
+        return Storage::download($candidateHunting->cv_path);
+    }
+
+    public function pcd_report($id) {
+        $candidateHunting = CandidateHunting::find($id);
+
+        return Storage::download($candidateHunting->pcd_report);
+    }
+
+    
 
 }

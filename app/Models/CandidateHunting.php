@@ -21,6 +21,7 @@ use App\Models\CandidateGender;
 use App\Models\CandidateRace;
 use Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class CandidateHunting extends Model {
 
@@ -208,16 +209,19 @@ class CandidateHunting extends Model {
 
     public function compact() {
         $data = $this->toArray();
-        $data['education'] = $this->education()->toArray();
-        $data['experience'] = $this->experience()->toArray();
-        $data['pcd_type_id'] = $this->pcd_typo();
-        $data['report'] = $this->report()->toArray();
+        $data['age'] = $this->age();       
+        unset($data['state_id'], $data['city_id'],$data['pcd_type_id']);
+        $data['state'] = $this->state() . '';
+        $data['city'] = $this->city() . '';
+        $data['payment'] = $this->payment_formatted() . '';
+        $data['pcd_type'] = $this->pcd_typo();
         $data['cellphone'] = $this->phone();
         $data['english_level'] = $this->english_level_obj() . '';
-        $data['state_id'] = $this->state() . '';
-        $data['city_id'] = $this->city() . '';
-        $data['payment'] = $this->payment_formatted() . '';
-
+        
+        $data['education'] = $this->education()->toArray();
+        $data['experience'] = $this->experience()->toArray();
+        $data['report'] = $this->report()->toArray();
+        
         return $data;
     }
 

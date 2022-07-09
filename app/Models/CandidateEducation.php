@@ -68,7 +68,8 @@ class CandidateEducation extends Model {
 
     public function toArray() {
         $data = parent::toArray();
-        $data['level_education_id'] = $this->level_education() . "";
+        unset($data['level_education_id'] );
+        $data['level_education'] = $this->level_education() . "";
         return $data;
     }
 
