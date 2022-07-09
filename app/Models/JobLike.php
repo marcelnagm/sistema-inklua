@@ -74,7 +74,7 @@ class JobLike extends Model {
 //       dd($last_experience);
       return array(
           'id' => $this->id,
-          'gid' => $this->gid,
+          'gid' => $candidate->gid,
           'age' => $candidate->age(),
           'salary' => $candidate->payment,
           'education_level' => LevelEducation::find($candidate->education_max()).'' ,

@@ -103,7 +103,9 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/admin/hunting/candidate', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@index');
     Route::get('/admin/hunting/candidate/{id}', 'App\Http\Controllers\Hunting\Recruiter\CandidateControler@show');
-
+    Route::get('/admin/hunting/candidate/cv/{id}', 'App\Http\Controllers\HuntingAdmin\CandidateController@cv')->name('hunt.api.cv');
+    Route::get('/admin/hunting/candidate/pcd_report/{id}', 'App\Http\Controllers\HuntingAdmin\CandidateController@pcd_report')->name('hunt.api.pcd_report');
+    
     Route::post('/admin/hunting/education', 'App\Http\Controllers\Hunting\Recruiter\CandidateEducationControler@index');
 
     Route::post('/admin/hunting/work', 'App\Http\Controllers\Hunting\Recruiter\CandidateExperienceControler@index');

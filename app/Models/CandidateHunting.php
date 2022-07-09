@@ -217,7 +217,7 @@ class CandidateHunting extends Model {
         $data['pcd_type'] = $this->pcd_typo();
         $data['cellphone'] = $this->phone();
         $data['english_level'] = $this->english_level_obj() . '';
-        
+        $data['gid'] = $this->gid;
         $data['education'] = $this->education()->toArray();
         $data['experience'] = $this->experience()->toArray();
         $data['report'] = $this->report()->toArray();
