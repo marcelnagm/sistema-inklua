@@ -48,7 +48,7 @@ class ReportController extends Controller {
 
         foreach ($vagas as $content) {
 //        dd($i);
-            $data['vagas'][$i]['id'] = $content->id;
+            $data['vagas'][$i]['id'] = "$content->id";
             $data['vagas'][$i]['status_front'] = $content->getStatusFront();
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');

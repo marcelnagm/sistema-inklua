@@ -33,20 +33,20 @@ class ContentClient extends Model
      *
      * @var array
      */
-    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy'];
+    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy','hired',];
     
      public static function boot()
     {
        parent::boot();
        static::creating(function($model)
        {
-           $user = Auth::user();
+            $user = auth()->guard('api')->user();
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
        });
        static::updating(function($model)
        {
-           $user = Auth::user();
+            $user = auth()->guard('api')->user();
            $model->updated_by = $user->id;
        });
    }
@@ -71,6 +71,8 @@ class ContentClient extends Model
         return $this->hasOne('App\Models\ClientCondition', 'id', 'client_condition_id');
     }
     
-    
+    public function hasVacancy(){
+        return $this->vacancy > ($this->hired - $this->replaced);
+    }
 
 }

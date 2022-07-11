@@ -18,6 +18,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Str;
 use App\Models\CandidateHunting as Candidate;
+use Auth;
 
 class CandidateReport extends Model {
 
@@ -53,13 +54,13 @@ class CandidateReport extends Model {
        parent::boot();
        static::creating(function($model)
        {
-           $user = Auth::user();
+            $user = auth()->guard('api')->user();
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
        });
        static::updating(function($model)
        {
-           $user = Auth::user();
+            $user = auth()->guard('api')->user();
            $model->updated_by = $user->id;
        });
    }
@@ -70,6 +71,10 @@ class CandidateReport extends Model {
     
      public function candidate() {
         return Candidate::find($this->candidate_id);
+    }
+    
+     public function content() {
+        return Content::find($this->job_id);
     }
     
 }

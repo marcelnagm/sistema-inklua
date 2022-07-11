@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
 use App\Models\InkluaUser;
 use App\Http\Controllers\Controller;
+use App\Models\ContentClient;
 
 class CandidateReportControler extends Controller {
 
@@ -42,8 +43,21 @@ class CandidateReportControler extends Controller {
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
         $cand = Candidate::find($data['candidate_id']);
+        if ($cand == null) {
+            return response()->json([
+                        'status' => false,
+                        'msg' => 'Candidato não encontrado!',
+            ]);
+        }
+        $cont = ContentClient::where('content_id', $data['job_id'])->first();
+
+        if (!$cont->hasVacancy())
+            return response()->json([
+                        'status' => true,
+                        'msg' => 'Não existem vagas disponiveis[vagas - ' . $cont->vacancy . ',contratados - ' . $cont->vacancy . ',repostos - ' . $cont->replaced . '] para a vaga  escolhida!',
+            ]);
         if ($cand->status != -1) {
-            if ($cand->status == 0 || $cand->status==null) {
+            if ($cand->status == 0 || $cand->status == null) {
                 $cand = new CandidateReport($data);
 
                 $cand->save();
@@ -58,7 +72,7 @@ class CandidateReportControler extends Controller {
                 $user = User::find($cand->status);
                 return response()->json([
                             'status' => false,
-                            'msg' => "Candidate ja sendo abordado por  $user",
+                            'msg' => "Candidate ja sendo abordado por  $user->name",
                 ]);
             }
         } else {
@@ -103,30 +117,61 @@ class CandidateReportControler extends Controller {
      */
     public function update(Request $request, $id) {
         $user = auth()->guard('api')->user();
-        $cand = CandidateReport::find($id);
-        if ($cand->status != -1) {
+        $report = CandidateReport::find($id);
+        if ($report->status != -1) {
             $data = $this->validate($request, CandidateReport::$rules);
 
             unset($data['user_id']);
             $data['user_id'] = $user->id;
-            $cand->update($data);
+
             if ($data['report_status_id'] == 5) {
-                $candidate = $cand->candidate();
+                $candidate = $report->candidate();
                 $candidate->status = -1;
                 $candidate->save();
             } else {
-                if ($data['report_status_id'] == 6) {
-                    $candidate = $cand->candidate();
-                    $candidate->status = 9999;
-                    $candidate->save();
+                if ($data['report_status_id'] == 6 || $data['report_status_id'] == 7) {
+                    $cont = $report->content()->contentclient();
+                    if ($data['report_status_id'] == 6) {
+                        $data['hired'] = 1;
+                        $report->update($data);
+                        $candidate = $report->candidate();
+                        $candidate->status = 9999;
+                        $candidate->save();
+                        $cont->hired = $cont->hired + 1;
+                        $cont->save();
+                    } else {
+                        if ($data['report_status_id'] == 7) {
+                             $candidate = $report->candidate();
+                            if ($candidate->status != 9999) {
+                                return response()->json([
+                                            'status' => true,
+                                            'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
+                                ]);
+                            }
+
+                            $data['hired'] = 0;
+                            $report->update($data);
+                           
+                            $candidate->status = null;
+                            $candidate->save();
+                            $cont->replaced = $cont->replaced + 1;
+                            $cont->save();
+                            $content = $report->content();
+                            $content->status = 'reposicao';
+                            $content->save();
+                            return response()->json([
+                                        'status' => true,
+                                        'msg' => 'Candidato Reposto!',
+                            ]);
+                        }
+                    }
                 } else {
-                    $candidate = $cand->candidate();
+                    $candidate = $report->candidate();
                     $candidate->status = NULL;
                     $candidate->save();
                 }
             }
-
-
+            $report->update($data);
 
             return response()->json([
                         'status' => true,

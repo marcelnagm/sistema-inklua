@@ -162,7 +162,7 @@ class MyContentController extends Controller {
         return $response;
     }
 
-    public function repos($id) {
+    public function clientevaluate($id) {
 
         $content = Content::where('id', $id)->first();
         $content->status = 'reposicao';
@@ -173,6 +173,8 @@ class MyContentController extends Controller {
         ]);
     }
 
+    
+    
     public function approve($id) {
 
         $content = Content::where('id', $id)->first();

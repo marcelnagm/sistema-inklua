@@ -40,12 +40,14 @@ class InkluaOffice extends Model {
        static::creating(function($model)
        {
            $user = Auth::user();
+           if($user == null)    $user = auth()->guard('api')->user();
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
        });
        static::updating(function($model)
        {
            $user = Auth::user();
+           if($user == null)    $user = auth()->guard('api')->user();
            $model->updated_by = $user->id;
        });
    }
