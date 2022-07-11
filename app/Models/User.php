@@ -178,6 +178,7 @@ class User extends Authenticatable implements MustVerifyEmail {
                 ->paginate(12);
 
         $content->data = Content::hideFields($content);
+//        dd($content->data );
         return $content;
     }
 

@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ContentClient;
 use App\Models\ContentCancel;
 
-class MyContentController extends Controller
-{
+class MyContentController extends Controller {
 
     static $visible = [
         'title',
@@ -42,9 +41,13 @@ class MyContentController extends Controller
         $status = $request->input("status");
 
         $myContents = $user->getMyContents($search, $status);
-
+        $myContents->each(function($item,$key){
+              $data = $item->toArray();  
+             $item->salary = floatval($data['salary']);
+             return $item;
+                });
         return response()->json([
-                    'myContents' => $myContents,
+            'myContents' => $myContents,
         ]);
     }
 
@@ -69,7 +72,7 @@ class MyContentController extends Controller
 
         $newContent = Content::create($data);
         $newContent['application_type'] = $newContent->getApplicationType();
-
+        $newContent['salary'] = round($newContent['salary'], 2);
         if ($user->isInklua()) {
 
             $data = $request->only(array_keys(ContentClient::$rules));
@@ -78,7 +81,6 @@ class MyContentController extends Controller
 //            dd($data);
 
             ContentClient::create($data);
-
         }
 
 
@@ -127,9 +129,19 @@ class MyContentController extends Controller
         $data['user_id'] = $user->id;
         $data['status'] = 'aguardando_aprovacao';
         $data['type'] = 1;
+        if ($user->isInklua()) {
 
+            $contentclient = ContentClient::where('content_id', $id)->first();
+            $data = $request->only(array_keys(ContentClient::$rules));
+            $data['content_id'] = $id;
+            $data['user_id'] = $user->id;
+//            dd($data);
+
+            $contentclient->update($data);
+        }
         $content->update($data);
         $content['application_type'] = $content->getApplicationType();
+        $content['salary'] = round($content['salary'], 2);
         return response()->json($content);
     }
 
@@ -150,66 +162,65 @@ class MyContentController extends Controller
         return $response;
     }
 
-    
-public function repos($id){
-      
-       $content = Content::where('id', $id)->first();
-       $content->status='reposicao';
-       $content->save();                      
-         return response()->json([
+    public function repos($id) {
+
+        $content = Content::where('id', $id)->first();
+        $content->status = 'reposicao';
+        $content->save();
+        return response()->json([
                     'message' => 'Vaga Reposta',
                     'content_id' => $content->id
         ]);
-}
+    }
 
-public function approve($id){
-      
-       $content = Content::where('id', $id)->first();
-       $content->status='publicada';
-       $content->save();        
-         return response()->json([
+    public function approve($id) {
+
+        $content = Content::where('id', $id)->first();
+        $content->status = 'publicada';
+        $content->save();
+        return response()->json([
                     'message' => 'Vaga Aprovada',
                     'content_id' => $content->id
         ]);
-}
+    }
 
-
-public function close($id){
-       $content = Content::where('id', $id)->first();
-       $content->status='fechada';
-       $content->save();        
-         return response()->json([
+    public function close($id) {
+        $content = Content::where('id', $id)->first();
+        $content->status = 'fechada';
+        $content->save();
+        return response()->json([
                     'message' => 'Vaga Fechada',
                     'content_id' => $content->id
         ]);
-}
-public function details($id){
-       $content = Content::where('id', $id)->first();
-       
-         return response()->json([
+    }
+
+    public function details($id) {
+        $content = Content::where('id', $id)->first();
+
+        return response()->json([
                     'content' => [$content->id, $content->observation]
         ]);
-}
+    }
 
-public function cancel(Request $request, $id){
-       $content = Content::where('id', $id)->first();
-       $content->status='cancelada';
-       $content->save();    
-       
-       $cc = $content->contentclient()->first();
+    public function cancel(Request $request, $id) {
+        $content = Content::where('id', $id)->first();
+        $content->status = 'cancelada';
+        $content->save();
+
+        $cc = $content->contentclient()->first();
 //       dd($cc);
-       
-       $cancel = new ContentCancel();
-       $cancel->content_id= $cc->content_id;
-       $cancel->client_id= $cc->client_id;
-       $cancel->user_id=  $request->user()->id;
-       $cancel->reason= $request->input('reason');
-       $cancel->save();
-       
-         return response()->json([
+
+        $cancel = new ContentCancel();
+        $cancel->content_id = $cc->content_id;
+        $cancel->client_id = $cc->client_id;
+        $cancel->user_id = $request->user()->id;
+        $cancel->reason = $request->input('reason');
+        $cancel->save();
+
+        return response()->json([
                     'message' => 'Vaga Cancelada',
                     'content_id' => $content->id
         ]);
-}
-    
+    }
+
 }
