@@ -166,7 +166,7 @@ Route::get('/races', function () use ($router) {
     return App\Models\CandidateRace::all();
 });
 
-Route::post('/genders', function () use ($router) {
+Route::get('/genders', function () use ($router) {
     return App\Models\CandidateGender::all();
 });
 
