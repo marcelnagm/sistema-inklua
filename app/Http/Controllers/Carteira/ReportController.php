@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\checkUserInkluer;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
+use Carbon;
 
 class ReportController extends Controller {
 
@@ -88,18 +89,24 @@ class ReportController extends Controller {
             $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
         } else {
             if ($request->exists('date_start') && $request->exists('date_end')) {
-                $vagas = $vagas->whereRaw('(contents.created_at between "' . $request->input('date_start') . '" and '
-                        .'"' . $request->input('date_end') . '"'
-                        . ' or (status="publicada" and  contents.created_at  <= "' . $request->input('date_start') . '")'
+                $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
+                $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+                $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
+                        . '" and '
+                        . '"' . $date_end. '"'
+                        . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
             } else {
                 if ($request->exists('date_start')) {
-                    $vagas = $vagas->whereRaw('(contents.created_at  >= "' . $request->input('date_start') . '"'
-                            . ' or (status="publicada" and  contents.created_at  <= "' . $request->input('date_start') . '")'
+                    $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
+
+                    $vagas = $vagas->whereRaw('(contents.created_at  >= "' . $date_start . '"'
+                            . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                             . ')');
                 }
                 if ($request->exists('date_end')) {
-                    $vagas = $vagas->where('contents.created_at', '<=', $request->input('date_end'));
+                    $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+                    $vagas = $vagas->where('contents.created_at', '<=', $date_end);
                 }
             }
             if ($request->exists('title')) {
