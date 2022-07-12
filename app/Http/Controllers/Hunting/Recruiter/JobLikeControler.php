@@ -49,6 +49,7 @@ class JobLikeControler extends Controller {
            $data = array();
            $data['data']['current_page']=  $request->input('page') ;
            $data['data']['last_page']= round($cand->count()/2,0); 
+           if($cand->count() ==0)$data['data']['likes'] = array();
            foreach($cand as $c){
            $data['data']['likes'][] = $c->toArray();
            }
