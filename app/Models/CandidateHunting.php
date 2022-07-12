@@ -209,19 +209,23 @@ class CandidateHunting extends Model {
 
     public function compact() {
         $data = $this->toArray();
-        $data['age'] = $this->age();       
-        unset($data['state_id'], $data['city_id'],$data['pcd_type_id']);
+        $data['age'] = $this->age();
+        unset($data['state_id'], $data['city_id'], $data['pcd_type_id']);
         $data['state'] = $this->state() . '';
         $data['city'] = $this->city() . '';
-        $data['payment'] = $this->payment_formatted() . '';        
+        $data['payment'] = $this->payment_formatted() . '';
         $data['pcd_type'] = $this->pcd_typo();
         $data['cellphone'] = $this->phone();
         $data['english_level'] = $this->english_level_obj() . '';
         $data['gid'] = $this->gid;
+        $data['status'] = $this->status_name();
+        if ($data['status'] == "TAKEN") {
+            $data['recruiter']['name'] = User::find($this->status)->fullname();
+        }
         $data['education'] = $this->education()->toArray();
         $data['experience'] = $this->experience()->toArray();
         $data['report'] = $this->report()->toArray();
-        
+
         return $data;
     }
 

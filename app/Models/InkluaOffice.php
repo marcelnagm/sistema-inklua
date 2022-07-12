@@ -67,8 +67,8 @@ class InkluaOffice extends Model {
     }
 
     public function inkluaUsersContent(Request $request) {        
-            $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
-            $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+            $date_start = $request->exists('date_start') ? Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d') :   Carbon\Carbon::now()->subDays(6)->format('Y/m/d');
+            $date_end = $request->exists('date_end')  ? Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d') : Carbon\Carbon::now()->format('Y/m/d') ;
             
         return Content::
                 where('type',1)

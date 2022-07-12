@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\checkUserInkluer;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
+use Carbon;
 
 class ReportController extends Controller {
 
@@ -31,12 +32,14 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent());
+            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
            
         }
          $valo = clone $vagas;
             $valo->join('contents_client', 'content_id', '=', 'contents.id');
             $valo->join('client_condition', 'content_id', '=', 'contents.id');
+            $valo->whereRaw('contents_client.content_id = contents.id');             
+            $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
             $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
             $valo->groupby('status');
             if ($request->exists('debug5')) {
@@ -88,6 +91,7 @@ class ReportController extends Controller {
 //        dd($data);
         return $data;
     }
+    
     public function index(Request $request) {
 
 
@@ -102,7 +106,7 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent());
+            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
            
         }
          $valo = clone $vagas;
