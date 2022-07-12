@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Carbon;
 /**
  * Class InkluaOffice
  *
@@ -64,10 +66,17 @@ class InkluaOffice extends Model {
         
     }
 
-    public function inkluaUsersContent() {        
+    public function inkluaUsersContent(Request $request) {        
+            $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
+            $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+            
         return Content::
                 where('type',1)
-                ->whereIN('contents.user_id', $this->inkluaUsers()->get()->pluck('user_id') );
+                ->whereRaw('contents.user_id in (SELECT user_id FROM `inklua_users` WHERE ((`start_at` >= ? and `end_at` <= ?) or (`start_at` >= ? and active=1) ) and office_id = ?)',
+                        array(
+                            $date_start,$date_end,
+                            $date_start, $this->id
+                        ));
     }
     
     /**

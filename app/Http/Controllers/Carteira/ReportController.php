@@ -30,11 +30,13 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent());
+            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
         }
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
+        $valo->whereRaw('contents_client.content_id = contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
+        $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
         $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
         $valo->groupby('status');
         if ($request->exists('debug5')) {
@@ -49,7 +51,7 @@ class ReportController extends Controller {
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = "$content->id";
-            $data['vagas'][$i]['status_front'] = $content->getStatusFront();            
+            $data['vagas'][$i]['status_front'] = $content->getStatusFront();
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
@@ -93,7 +95,7 @@ class ReportController extends Controller {
                 $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
                 $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
                         . '" and '
-                        . '"' . $date_end. '"'
+                        . '"' . $date_end . '"'
                         . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
             } else {
