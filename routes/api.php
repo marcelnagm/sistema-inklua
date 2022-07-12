@@ -83,7 +83,7 @@ use App\Http\Middleware\checkUserInkluer;
 // rotas novas para aprovacao e cancelamento
 Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], function () {
 
-    Route::get('/vaga/reposicao/{id}', [MyContentController::class, 'repos']);
+    Route::get('/vaga/aocliente/{id}', [MyContentController::class, 'clientevaluate']);
     Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
     Route::get('/vaga/aprovar/{id}', [MyContentController::class, 'approve']);
     Route::get('/vaga/fechar/{id}', [MyContentController::class, 'close']);
@@ -190,7 +190,7 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/clients', 'App\Http\Controllers\Carteira\ClientController@all');
     Route::get('/client_conditions', 'App\Http\Controllers\Carteira\ClientConditionController@all');
-    Route::get('/carteira', 'App\Http\Controllers\Carteira\ReportController@index');
+    Route::post('/carteira', 'App\Http\Controllers\Carteira\ReportController@index');
     Route::get('/escritorios', function () {
         return App\Models\InkluaOffice::where('active',1)->get();
     });
@@ -200,5 +200,6 @@ Route::group(['middleware' => ['api']], function () {
 Route::group(['middleware' => ['api']], function () {
 
     Route::get('/vagas/publicadas', 'App\Http\Controllers\Lider\ReportController@index');
+    Route::get('/vagas/reposicao', 'App\Http\Controllers\Lider\ReportController@index_repos');
     
 });
