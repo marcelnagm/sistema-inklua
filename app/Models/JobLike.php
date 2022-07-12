@@ -72,7 +72,7 @@ class JobLike extends Model {
        $last_experience = $candidate->last_experience();
        
 //       dd($last_experience);
-      return array(
+      $data = array(
           'id' => $this->id,
           'gid' => $candidate->gid,
           'age' => $candidate->age(),
@@ -84,11 +84,12 @@ class JobLike extends Model {
           'city' => $candidate->city()->name,
           'status' => $candidate->status_name(),
           'name' => $candidate->full_name()
-          
-          
+
       ) ; 
-        
-        
+      if($data['status'] == "TAKEN"){
+       $data['recruiter']['name'] = User::find($candidate->status)->fullname(); 
+      }
+      return $data;  
         
     }
     
