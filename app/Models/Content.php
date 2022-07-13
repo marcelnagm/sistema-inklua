@@ -72,14 +72,18 @@ class Content extends Model {
        {
            $user = Auth::user();
            if($user == null)    $user = auth()->guard('api')->user();
+           if($user != null){
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
+           }
        });
        static::updating(function($model)
        {
            $user = Auth::user();
            if($user == null)    $user = auth()->guard('api')->user();
+           if($user != null){
            $model->updated_by = $user->id;
+           }
        });
    }
     
@@ -144,7 +148,7 @@ class Content extends Model {
     public static function getCities($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("city as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
-//                        ->where('status', 'publicada')
+                        ->where('status', 'publicada')
                         ->whereNotNull("city")
                         ->where("city", "!=", "")
                         ->when(($search), function ($query) use ($search) {
@@ -164,7 +168,7 @@ class Content extends Model {
     public static function getStates($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("state as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
-//                        ->where('status', 'publicada')
+                        ->where('status', 'publicada')
                         ->whereNotNull("state")
                         ->where("state", "!=", "")
                         ->when(($search), function ($query) use ($search) {
@@ -195,7 +199,7 @@ class Content extends Model {
 
         if ($contract != 'presencial') {
             $remote = Content::where("type", 1)
-//                            ->where('status', 'publicada')
+                            ->where('status', 'publicada')
                     ->where("city", "")
                     ->when(($search), function ($query) use ($search) {
                         $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
@@ -213,7 +217,7 @@ class Content extends Model {
 
         if ($contract != 'remoto') {
             $inPerson = Content::where("type", 1)
-//                            ->where('status', 'publicada')
+                            ->where('status', 'publicada')
                     ->whereNotNull("city")
                     ->where("state", "!=", "")
                     ->when(($search), function ($query) use ($search) {
@@ -261,6 +265,7 @@ class Content extends Model {
 
         $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
                 ->where("type", 1)
+                ->where('status','publicada')
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
                                 + match (description) against ('{$searchEscaped}' in boolean mode)

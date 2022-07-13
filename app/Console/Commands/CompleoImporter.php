@@ -69,6 +69,7 @@ class CompleoImporter extends Command {
                         'title' => trim($apiPosition->titulo),
                         'date' => trim($apiPosition->dataabertura),
                         'url' => trim($apiPosition->url),
+                        'status' => 'publicada',
                         'city' => trim($apiPosition->cidade),
                         'state' => trim($apiPosition->estado),
                         'cod_filial' => trim($apiPosition->codigofilial),
@@ -79,7 +80,10 @@ class CompleoImporter extends Command {
             $counter++;
         }
         $deleted = Content::where('type', 1)->where('in_compleo', 0)->count();
-        Content::where('type', 1)->where('in_compleo', 0)->delete();
+        Content::where('type', 1)->where('in_compleo', 0)->get()->each(function($item,$key){
+            $item['status'] = 'fechada';
+            $item->save();
+        });
         $this->info("${counter} vagas importadas/atualizadas");
         $this->info("${deleted} vagas removidas");
 
