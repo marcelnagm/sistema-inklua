@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Group;
 use App\Models\ContentClient;
 use App\Models\JobLike;
+use App\Models\CandidateReport;
 
 class Content extends Model {
 
@@ -91,6 +92,10 @@ class Content extends Model {
         return $this->hasMany(\App\Models\Action::class);
     }
 
+    public function candidateReport() {
+        return CandidateReport::where('job_id',$this->id)->get();
+    }
+    
     public function contentclient() {
         return ContentClient::where('content_id', $this->id)->first();
     }

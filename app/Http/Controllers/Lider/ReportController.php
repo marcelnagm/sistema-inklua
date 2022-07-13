@@ -23,141 +23,219 @@ class ReportController extends Controller {
 
 
         $data = array();
-        
+
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());           
-            
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent($request));
-           
         }
-         $valo = clone $vagas;
-            $valo->join('contents_client', 'content_id', '=', 'contents.id');
-            $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo->whereRaw('contents_client.content_id = contents.id');             
-            $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
-            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-            $valo->groupby('status');
-            if ($request->exists('debug5')) {
-                dd(Controller::getEloquentSqlWithBindings($valo));
-            }
-            $data['carteira'] = $valo->get();
+        $valo = clone $vagas;
+        $valo->join('contents_client', 'content_id', '=', 'contents.id');
+        $valo->join('client_condition', 'content_id', '=', 'contents.id');
+        $valo->whereRaw('contents_client.content_id = contents.id');
+        $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
+        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
+        $valo->groupby('status');
+        if ($request->exists('debug5')) {
+            dd(Controller::getEloquentSqlWithBindings($valo));
+        }
+        $data['carteira'] = $valo->get();
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
-        
-            $i = 0;
+
+        $i = 0;
 
         foreach ($vagas as $content) {
 //        dd($i);
             $contentclient = $content->contentclient();
             $data['vagas'][$i]['id'] = $content->id;
-            $data['vagas'][$i]['titulo_vagas'] = $content->title;            
-            if ($contentclient != null) {            
-            $data['vagas'][$i]['vagas'] = $contentclient->replaced;            ;            
-            }else{            
-            $data['vagas'][$i]['vagas'] = '-' ;                            
-            }
-            
-            $data['vagas'][$i]['reabertura']['value'] = $content->updated_at->format('d/m/Y');            
-            $data['vagas'][$i]['reabertura']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();            
-            $data['vagas'][$i]['entrega']['value'] = $content->updated_at->addDays(5)->format('d/m/Y');   
-            $data['vagas'][$i]['entrega']['ref'] =  \Carbon\Carbon::parse($content->updated_at->addDays(5))->timestamp;
-            if ($contentclient != null) {            
-            $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;            
-            }else{            
-            $data['vagas'][$i]['cliente'] = '-';
-                
-            }
-            $data['vagas'][$i]['overview']['value'] = $content->updated_at->addDays(3)->format('d/m/Y');   
-            $data['vagas'][$i]['overview']['ref'] =  \Carbon\Carbon::parse($content->updated_at->addDays(3) )->timestamp;
+            $data['vagas'][$i]['titulo_vagas'] = $content->title;
             if ($contentclient != null) {
-            $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-            $data['vagas'][$i]['reposicao'] = $data['vagas'][$i]['vagas'] *  $content->salary;
-            $data['vagas'][$i]['reposicao'] =  'R$'.number_format(floatval($data['vagas'][$i]['reposicao'] ),2,'.','.');            
-            }else{
-            $data['vagas'][$i]['reposicao'] = '-';              
+                $data['vagas'][$i]['vagas'] = $contentclient->replaced;
+                ;
+            } else {
+                $data['vagas'][$i]['vagas'] = '-';
             }
-            $data['vagas'][$i]['c/o']  = $content->getLikesCount().'/'.$data['vagas'][$i]['vagas'] ;
-            
-            
-            
+
+            $data['vagas'][$i]['reabertura']['value'] = $content->updated_at->format('d/m/Y');
+            $data['vagas'][$i]['reabertura']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
+            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+            $data['vagas'][$i]['entrega']['value'] = $content->updated_at->addDays(5)->format('d/m/Y');
+            $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->updated_at->addDays(5))->timestamp;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+            } else {
+                $data['vagas'][$i]['cliente'] = '-';
+            }
+            $data['vagas'][$i]['overview']['value'] = $content->updated_at->addDays(3)->format('d/m/Y');
+            $data['vagas'][$i]['overview']['ref'] = \Carbon\Carbon::parse($content->updated_at->addDays(3))->timestamp;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
+                $data['vagas'][$i]['reposicao'] = $data['vagas'][$i]['vagas'] * $content->salary;
+                $data['vagas'][$i]['reposicao'] = 'R$' . number_format(floatval($data['vagas'][$i]['reposicao']), 2, '.', '.');
+            } else {
+                $data['vagas'][$i]['reposicao'] = '-';
+            }
+            $data['vagas'][$i]['c/o'] = $content->getLikesCount() . '/' . $data['vagas'][$i]['vagas'];
+
             $i++;
         }
 //        dd($data);
         return $data;
     }
-    
+
     public function index(Request $request) {
 
 
 
         $data = array();
-        
+
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());           
-            
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent($request));
-           
         }
-         $valo = clone $vagas;
-            $valo->join('contents_client', 'content_id', '=', 'contents.id');
-            $valo->join('client_condition', 'content_id', '=', 'contents.id');
-            $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-            $valo->groupby('status');
-            if ($request->exists('debug5')) {
-                dd(Controller::getEloquentSqlWithBindings($valo));
-            }
-            $data['carteira'] = $valo->get();
+        $valo = clone $vagas;
+        $valo->join('contents_client', 'content_id', '=', 'contents.id');
+        $valo->join('client_condition', 'content_id', '=', 'contents.id');
+        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
+        $valo->groupby('status');
+        if ($request->exists('debug5')) {
+            dd(Controller::getEloquentSqlWithBindings($valo));
+        }
+        $data['carteira'] = $valo->get();
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
-        
-            $i = 0;
+
+        $i = 0;
 
         foreach ($vagas as $content) {
 //        dd($i);
             $contentclient = $content->contentclient();
             $data['vagas'][$i]['id'] = $content->id;
-            $data['vagas'][$i]['titulo_vagas'] = $content->title;            
-            if ($contentclient != null) {            
-            $data['vagas'][$i]['vagas'] = $contentclient->vacancy            ;            
-            }else{            
-            $data['vagas'][$i]['vagas'] = '-' ;                            
-            }
-            
-            $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');            
-            $data['vagas'][$i]['criado_em']['ref'] =  \Carbon\Carbon::parse($content->created_at)->timestamp;
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();            
-            $data['vagas'][$i]['entrega']['value'] = $content->created_at->addDays(5)->format('d/m/Y');   
-            $data['vagas'][$i]['entrega']['ref'] =  \Carbon\Carbon::parse($content->created_at->addDays(5))->timestamp;
-            if ($contentclient != null) {            
-            $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;            
-            }else{            
-            $data['vagas'][$i]['cliente'] = '-';
-                
-            }
-            $data['vagas'][$i]['overview']['value'] = $content->created_at->addDays(3)->format('d/m/Y');   
-            $data['vagas'][$i]['overview']['ref'] =  \Carbon\Carbon::parse($content->created_at->addDays(3) )->timestamp;
+            $data['vagas'][$i]['titulo_vagas'] = $content->title;
             if ($contentclient != null) {
-            $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-            $data['vagas'][$i]['faturamento'] = ($data['vagas'][$i]['vagas'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
-            $data['vagas'][$i]['faturamento'] =  'R$'.number_format(floatval($data['vagas'][$i]['faturamento'] ),2,'.','.');            
-            }else{
-            $data['vagas'][$i]['faturamento'] = '-';              
+                $data['vagas'][$i]['vagas'] = $contentclient->vacancy;
+            } else {
+                $data['vagas'][$i]['vagas'] = '-';
             }
-            $data['vagas'][$i]['c/o']  = $content->getLikesCount().'/'.$data['vagas'][$i]['vagas'] ;
-            
-            
-            
+
+            $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
+            $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
+            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+            $data['vagas'][$i]['entrega']['value'] = $content->created_at->addDays(5)->format('d/m/Y');
+            $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(5))->timestamp;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+            } else {
+                $data['vagas'][$i]['cliente'] = '-';
+            }
+            $data['vagas'][$i]['overview']['value'] = $content->created_at->addDays(3)->format('d/m/Y');
+            $data['vagas'][$i]['overview']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(3))->timestamp;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
+                $data['vagas'][$i]['faturamento'] = ($data['vagas'][$i]['vagas'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
+                $data['vagas'][$i]['faturamento'] = 'R$' . number_format(floatval($data['vagas'][$i]['faturamento']), 2, '.', '.');
+            } else {
+                $data['vagas'][$i]['faturamento'] = '-';
+            }
+            $data['vagas'][$i]['c/o'] = $content->getLikesCount() . '/' . $data['vagas'][$i]['vagas'];
+
+            $i++;
+        }
+//        dd($data);
+        return $data;
+    }
+
+    public function details(Request $request, $id) {
+        $content = Content::where('id', $id)->first();
+        $contentclient = $content->contentclient();
+        $data = array();
+        $data['titulo_vaga'] = $content->title;
+        if ($contentclient != null) {
+            $data['vagas'] = $contentclient->vacancy;
+        } else {
+            $data['vagas'] = '-';
+        }
+        $data['entrega'] = $content->created_at->addDays(5)->format('d/m/Y');
+        if ($contentclient != null) {
+            $data['taxa'] = $contentclient->clientcondition()->first()->tax;
+            $data['faturamento'] = ($data['vagas'] * ($data['taxa'] / 100)) * $content->salary;
+            $data['faturamento'] = 'R$' . number_format(floatval($data['faturamento']), 2, '.', '.');
+        } else {
+            $data['faturamento'] = '-';
+        }
+         $data['status'] = $content->getStatusFront();
+         $i=0;
+         $report = new \App\Models\CandidateReport;
+         foreach ($content->candidateReport() as $report){
+             $candidate = $report->candidate();
+             $data['candidate'][$i]['name']=  $candidate->full_name();
+             $data['candidate'][$i]['salary']=  $candidate->payment;
+             $data['candidate'][$i]['status']=  $report->reportstatus().'';
+             $data['candidate'][$i]['start_at']=  $report->start_at->format('d/m/Y');
+             $data['candidate'][$i]['owner']=  $report->owner_formatted();
+         }
+         
+        return $data;
+    }
+
+    public function description(Request $request) {
+        
+    }
+
+    public function index_fechada(Request $request) {
+
+
+
+        $data = array();
+
+        if ($request->user()->admin == 1) {
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+        } else {
+
+            $office = $request->user()->office();
+            $data['escritorio'] = $office->name;
+
+            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+        }
+        $valo = clone $vagas;
+        $valo->join('contents_client', 'content_id', '=', 'contents.id');
+        $valo->join('client_condition', 'content_id', '=', 'contents.id');
+        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
+        $valo->groupby('status');
+        if ($request->exists('debug5')) {
+            dd(Controller::getEloquentSqlWithBindings($valo));
+        }
+        $data['carteira'] = $valo->get();
+        $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
+//        dd($vagas );
+
+        $i = 0;
+
+        foreach ($vagas as $content) {
+//        dd($i);
+            $contentclient = $content->contentclient();
+            $data['vagas'][$i]['id'] = $content->id;
+            $data['vagas'][$i]['titulo_vagas'] = $content->title;
+            $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
+            $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
+            } else {
+                $data['vagas'][$i]['cliente'] = '-';
+            }
+            $data['vagas'][$i]['descritivo'] = route('vaga.descritivo', array('id' => $data['vagas'][$i]['id']));
+            $data['vagas'][$i]['detalhes'] = route('vaga.detalhes', array('id' => $data['vagas'][$i]['id']));
+
             $i++;
         }
 //        dd($data);
@@ -176,7 +254,7 @@ class ReportController extends Controller {
                 $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
                 $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
                         . '" and '
-                        . '"' . $date_end. '"'
+                        . '"' . $date_end . '"'
                         . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
             } else {

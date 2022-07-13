@@ -199,7 +199,10 @@ Route::group(['middleware' => ['api']], function () {
 //Rotas Perfil Lider
 Route::group(['middleware' => ['api']], function () {
 
-    Route::get('/vagas/publicadas', 'App\Http\Controllers\Lider\ReportController@index');
+    Route::get('/vagas/publicada', 'App\Http\Controllers\Lider\ReportController@index');
     Route::get('/vagas/reposicao', 'App\Http\Controllers\Lider\ReportController@index_repos');
+    Route::get('/vagas/fechada', 'App\Http\Controllers\Lider\ReportController@index_fechada');
+    Route::get('/vagas/{id}/descritivo', 'App\Http\Controllers\Lider\ReportController@description')->name('vaga.descritivo');
+    Route::get('/vagas/{id}/detalhes', 'App\Http\Controllers\Lider\ReportController@details')->name('vaga.detalhes');
     
 });

@@ -243,6 +243,9 @@ class CandidateHunting extends Model {
             if (str_contains($attributes['payment'], '.'))
                 $attributes['payment'] = $attributes['payment'] * 1000;
         }
+         if (isset($attributes['birth_date'])) {
+            $attributes['birth_date'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['birth_date']);
+        }
         parent::save($attributes, $options);
     }
 

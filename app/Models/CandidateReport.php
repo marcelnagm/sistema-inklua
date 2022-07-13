@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Str;
 use App\Models\CandidateHunting as Candidate;
 use Auth;
+use Carbon;
+use App\Models\ReportStatus;
+use App\Models\User;
 
 class CandidateReport extends Model {
 
@@ -27,27 +30,49 @@ class CandidateReport extends Model {
         'candidate_id',
         'job_id',
         'hired',
+        'start_at',
         'owner',
-        'obs',
-        'company', 
+        'obs', 
         'report_status_id',
         'user_id'
     ];
     
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
+        'start_at'
     ];
         
+     protected $casts = [
+        'start_at' => 'date'      
+    ];
+     
     static $rules = array(
          'candidate_id' => 'nullable',
         'job_id' => 'nullable',
         'hired' => 'nullable',
         'owner' => 'nullable',
+        'start_at' => 'nullable',
         'obs' => 'nullable',
-        'company' => 'nullable', 
         'report_status_id' => 'nullable'        
     );
+    static $rules_hired = array(
+        'hired' => 'required',
+        'owner' => 'nullable',
+        'start_at' => 'required',
+        'obs' => 'nullable',
+        'report_status_id' => 'required'        
+    );
+    
+      public function __construct($param = null) {
+        if ($param != null) {
+            if (isset($param['start_at'])) {
+                $this->start_at = Carbon\Carbon::createFromFormat('d/m/Y', $param['start_at']);
+                unset($param['start_at']);                
+            }
+            parent::__construct($param);
+        }
+    }
     
      public static function boot()
     {
@@ -65,10 +90,43 @@ class CandidateReport extends Model {
        });
    }
     
+    public function save(array $attributes = [], array $options = []) {
+
+      
+         if (isset($attributes['start_at'])) {
+            $attributes['start_at'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['start_at']);
+        }
+        parent::save($attributes, $options);
+    }
+
+    public function update(array $attributes = [], array $options = []) {
+//        dd($attributes);        
+        if (isset($attributes['start_at'])) {
+            $attributes['start_at'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['start_at']);
+        }
+
+        parent::update($attributes, $options);
+    }
+   
      public function user() {
-        return Users::find($this->user_id);
+        return User::find($this->user_id);
     }
     
+     public function owner() {
+        return User::find($this->owner);
+    }
+     public function owner_formatted() {
+        if($this->owner != null) 
+        return 'INKLUER#'.$this->owner()->id.' - '.$this->owner()->fullname();
+        else return 'Meu candidato';
+    }
+    
+    
+    
+    /**
+     * 
+     * @return CandidateHunting
+     */
      public function candidate() {
         return Candidate::find($this->candidate_id);
     }
@@ -77,4 +135,16 @@ class CandidateReport extends Model {
         return Content::find($this->job_id);
     }
     
+     public function reportstatus() {
+        return ReportStatus::find($this->report_status_id);
+    }
+    
+    public function toArray() {
+        $data = parent::toArray();
+        unset($data['owner']);
+//        dd($data['start_at'] );        
+//        $data['owner'] = $this->owner_formatted();
+        $data['recruiter'] = $this->owner_formatted();
+        return $data;
+     }
 }
