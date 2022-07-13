@@ -202,7 +202,10 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/vagas/publicada', 'App\Http\Controllers\Lider\ReportController@index');
     Route::get('/vagas/reposicao', 'App\Http\Controllers\Lider\ReportController@index_repos');
     Route::get('/vagas/fechada', 'App\Http\Controllers\Lider\ReportController@index_fechada');
-    Route::get('/vagas/{id}/descritivo', 'App\Http\Controllers\Lider\ReportController@description')->name('vaga.descritivo');
-    Route::get('/vagas/{id}/detalhes', 'App\Http\Controllers\Lider\ReportController@details')->name('vaga.detalhes');
+    Route::get('/vagas/{id}/descritivo', 'App\Http\Controllers\Lider\ContentController@description')->name('vaga.descritivo');
+    Route::get('/vagas/{id}/detalhes', 'App\Http\Controllers\Lider\ContentController@details')->name('vaga.detalhes');
+    Route::post('/vagas/{id}/trocar', 'App\Http\Controllers\Lider\ContentController@changeRecruiter');
+    Route::post('/vagas/{id}/selects', 'App\Http\Controllers\Lider\ContentController@selects');
+    Route::post('/vagas/{id}/aocliente', 'App\Http\Controllers\Lider\ContentController@sendClient');
     
 });

@@ -155,43 +155,6 @@ class ReportController extends Controller {
         return $data;
     }
 
-    public function details(Request $request, $id) {
-        $content = Content::where('id', $id)->first();
-        $contentclient = $content->contentclient();
-        $data = array();
-        $data['titulo_vaga'] = $content->title;
-        if ($contentclient != null) {
-            $data['vagas'] = $contentclient->vacancy;
-        } else {
-            $data['vagas'] = '-';
-        }
-        $data['entrega'] = $content->created_at->addDays(5)->format('d/m/Y');
-        if ($contentclient != null) {
-            $data['taxa'] = $contentclient->clientcondition()->first()->tax;
-            $data['faturamento'] = ($data['vagas'] * ($data['taxa'] / 100)) * $content->salary;
-            $data['faturamento'] = 'R$' . number_format(floatval($data['faturamento']), 2, '.', '.');
-        } else {
-            $data['faturamento'] = '-';
-        }
-         $data['status'] = $content->getStatusFront();
-         $i=0;
-         $report = new \App\Models\CandidateReport;
-         foreach ($content->candidateReport() as $report){
-             $candidate = $report->candidate();
-             $data['candidate'][$i]['name']=  $candidate->full_name();
-             $data['candidate'][$i]['salary']=  $candidate->payment;
-             $data['candidate'][$i]['status']=  $report->reportstatus().'';
-             $data['candidate'][$i]['start_at']=  $report->start_at->format('d/m/Y');
-             $data['candidate'][$i]['owner']=  $report->owner_formatted();
-         }
-         
-        return $data;
-    }
-
-    public function description(Request $request) {
-        
-    }
-
     public function index_fechada(Request $request) {
 
 
