@@ -29,7 +29,7 @@ class JobLikeControler extends Controller {
             ]);
         }
 
-        if ($user->->isInklua()) {
+        if ($user->isInklua()) {
             if ($request->exists('key')) {
                 $param = $request->input('key');
                 $cand =  JobLike::where('job_id', $id)->
