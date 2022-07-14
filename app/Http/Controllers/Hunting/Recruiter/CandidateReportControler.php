@@ -54,7 +54,12 @@ class CandidateReportControler extends Controller {
             ]);
         }
         $cont = ContentClient::where('content_id', $data['job_id'])->first();
-
+        if ($cont == null) {
+            return response()->json([
+                        'status' => false,
+                        'msg' => 'Associação com cliente não criada, falta a informação da vaga de que cliente esta associado, posição e condições do cliente!',
+            ]);
+        }
         if (!$cont->hasVacancy())
             return response()->json([
                         'status' => true,
