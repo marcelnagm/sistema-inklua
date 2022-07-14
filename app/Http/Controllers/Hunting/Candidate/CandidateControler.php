@@ -100,7 +100,7 @@ class CandidateControler extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-//        if (InkluaUser::isInternal(Auth::user()->id)) {
+//        if (InkluaUser::isInternal(Auth::user()->id)) {dcc
         $user = auth()->guard('api')->user();
         return $candidate = Candidate::where('user_id', $user->id)->first()->delete();
 //        }

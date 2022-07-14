@@ -29,7 +29,7 @@ class CandidateControler extends Controller {
      */
     public function show(Request $request, $id) {
            $user = auth()->guard('api')->user();
-        if (InkluaUser::isInternal($user->id)) {
+        if ($user->isInklua()) {
           $data = Candidate::where('gid', $id)->first()->compact();
           $data['cv_path'] = route('hunt.api.cv',$data['id']);
           $data['pcd_report'] = route('hunt.api.pcd_report',$data['id']);

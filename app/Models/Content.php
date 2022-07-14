@@ -73,8 +73,11 @@ class Content extends Model {
            $user = Auth::user();
            if($user == null)    $user = auth()->guard('api')->user();
            if($user != null){
+           
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
+           if($user->office() != null)
+           $model->office_id = $user->office()->id;
            }
        });
        static::updating(function($model)
@@ -83,6 +86,8 @@ class Content extends Model {
            if($user == null)    $user = auth()->guard('api')->user();
            if($user != null){
            $model->updated_by = $user->id;
+           if($user->office() != null)
+           $model->office_id = $user->office()->id;
            }
        });
    }
@@ -109,6 +114,10 @@ class Content extends Model {
         return url("/img/{$img}.png");
     }
 
+     public function office() {
+       
+    }
+    
     public static function getHomeContent() {
         $type = request()->input("tipo");
         $user = auth()->guard('api')->user();

@@ -29,7 +29,7 @@ class JobLikeControler extends Controller {
             ]);
         }
 
-        if (InkluaUser::isInternal($user->id)) {
+        if ($user->->isInklua()) {
             if ($request->exists('key')) {
                 $param = $request->input('key');
                 $cand =  JobLike::where('job_id', $id)->
@@ -56,7 +56,8 @@ class JobLikeControler extends Controller {
 //           dd($data);
             return $data;
         } else {
-            return JobLike::where('job_id', $id)->orderBy('created_at')->count();
+            return array('likes' =>  JobLike::where('job_id', $id)->orderBy('created_at')->count());            
+            
         }
         
         
@@ -73,7 +74,7 @@ class JobLikeControler extends Controller {
             ]);
         }
         $param = $request->input('key');
-        if (InkluaUser::isInternal($user->id)) {
+        if ($user->->isInklua()) {
             return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
                             whereRaw("("
                                     . "name like '%$param%'  or "

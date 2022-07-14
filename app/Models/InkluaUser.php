@@ -68,9 +68,5 @@ protected $dates = [
     public static function inkluaUsers() {
         return InkluaUser::orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
     }
-    
-    static function isInternal($id) {
-        return InkluaUser::where('user_id', $id)->count() == 1;
-    }
-
+   
 }
