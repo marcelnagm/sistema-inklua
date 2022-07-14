@@ -61,6 +61,10 @@ class InkluaOffice extends Model {
         return InkluaUser::where('office_id',$this->id)->orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
     }
 
+    static function actives() {
+        return InkluaOffice::where('active',1)->orderby('name','asc')->get();
+        
+    }
     public function inkluaUsersActive() {
         return InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',1);
         

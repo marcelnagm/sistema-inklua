@@ -32,6 +32,10 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+            $vagas = $vagas->orWhere('office_id', '=', $office->id);
+            if ($request->exists('debug2')) {
+                dd(Controller::getEloquentSqlWithBindings($vagas));
+            }
         }
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
@@ -159,7 +163,7 @@ class ReportController extends Controller {
 //        dd($data);
         return $data;
     }
-    
+
     public function index(Request $request) {
 
 
@@ -174,6 +178,10 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+              $vagas = $vagas->orWhere('office_id', '=', $office->id);
+            if ($request->exists('debug2')) {
+                dd(Controller::getEloquentSqlWithBindings($vagas));
+            }
         }
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
@@ -241,6 +249,10 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+              $vagas = $vagas->orWhere('office_id', '=', $office->id);
+            if ($request->exists('debug2')) {
+                dd(Controller::getEloquentSqlWithBindings($vagas));
+            }
         }
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');

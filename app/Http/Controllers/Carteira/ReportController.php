@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Carteira;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\checkUserInkluer;
+use App\Models\InkluaOffice;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
 use Carbon;
@@ -25,12 +26,19 @@ class ReportController extends Controller {
         $data = array();
         if ($request->user()->admin == 1) {
             $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+             $data['escritorios'] = InkluaOffice::actives();
         } else {
 
+//            $office = new \App\Models\InkluaOffice;
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-
-            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+//dd('lider');
+            $vagas = $office->inkluaUsersContent($request);
+            $vagas = $this->filters($request, $vagas);
+            $vagas = $vagas->orWhere('office_id', '=', $office->id);
+            if ($request->exists('debug2')) {
+                dd(Controller::getEloquentSqlWithBindings($vagas));
+            }
         }
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
@@ -53,6 +61,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['id'] = "$content->id";
             $data['vagas'][$i]['status_front'] = $content->getStatusFront();
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
+            $data['vagas'][$i]['escritorio'] = $content->office()->name;
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
             $data['vagas'][$i]['salario'] = $content->salary;

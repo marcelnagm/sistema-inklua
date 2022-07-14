@@ -212,7 +212,7 @@ class CandidateHunting extends Model {
         $data['age'] = $this->age();
         unset($data['state_id'], $data['city_id'], $data['pcd_type_id']);
         $data['state'] = $this->state() . '';
-        $data['city'] = $this->city() . '';
+        $data['city'] = $this->city()->name . '';
         $data['payment'] = $this->payment_formatted() . '';
         $data['pcd_type'] = $this->pcd_typo();
         $data['cellphone'] = $this->phone();

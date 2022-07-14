@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Group;
 use App\Models\ContentClient;
 use App\Models\JobLike;
+use App\Models\InkluaOffice;
 use App\Models\CandidateReport;
 
 class Content extends Model {
@@ -54,45 +55,43 @@ class Content extends Model {
         'row_n',
         'order_type'
     ];
-    static $status = array(        
+    static $status = array(
         "aguardando_aprovacao",
         "aguardando_pagamento",
         "publicada",
         "reposicao"
-        , "reprovada" ,
+        , "reprovada",
         "expirada",
         "fechada",
         "cancelada"
     );
 
-       public static function boot()
-    {
-       parent::boot();
-       static::creating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           if($user != null){
-           
-           $model->created_by = $user->id;
-           $model->updated_by = $user->id;
-           if($user->office() != null)
-           $model->office_id = $user->office()->id;
-           }
-       });
-       static::updating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           if($user != null){
-           $model->updated_by = $user->id;
-           if($user->office() != null)
-           $model->office_id = $user->office()->id;
-           }
-       });
-   }
-    
-    
+    public static function boot() {
+        parent::boot();
+        static::creating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+            if ($user != null) {
+
+                $model->created_by = $user->id;
+                $model->updated_by = $user->id;
+                if ($user->office() != null)
+                    $model->office_id = $user->office()->id;
+            }
+        });
+        static::updating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+            if ($user != null) {
+                $model->updated_by = $user->id;
+                if ($user->office() != null)
+                    $model->office_id = $user->office()->id;
+            }
+        });
+    }
+
     public function group() {
         return $this->belongsTo('App\Models\Group');
     }
@@ -102,9 +101,9 @@ class Content extends Model {
     }
 
     public function candidateReport() {
-        return CandidateReport::where('job_id',$this->id)->get();
+        return CandidateReport::where('job_id', $this->id)->get();
     }
-    
+
     public function contentclient() {
         return ContentClient::where('content_id', $this->id)->first();
     }
@@ -114,10 +113,13 @@ class Content extends Model {
         return url("/img/{$img}.png");
     }
 
-     public function office() {
-       
+    public function office() {
+        if ($this->office_id != null)
+            return InkluaOffice::find($this->office_id);
+        else
+            return '-';
     }
-    
+
     public static function getHomeContent() {
         $type = request()->input("tipo");
         $user = auth()->guard('api')->user();
@@ -208,7 +210,7 @@ class Content extends Model {
 
         if ($contract != 'presencial') {
             $remote = Content::where("type", 1)
-                            ->where('status', 'publicada')
+                    ->where('status', 'publicada')
                     ->where("city", "")
                     ->when(($search), function ($query) use ($search) {
                         $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
@@ -226,7 +228,7 @@ class Content extends Model {
 
         if ($contract != 'remoto') {
             $inPerson = Content::where("type", 1)
-                            ->where('status', 'publicada')
+                    ->where('status', 'publicada')
                     ->whereNotNull("city")
                     ->where("state", "!=", "")
                     ->when(($search), function ($query) use ($search) {
@@ -274,7 +276,7 @@ class Content extends Model {
 
         $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
                 ->where("type", 1)
-                ->where('status','publicada')
+                ->where('status', 'publicada')
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
                                 + match (description) against ('{$searchEscaped}' in boolean mode)
@@ -534,7 +536,7 @@ class Content extends Model {
                         ->whereIN('contents.user_id', InkluaUser::inkluaUsers()->get()->pluck('user_id'));
     }
 
-    public static function  StatusName($status) {
+    public static function StatusName($status) {
         switch ($status) {
             case "aguardando_aprovacao":
                 return 'Aguardando aprovação';
@@ -562,24 +564,23 @@ class Content extends Model {
                 break;
         }
     }
-    public static function ListStatusName(){
+
+    public static function ListStatusName() {
         $status = array();
-        
-        
-        foreach (self::$status as $sta){
-         $status[$sta ] = self::StatusName($sta);   
+
+        foreach (self::$status as $sta) {
+            $status[$sta] = self::StatusName($sta);
         }
 //         dd($status );
         return $status;
-       
     }
- 
-    public function getLikesCount(){
+
+    public function getLikesCount() {
         return JobLike::where('job_id', $this->id)->orderBy('created_at')->count();
     }
-    
-    public function getLikes(){
-         return Candidate::whereIn('id', JobLike::where('job_id', $this->id)->orderBy('created_at')->pluck('candidate_id'))->get();
+
+    public function getLikes() {
+        return Candidate::whereIn('id', JobLike::where('job_id', $this->id)->orderBy('created_at')->pluck('candidate_id'))->get();
     }
-    
+
 }
