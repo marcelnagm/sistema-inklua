@@ -20,6 +20,21 @@ class ContentController extends Controller {
         $this->middleware('App\Http\Middleware\checkUserInkluer');
     }
 
+    public function replacement(Request $request, $id) {
+        $reports = CandidateReport::whereIn('id', explode(',', $request->input('report_id')))->get();
+        $i =0;
+        $j= 0;
+        foreach ($reports as $report){
+            if($report->candidate()->status != -9999) $i++;
+            else {$report->replacement();
+            $j++;
+            }
+        }
+        return array('status' => true,'message' => 'Selecionado '.$reports->count().' candidatos [reposto -'.$j.', ignorados - '.$i.' ]!');
+//        dd($reports);
+        
+    }
+    
     public function selects(Request $request, $id) {
         $reports = CandidateReport::whereIn('id', explode(',', $request->input('report_id')))->get();
         foreach ($reports as $report){

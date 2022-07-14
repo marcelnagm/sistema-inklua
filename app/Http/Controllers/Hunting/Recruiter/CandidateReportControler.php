@@ -148,30 +148,23 @@ class CandidateReportControler extends Controller {
                         $data['hired'] = 1;
                         $report->update($data);
                         $candidate = $report->candidate();
-                        $candidate->status = 9999;
+                        $candidate->status = -9999;
                         $candidate->save();
                         $cont->hired = $cont->hired + 1;
                         $cont->save();
                     } else {
                         if ($data['report_status_id'] == 7) {
                             $candidate = $report->candidate();
-                            if ($candidate->status != 9999) {
+                            if ($candidate->status != -9999) {
                                 return response()->json([
                                             'status' => true,
                                             'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
                                 ]);
                             }
 
-                            $data['hired'] = 0;
+                            $report->replacement();
                             $report->update($data);
 
-                            $candidate->status = null;
-                            $candidate->save();
-                            $cont->replaced = $cont->replaced + 1;
-                            $cont->save();
-                            $content = $report->content();
-                            $content->status = 'reposicao';
-                            $content->save();
                             return response()->json([
                                         'status' => true,
                                         'msg' => 'Candidato Reposto!',

@@ -94,6 +94,7 @@ Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], 
 
 use App\Models\PcdType;
 use App\Models\State;
+use App\Models\User;
 use App\Http\Controllers\Hunting\Recruiter\CandidateControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateReportControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateEducationControler;
@@ -120,6 +121,11 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/admin/hunting/job/recruiter/{id}', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@index');
     Route::post('/admin/hunting/job/recruiter/{id}/search', 'App\Http\Controllers\Hunting\Recruiter\JobLikeControler@search');
 //Route::delete('/job/{id}', 'JobLikeControler@destroy');
+     Route::post('/admin/hunting/recruiter/search',function (Request $request){
+        return User::searchRecruiter($request); 
+     });
+    
+    
 });
 
 Route::group(['middleware' => ['api']], function ($router) {
@@ -206,6 +212,7 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/vagas/{id}/descritivo', 'App\Http\Controllers\Lider\ContentController@description')->name('vaga.descritivo');
     Route::get('/vagas/{id}/detalhes', 'App\Http\Controllers\Lider\ContentController@details')->name('vaga.detalhes');
     Route::post('/vagas/{id}/trocar', 'App\Http\Controllers\Lider\ContentController@changeRecruiter');
+    Route::post('/vagas/{id}/substituir', 'App\Http\Controllers\Lider\ContentController@replacement');
     Route::post('/vagas/{id}/selects', 'App\Http\Controllers\Lider\ContentController@selects');
     Route::post('/vagas/{id}/aocliente', 'App\Http\Controllers\Lider\ContentController@sendClient');
     
