@@ -74,7 +74,7 @@ class JobLikeControler extends Controller {
             ]);
         }
         $param = $request->input('key');
-        if ($user->->isInklua()) {
+        if ($user->isInklua()) {
             return Candidate::whereIn('id', JobLike::where('job_id', $id)->orderBy('created_at')->pluck('candidate_id'))->
                             whereRaw("("
                                     . "name like '%$param%'  or "
