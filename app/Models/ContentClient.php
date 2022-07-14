@@ -21,8 +21,7 @@ class ContentClient extends Model
     
     static $rules = [
 		'client_condition_id' => 'required',
-		'client_id' => 'required',
-		'content_id' => 'required',
+		'client_id' => 'required',	
 		'vacancy' => 'required',		
     ];
 

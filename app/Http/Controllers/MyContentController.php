@@ -41,13 +41,13 @@ class MyContentController extends Controller {
         $status = $request->input("status");
 
         $myContents = $user->getMyContents($search, $status);
-        $myContents->each(function($item,$key){
-              $data = $item->toArray();  
-             $item->salary = floatval($data['salary']);
-             return $item;
-                });
+        $myContents->each(function ($item, $key) {
+            $data = $item->toArray();
+            $item->salary = floatval($data['salary']);
+            return $item;
+        });
         return response()->json([
-            'myContents' => $myContents,
+                    'myContents' => $myContents,
         ]);
     }
 
@@ -75,9 +75,13 @@ class MyContentController extends Controller {
         $newContent['salary'] = round($newContent['salary'], 2);
         if ($user->isInklua()) {
 
+            
             $data = $request->only(array_keys(ContentClient::$rules));
+            $response = $this->validate_request($data, ContentClient::$rules);
+            if($response instanceof \Illuminate\Http\JsonResponse) return $response;
             $data['content_id'] = $newContent->id;
             $data['user_id'] = $user->id;
+
 //            dd($data);
 
             ContentClient::create($data);
@@ -133,6 +137,9 @@ class MyContentController extends Controller {
 
             $contentclient = ContentClient::where('content_id', $id)->first();
             $data = $request->only(array_keys(ContentClient::$rules));
+            $response = $this->validate_request($data, ContentClient::$rules);
+            if($response instanceof \Illuminate\Http\JsonResponse) return $response;
+            
             $data['content_id'] = $id;
             $data['user_id'] = $user->id;
 //            dd($data);
@@ -173,8 +180,6 @@ class MyContentController extends Controller {
         ]);
     }
 
-    
-    
     public function approve($id) {
 
         $content = Content::where('id', $id)->first();
