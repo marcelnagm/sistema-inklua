@@ -112,12 +112,13 @@ class CandidateReport extends Model {
         return User::find($this->user_id);
     }
     
-     public function owner() {
+     public function owner_obj() {
         return User::find($this->owner);
     }
+    
      public function owner_formatted() {
         if($this->owner != null) 
-        return 'INKLUER#'.$this->owner()->id.' - '.$this->owner()->fullname();
+        return 'INKLUER#'.$this->owner_obj()->id.' - '.$this->owner_obj()->fullname();
         else return 'Meu candidato';
     }
     

@@ -20,7 +20,11 @@ class CandidateReportControler extends Controller {
     public function index(Request $request) {
         $user = auth()->guard('api')->user();
         if (InkluaUser::isInternal($user->id)) {
-            return CandidateReport::where('candidate_id', $request->input('candidate_id'))->orderBy('updated_at', "DESC")->get();
+            return CandidateReport::when($request->exists('candidate_id'), function ($query) {
+                        return $query->where('candidate_id', request('candidate_id'));
+                    })->when($request->exists('job_id'), function ($query) {
+                        return $query->where('job_id', request('job_id'));
+                    })->orderBy('updated_at', "DESC")->get();
         } else {
             return response()->json([
                         'status' => false,
@@ -39,7 +43,7 @@ class CandidateReportControler extends Controller {
         $data = $this->validate($request, CandidateReport::$rules);
         unset($data['user_id']);
 //        $data['user_id'] = $user->id;
-//        dd ($user);
+//        dd ($data);
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
         $cand = Candidate::find($data['candidate_id']);
@@ -67,6 +71,7 @@ class CandidateReportControler extends Controller {
                 return response()->json([
                             'status' => true,
                             'msg' => 'Abordagem Iniciada!',
+                            'data' => $cand->toArray()
                 ]);
             } else {
                 $user = User::find($cand->status);
@@ -119,14 +124,14 @@ class CandidateReportControler extends Controller {
         $user = auth()->guard('api')->user();
         $report = CandidateReport::find($id);
         if ($report->status != -1) {
-            if($request->input('hired') ==1){                  
-            $data = $this->validate($request, CandidateReport::$rules_hired);    
-            }else
-            $data = $this->validate($request, CandidateReport::$rules);
+            if ($request->input('hired') == 1) {
+                $data = $this->validate($request, CandidateReport::$rules_hired);
+            } else
+                $data = $this->validate($request, CandidateReport::$rules);
 
             unset($data['user_id']);
             $data['user_id'] = $user->id;
-
+//            dd($data);
             if ($data['report_status_id'] == 5) {
                 $candidate = $report->candidate();
                 $candidate->status = -1;
@@ -144,7 +149,7 @@ class CandidateReportControler extends Controller {
                         $cont->save();
                     } else {
                         if ($data['report_status_id'] == 7) {
-                             $candidate = $report->candidate();
+                            $candidate = $report->candidate();
                             if ($candidate->status != 9999) {
                                 return response()->json([
                                             'status' => true,
@@ -154,7 +159,7 @@ class CandidateReportControler extends Controller {
 
                             $data['hired'] = 0;
                             $report->update($data);
-                           
+
                             $candidate->status = null;
                             $candidate->save();
                             $cont->replaced = $cont->replaced + 1;
@@ -179,6 +184,7 @@ class CandidateReportControler extends Controller {
             return response()->json([
                         'status' => true,
                         'msg' => 'Candidate report successfully updated!',
+                        'data' => $report->toArray()
             ]);
         } else {
             return response()->json([
