@@ -84,11 +84,53 @@ class CandidateReport extends Model {
 
     public function save(array $attributes = [], array $options = []) {
 
-
+//        dd($attributes);
         if (isset($attributes['start_at'])) {
             $attributes['start_at'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['start_at']);
         }
+        if ($attributes['report_status_id'] == 5) {
+            $candidate = $this->candidate();
+            $candidate->status = -1;
+            $candidate->save();
+        } else {
+            if ($attributes['report_status_id'] == 6 || $attributes['report_status_id'] == 7) {
+                $cont = $this->content()->contentclient();
+                if ($attributes['report_status_id'] == 6) {
+                    $attributes['hired'] = 1;
+                    parent::save($attributes, $options);
+                    $candidate = $this->candidate();
+                    $candidate->status = -9999;
+                    $candidate->save();
+                    $cont->hired = $cont->hired + 1;
+                    $cont->save();
+                } else {
+                    if ($attributes['report_status_id'] == 7) {
+                        $candidate = $this->candidate();
+                        if ($candidate->status != -9999) {
+                            return response()->json([
+                                        'status' => true,
+                                        'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
+                            ]);
+                        }
+
+                        $this->replacement();
+                        parent::save($attributes, $options);
+
+                        return response()->json([
+                                    'status' => true,
+                                    'msg' => 'Candidato Reposto!',
+                        ]);
+                    }
+                }
+            } else {
+                $candidate = $this->candidate();
+                $candidate->status = NULL;
+                $candidate->save();
+            }
+        }
         parent::save($attributes, $options);
+        return $this;
+        
     }
 
     public function update(array $attributes = [], array $options = []) {
@@ -96,8 +138,50 @@ class CandidateReport extends Model {
         if (isset($attributes['start_at'])) {
             $attributes['start_at'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['start_at']);
         }
+        if ($attributes['report_status_id'] == 5) {
+            $candidate = $this->candidate();
+            $candidate->status = -1;
+            $candidate->save();
+                parent::update($attributes, $options);
+        } else {
+            if ($attributes['report_status_id'] == 6 || $attributes['report_status_id'] == 7) {
+                $cont = $this->content()->contentclient();
+                if ($attributes['report_status_id'] == 6) {
+                    $attributes['hired'] = 1;                  
+                    $candidate = $this->candidate();
+                    $candidate->status = -9999;
+                    $candidate->save();
+                    $cont->hired = $cont->hired + 1;
+                    $cont->save();
+                        parent::update($attributes, $options);
+                } else {
+                    if ($attributes['report_status_id'] == 7) {
+                        $candidate = $this->candidate();
+                        if ($candidate->status != -9999) {
+                            return response()->json([
+                                        'status' => true,
+                                        'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
+                            ]);
+                        }
 
-        parent::update($attributes, $options);
+                        $this->replacement();
+                        parent::update($attributes, $options);
+
+                        return response()->json([
+                                    'status' => true,
+                                    'msg' => 'Candidato Reposto!',
+                        ]);
+                    }
+                }
+            } else {
+//                    parent::update($attributes, $options);
+                $candidate = $this->candidate();
+                $candidate->status = NULL;
+                $candidate->save();
+            }
+        }
+//         parent::update($attributes, $options);
+         return $this;
     }
 
     public function user() {
@@ -151,11 +235,11 @@ class CandidateReport extends Model {
         $data['recruiter'] = $this->owner_formatted();
         $data['date'] = $this->start_at;
         $data['hired'] = $this->hired;
-        if($this->report_status_id != null)
-        $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;        
-        $data['obs'] = $this->obs;        
-        $data['id'] = $this->id;        
-        
+        if ($this->report_status_id != null)
+            $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;
+        $data['obs'] = $this->obs;
+        $data['id'] = $this->id;
+
         return $data;
     }
 

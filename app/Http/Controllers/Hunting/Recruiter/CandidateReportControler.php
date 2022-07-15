@@ -67,9 +67,10 @@ class CandidateReportControler extends Controller {
             ]);
         if ($cand->status != -1) {
             if ($cand->status == 0 || $cand->status == null) {
+                $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
                 $cand = new CandidateReport($data);
 
-                $cand->save();
+                $cand = $cand->save($data);
                 $candidate = $cand->candidate();
                 $candidate->status = $user->id;
                 $candidate->save();
@@ -82,7 +83,7 @@ class CandidateReportControler extends Controller {
                 $user = User::find($cand->status);
                 return response()->json([
                             'status' => false,
-                            'msg' => "Candidate ja sendo abordado por  $user->name",
+                            'msg' => "Candidate ja sendo abordado por  $user",
                 ]);
             }
         } else {
@@ -125,73 +126,74 @@ class CandidateReportControler extends Controller {
      * @param  \Illuminate\Http\Request  $request     
      * @return \Illuminate\Http\Response Json com mensagem de sucesso ou mensagem de erro de validação
      */
-    public function update(Request $request, $id) {
-        $user = auth()->guard('api')->user();
-        $report = CandidateReport::findOrFail($id);
-        if ($report->status != -1) {
-            if ($request->input('hired') == 1) {
-                $data = $this->validate($request, CandidateReport::$rules_hired);
-            } else
-                $data = $this->validate($request, CandidateReport::$rules);
-
-            unset($data['user_id']);
-            $data['user_id'] = $user->id;
-            $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
-//            dd($data);
-            if ($data['report_status_id'] == 5) {
-                $candidate = $report->candidate();
-                $candidate->status = -1;
-                $candidate->save();
-            } else {
-                if ($data['report_status_id'] == 6 || $data['report_status_id'] == 7) {
-                    $cont = $report->content()->contentclient();
-                    if ($data['report_status_id'] == 6) {
-                        $data['hired'] = 1;
-                        $report->update($data);
-                        $candidate = $report->candidate();
-                        $candidate->status = -9999;
-                        $candidate->save();
-                        $cont->hired = $cont->hired + 1;
-                        $cont->save();
-                    } else {
-                        if ($data['report_status_id'] == 7) {
-                            $candidate = $report->candidate();
-                            if ($candidate->status != -9999) {
-                                return response()->json([
-                                            'status' => true,
-                                            'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
-                                ]);
-                            }
-
-                            $report->replacement();
-                            $report->update($data);
-
-                            return response()->json([
-                                        'status' => true,
-                                        'msg' => 'Candidato Reposto!',
-                            ]);
-                        }
-                    }
-                } else {
-                    $candidate = $report->candidate();
-                    $candidate->status = NULL;
-                    $candidate->save();
-                }
-            }
-            $report->update($data);
-
-            return response()->json([
-                        'status' => true,
-                        'msg' => 'Candidate report successfully updated!',
-                        'data' => $report->toArray()
-            ]);
-        } else {
-            return response()->json([
-                        'status' => false,
-                        'msg' => 'Candidate cannot be interview, do not engage!',
-            ]);
-        }
-    }
+//  public function update(Request $request, $id) {
+//        $user = auth()->guard('api')->user();
+//        $report = CandidateReport::findOrFail($id);
+//        if ($report->status != -1) {
+//            if ($request->input('hired') == 1) {
+//                $data = $this->validate($request, CandidateReport::$rules_hired);
+//            } else
+//                $data = $this->validate($request, CandidateReport::$rules);
+//
+//            unset($data['user_id']);
+//            $data['user_id'] = $user->id;
+//            $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
+////            dd($data);
+//             $report->update($data);
+//            if ($data['report_status_id'] == 5) {
+//                $candidate = $report->candidate();
+//                $candidate->status = -1;
+//                $candidate->save();
+//            } else {
+//                if ($data['report_status_id'] == 6 || $data['report_status_id'] == 7) {
+//                    $cont = $report->content()->contentclient();
+//                    if ($data['report_status_id'] == 6) {
+//                        $data['hired'] = 1;
+//                        $report->update($data);
+//                        $candidate = $report->candidate();
+//                        $candidate->status = -9999;
+//                        $candidate->save();
+//                        $cont->hired = $cont->hired + 1;
+//                        $cont->save();
+//                    } else {
+//                        if ($data['report_status_id'] == 7) {
+//                            $candidate = $report->candidate();
+//                            if ($candidate->status != -9999) {
+//                                return response()->json([
+//                                            'status' => true,
+//                                            'msg' => 'Você não pode fazer a reposição de um candidato não contratado!',
+//                                ]);
+//                            }
+//
+//                            $report->replacement();
+//                            $report->update($data);
+//
+//                            return response()->json([
+//                                        'status' => true,
+//                                        'msg' => 'Candidato Reposto!',
+//                            ]);
+//                        }
+//                    }
+//                } else {
+//                    $candidate = $report->candidate();
+//                    $candidate->status = NULL;
+//                    $candidate->save();
+//                }
+//            }
+//            $report->update($data);
+//
+//            return response()->json([
+//                        'status' => true,
+//                        'msg' => 'Candidate report successfully updated!',
+//                        'data' => $report->toArray()
+//            ]);
+//        } else {
+//            return response()->json([
+//                        'status' => false,
+//                        'msg' => 'Candidate cannot be interview, do not engage!',
+//            ]);
+//        }
+//    }
 
     /**
      * Remove o candidato especificado
