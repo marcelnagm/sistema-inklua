@@ -31,8 +31,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
-            $vagas = $vagas->orWhere('office_id', '=', $office->id);
+            $vagas = $this->filters($request, Content::where('office_id',$office->id));
+            $vagas = $vagas->where('type',1);
+            $vagas = $vagas->where('status','reposicao');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -59,8 +60,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['id'] = $content->id;
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
             if ($contentclient != null) {
-                $data['vagas'][$i]['vagas'] = $contentclient->replaced;
-                ;
+                $data['vagas'][$i]['vagas'] = $contentclient->replaced;                
             } else {
                 $data['vagas'][$i]['vagas'] = '-';
             }
@@ -177,8 +177,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
-              $vagas = $vagas->orWhere('office_id', '=', $office->id);
+             $vagas = $this->filters($request, Content::where('office_id',$office->id));
+            $vagas = $vagas->where('type',1);
+            $vagas = $vagas->where('status','publicada');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -248,8 +249,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
-              $vagas = $vagas->orWhere('office_id', '=', $office->id);
+              $vagas = $this->filters($request, Content::where('office_id',$office->id));
+            $vagas = $vagas->where('type',1);
+            $vagas = $vagas->where('status','fechada');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -304,19 +306,7 @@ class ReportController extends Controller {
                         . '"' . $date_end . '"'
                         . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
-            } else {
-                if ($request->exists('date_start')) {
-                    $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
-
-                    $vagas = $vagas->whereRaw('(contents.created_at  >= "' . $date_start . '"'
-                            . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
-                            . ')');
-                }
-                if ($request->exists('date_end')) {
-                    $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
-                    $vagas = $vagas->where('contents.created_at', '<=', $date_end);
-                }
-            }
+            } 
             if ($request->exists('title')) {
                 $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');
             }
