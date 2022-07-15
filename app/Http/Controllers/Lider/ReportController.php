@@ -105,7 +105,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, $office->inkluaUsersContent($request));
+            $vagas = $this->filters($request, Content::where('office_id',$office->id));
+            $vagas = $vagas->whereIn('status',array('publicada','reposicao'));
+            $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id =8)');
         }
 //        dd('va');
         $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');

@@ -19,7 +19,7 @@ class CandidateReportControler extends Controller {
      */
     public function index(Request $request) {
         $user = auth()->guard('api')->user();
-        if (InkluaUser::isInternal($user->id)) {
+        if ($user->isInklua()) {
             return CandidateReport::when($request->exists('candidate_id'), function ($query) {
                         return $query->where('candidate_id', request('candidate_id'));
                     })->when($request->exists('job_id'), function ($query) {
