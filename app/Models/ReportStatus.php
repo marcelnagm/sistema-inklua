@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReportStatus extends Model {
     protected $table = 'report_status';
     protected $fillable = [
-        'status',
+      'status_front',  'status',
         
     ];
     
@@ -26,6 +26,10 @@ class ReportStatus extends Model {
     
     public function __toString() {
         return $this->status;
+    }
+    
+    static function byStatusFront($status_name){
+        return self::where('status_front',$status_name)->first();
     }
     
 }

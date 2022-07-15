@@ -136,6 +136,7 @@ class CandidateReportControler extends Controller {
 
             unset($data['user_id']);
             $data['user_id'] = $user->id;
+            $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
 //            dd($data);
             if ($data['report_status_id'] == 5) {
                 $candidate = $report->candidate();

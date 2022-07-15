@@ -152,6 +152,7 @@ class CandidateReport extends Model {
 //        dd($data['start_at'] );        
 //        $data['owner'] = $this->owner_formatted();
         $data['recruiter'] = $this->owner_formatted();
+        $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;
         return $data;
     }
 
