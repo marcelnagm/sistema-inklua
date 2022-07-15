@@ -147,12 +147,14 @@ class CandidateReport extends Model {
     }
 
     public function toArray() {
-        $data = parent::toArray();
-        unset($data['owner']);
-//        dd($data['start_at'] );        
-//        $data['owner'] = $this->owner_formatted();
+        $data = array();
         $data['recruiter'] = $this->owner_formatted();
-        $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;
+        $data['date'] = $this->start_at;
+        $data['hired'] = $this->hired;
+        $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;        
+        $data['obs'] = $this->obs;        
+        $data['id'] = $this->id;        
+        
         return $data;
     }
 

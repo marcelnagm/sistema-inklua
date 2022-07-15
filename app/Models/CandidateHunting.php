@@ -168,7 +168,10 @@ class CandidateHunting extends Model {
     public function pcd_typo() {
         return $this->pcd_type_id != null ? PcdType::find($this->pcd_type_id) : "Nenhum";
     }
-
+ /**
+     * 
+     * @return \Illuminate\Support\Collection;
+     */
     public function education() {
         return CandidateEducation::where('candidate_id', $this->id)->orderBy('level_education_id')->get();
     }
@@ -177,14 +180,25 @@ class CandidateHunting extends Model {
         return CandidateEducation::where('candidate_id', $this->id)->orderBy('level_education_id')->get()->pluck('level_education_id')->max();
     }
 
+    /**
+     * 
+     * @return \Illuminate\Support\Collection;
+     */
     public function report() {
         return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at', 'DESC')->get();
     }
 
+     /**
+     * 
+     * @return \Illuminate\Support\Collection;
+     */
     public function experience() {
         return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get();
     }
-
+    /**
+     * 
+     * @return CandidateExperience
+     */
     public function last_experience() {
         return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get()->last();
     }
