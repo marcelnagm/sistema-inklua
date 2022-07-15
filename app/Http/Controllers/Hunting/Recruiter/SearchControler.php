@@ -22,7 +22,6 @@ class SearchControler extends Controller {
     );
     private $candidates;
 
-
     public function index_search(Request $request) {
 
         $result = $this->search($request);
@@ -32,27 +31,23 @@ class SearchControler extends Controller {
 
         $filters = $this->getFilterFields($result['search'], $result['search']);
         $this->candidates = $result['search']->orderBy('candidate_hunting.updated_at', 'desc')->paginate(10);
-        
-                
+
 //        dd($page);
-            $this->candidates->items();
-        
+        $this->candidates->items();
+
 //        dd($result['search_nofilter']->count());
 //        if ($result['search_nofilter']->count() == 0) x`
-
-
-
 //        dd($result['param']);
-        return response()->json( array(
+        return response()->json(array(
 //            'statesAll' => State::all(),
 //            'is_home' => false,
 //            'states_all' => State::all(),
-            'filters' => $filters,
+                    'filters' => $filters,
 //            'filtered' => $result['filtered'],
 //            'payment_max' => $this->payment_max,
 //            'english_levels' => CandidateEnglishLevel::all(),
-            'candidates' => $this->candidates->items(),
-            'paginator' => $this->candidates,
+                    'candidates' => $this->candidates->items(),
+                    'paginator' => $this->candidates,
 //            'param' => $result['param']
         ));
     }
@@ -64,7 +59,7 @@ class SearchControler extends Controller {
 //            dd($filters);
         $candidates = $result['search']->orderBy('updated_at', 'desc');
         if ($request->input('page') != null) {
-            $candidates->skip(10 * $request->input('page') )->take(10);
+            $candidates->skip(10 * $request->input('page'))->take(10);
         }
 //        dd ($candidates );
 
@@ -130,7 +125,7 @@ class SearchControler extends Controller {
                         )
                         ->groupBy('candidate_hunting.city_id')
                         ->groupBy('city.name')
-                ->orderBy('total', 'desc')->get()->toArray();
+                        ->orderBy('total', 'desc')->get()->toArray();
 //        dd($city);
         $city = $this->adjustArray($city, 'name', 'total');
         $levels = $levels->
@@ -168,7 +163,7 @@ class SearchControler extends Controller {
 //dd($states);
         $payments_result = arraY();
         foreach ($this->payment_max as $p) {
-            $payments_result[$p] = clone $payments;            
+            $payments_result[$p] = clone $payments;
             if ($p == 1000) {
                 $p_min = "" . (0);
             }
@@ -193,7 +188,6 @@ class SearchControler extends Controller {
                     ->where('payment', '>=', $p_min);
 //                            dd($payments_result[$p]->toSql()); 
             $payments_result[$p] = $payments_result[$p]->count();
-            
         }
 
         return array(
@@ -213,8 +207,7 @@ class SearchControler extends Controller {
 
         return $retornoo;
     }
-    
-       
+
     private $searchble = array(
         'key' => '%',
         'location' => '%',
@@ -351,7 +344,7 @@ class SearchControler extends Controller {
          * @var $search 
          */
 //        $search = new luminate\Database\Eloquent\Builder();
-        $search = Candidate::select();
+        $search = Candidate::select('candidate_hunting.*');
         $search = $search->whereRaw('status NOT IN (-1) OR status is null');
         $search_nofilter = clone $search;
         foreach ($this->searchble as $key => $val) {
@@ -380,7 +373,11 @@ class SearchControler extends Controller {
                     }
                     if ($val == '%') {
                         if ($key == 'key') {
-                            $search = $search->whereRaw("candidate_hunting.id IN (select candidate_id from candidate_experience_hunting where candidate_experience_hunting.role like '$val$data[$key]$val' )");
+                            $search = $search->whereRaw("(candidate_hunting.name like '%$data[$key]%'  or "
+                                    . "candidate_hunting.surname like '%$data[$key]%'  or "
+                                    . "candidate_hunting.cellphone like '%$data[$key]%'  or "
+                                    . "candidate_hunting.id = '$data[$key]'  "
+                                    . ") ");
                         }
                         if ($key == 'location') {
                             $param[$key] = $request->input($key);
@@ -415,9 +412,9 @@ class SearchControler extends Controller {
             }
         }
 
-
-//        dd(ApiControler::getEloquentSqlWithBindings($search));
-
+        if ($request->exists('debug')) {
+            dd(self::getEloquentSqlWithBindings($search));
+        }
         return array(
             'search' => $search,
             'param' => $param,
@@ -435,12 +432,10 @@ class SearchControler extends Controller {
         return $data;
     }
 
-  public static function getEloquentSqlWithBindings($query)
-{
+    public static function getEloquentSqlWithBindings($query) {
         return vsprintf(str_replace('?', '%s', str_replace('%', '%%', $query->toSql())), collect($query->getBindings())->map(function ($binding) {
-            return is_numeric($binding) ? $binding : "'{$binding}'";
-        })->toArray());
-}
- 
+                    return is_numeric($binding) ? $binding : "'{$binding}'";
+                })->toArray());
+    }
 
 }
