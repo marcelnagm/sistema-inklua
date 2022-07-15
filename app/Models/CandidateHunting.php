@@ -218,9 +218,9 @@ class CandidateHunting extends Model {
         $data['cellphone'] = $this->phone();
         $data['english_level'] = $this->english_level_obj() . '';
         $data['gid'] = $this->gid;
-        $data['status'] = $this->status_name();
-        if ($data['status'] == "TAKEN") {
-            $data['recruiter']['name'] = User::find($this->status)->fullname();
+        $data['recruitment']['status'] = $this->status_name();
+        if ($data['recruitment']['status'] == "TAKEN") {
+            $data['recruitment']['recruiterName']= User::find($this->status)->fullname();
         }
         $data['education'] = $this->education()->toArray();
         $data['experience'] = $this->experience()->toArray();
