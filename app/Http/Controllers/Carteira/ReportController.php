@@ -55,13 +55,13 @@ class ReportController extends Controller {
 //        dd($vagas );
 
         $i = 0;
-
+        $content = new Content();
         foreach ($vagas as $content) {
 //        dd($i);
             $data['vagas'][$i]['id'] = "$content->id";
             $data['vagas'][$i]['status_front'] = $content->getStatusFront();
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
-            $data['vagas'][$i]['escritorio'] = $content->office()->name;
+            $data['vagas'][$i]['escritorio'] = $content->office().'';
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
             $data['vagas'][$i]['salario'] = $content->salary;
