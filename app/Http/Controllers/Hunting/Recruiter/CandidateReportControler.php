@@ -127,7 +127,7 @@ class CandidateReportControler extends Controller {
      */
     public function update(Request $request, $id) {
         $user = auth()->guard('api')->user();
-        $report = CandidateReport::find($id);
+        $report = CandidateReport::findOrFail($id);
         if ($report->status != -1) {
             if ($request->input('hired') == 1) {
                 $data = $this->validate($request, CandidateReport::$rules_hired);
