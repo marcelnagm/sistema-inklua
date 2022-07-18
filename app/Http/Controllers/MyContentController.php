@@ -214,9 +214,15 @@ class MyContentController extends Controller {
         $content->status = 'cancelada';
         $content->save();
 
-        $cc = $content->contentclient()->first();
+        $cc = $content->contentclient();
 //       dd($cc);
-
+        if($cc == null)
+               return response()->json([
+                        'status' => false,
+                        'msg' => 'Associação com cliente não criada, falta a informação da vaga de que cliente esta associado, posição e condições do cliente!',
+            ]);
+        $cc= $cc->first();
+        
         $cancel = new ContentCancel();
         $cancel->content_id = $cc->content_id;
         $cancel->client_id = $cc->client_id;
