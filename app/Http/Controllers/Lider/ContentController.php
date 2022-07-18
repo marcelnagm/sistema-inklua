@@ -83,6 +83,7 @@ class ContentController extends Controller {
          $report = new \App\Models\CandidateReport;
          foreach ($content->candidateReport() as $report){
              $candidate = $report->candidate();
+             $data['candidate'][$i]['gid']=  $candidate->gid;
              $data['candidate'][$i]['name']=  $candidate->full_name();
              $data['candidate'][$i]['salary']=  $candidate->payment;
              $data['candidate'][$i]['status']=  $report->reportstatus().'';
