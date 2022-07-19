@@ -22,25 +22,27 @@ class ReportController extends Controller {
 
     public function index_produtidade(Request $request) {
         $data = array();
+        $i = 0;
         if ($request->user()->admin == 1) {
-            
+            $users = \App\Models\InkluaUser::all();
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-            $i = 0;
-            foreach ($office->inkluaUsers()->get() as $inkluaUser) {
-                $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
-                $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
-                $data['recrutadores'][$i]['posicoes'] = $inkluaUser->positionsTotal();
-                $data['recrutadores'][$i]['com_cliente'] = $inkluaUser->positionsWithClient();
-                $data['recrutadores'][$i]['fechadas'] = $inkluaUser->positionsClosed()->count();                
-                $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas']/$data['recrutadores'][$i]['posicoes'] : '-' ;  
-                $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ?  number_format($data['recrutadores'][$i]['assertividade'] *100,2  ).'%' : '-';
-                $data['recrutadores'][$i]['total'] = $inkluaUser->positionsClosedSum();
-            }
+            $users = $office->inkluaUsers()->get();
         }
-
+        foreach ($users as $inkluaUser) {
+            $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
+            $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
+            $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal(),null)->get()->count();
+            $data['recrutadores'][$i]['com_cliente'] = $this->filters($request, $inkluaUser->positionsWithClient(),null)->get()->count();
+            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(),null)->get();
+            $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);
+            $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();
+            $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas'] / $data['recrutadores'][$i]['posicoes'] : '-';
+            $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? number_format($data['recrutadores'][$i]['assertividade'] * 100, 2) . '%' : '-';
+            $i++;
+        }
 
         return $data;
     }
@@ -53,13 +55,13 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'reposicao');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $this->filters($request, Content::where('office_id', $office->id),'reposicao');
             $vagas = $vagas->where('type', 1);
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
@@ -127,22 +129,23 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, Content::whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)'));
+            $vagas = $this->filters($request, Content::whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)')
+                    ->where('type',1)
+                    ,'com-cliente');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-
-            $vagas = $this->filters($request, Content::where('office_id', $office->id));
-            $vagas = $vagas->whereIn('status', array('publicada', 'reposicao'));
+            
+            $vagas = $this->filters($request, Content::where('office_id', $office->id),'com-cliente');            
+            $vagas = $vagas->where('type',1); 
         }
 //        dd('va');
         $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
-        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-        $valo->groupby('status');
+        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, count(contents.status) as amount');        
         if ($request->exists('debug5')) {
             dd(Controller::getEloquentSqlWithBindings($valo));
         }
@@ -200,13 +203,13 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'publicada');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $this->filters($request, Content::where('office_id', $office->id),'publicada');
             $vagas = $vagas->where('type', 1);
 
             if ($request->exists('debug2')) {
@@ -241,7 +244,7 @@ class ReportController extends Controller {
 
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
-           $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
+            $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
             $data['vagas'][$i]['entrega']['value'] = $content->created_at->addDays(5)->format('d/m/Y');
             $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(5))->timestamp;
             if ($contentclient != null) {
@@ -273,19 +276,20 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent());
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'fechada');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $this->filters($request, Content::where('office_id', $office->id),'fechada');
             $vagas = $vagas->where('type', 1);
-            $vagas = $vagas->where('status', 'fechada');
+          
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
+          $vagas = $vagas->where('status', 'fechada');
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
@@ -321,7 +325,7 @@ class ReportController extends Controller {
         return $data;
     }
 
-    public function filters(Request $request, $vagas) {
+    public function filters(Request $request, $vagas,$status) {
 
 
 
@@ -331,11 +335,16 @@ class ReportController extends Controller {
             if ($request->exists('date_start') && $request->exists('date_end')) {
                 $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
                 $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+                if($status == 'publicada')
                 $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
                         . '" and '
                         . '"' . $date_end . '"'
                         . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
+                else
+                    $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
+                        . '" and '
+                        . '"' . $date_end . '")');
             }
             if ($request->exists('title')) {
                 $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');

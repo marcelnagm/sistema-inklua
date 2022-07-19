@@ -1,117 +1,54 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers\Lider;
 
-//Parte do sistema hunting
-
-
-use Illuminate\Database\Eloquent\Model;
-use App\Models\InkluaOffice;
-use App\Models\User;
-use App\Models\OfficeRole;
-use App\Models\Content;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Http\Middleware\checkUserInkluer;
+use Illuminate\Support\Facades\DB;
+use App\Models\Content;
+use Carbon;
 
-class InkluaUser extends Model {
+class ReportController extends Controller {
 
     //
-    protected $table = 'inklua_users';
-    protected $fillable = ['user_id', 'active', 'start_at', 'end_at', 'office_id', 'role_id'
-    ];
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'start_at',
-        'end_at'
-    ];
-
-    public static function boot() {
-        parent::boot();
-        static::creating(function ($model) {
-            $user = Auth::user();
-            if ($user == null)
-                $user = auth()->guard('api')->user();
-            $model->created_by = $user->id;
-            $model->updated_by = $user->id;
-        });
-        static::updating(function ($model) {
-            $user = Auth::user();
-            if ($user == null)
-                $user = auth()->guard('api')->user();
-            $model->updated_by = $user->id;
-        });
+    public function __construct() {
+        $this->middleware('auth:api');
+        $this->middleware('checkAdminPermission');
     }
 
-    public function office() {
-        return InkluaOffice::find($this->office_id);
-    }
+//  Relatorios de produtividade e engajamento
 
-    public function role() {
-        return OfficeRole::find($this->role_id);
-    }
+    public function index_produtidade(Request $request) {
+        $data = array();
+        $i = 0;
+        if ($request->user()->admin == 1) {
+            $users = \App\Models\InkluaUser::all();
+        } else {
 
-    public function user() {
-        return User::find($this->user_id);
-    }
-
-    public function save(array $options = []) {
-        if (in_array($this->role_id, array(1, 2))) {
-            $of = $this->office();
-            if ($this->role_id == 1)
-                $of->leader_id = $this->user()->id;
-            if ($this->role_id == 2)
-                $of->pfl_id = $this->user()->id;
-            $of->save();
+            $office = $request->user()->office();
+            $data['escritorio'] = $office->name;
+            $users = $office->inkluaUsers()->get();
+        }
+        foreach ($users as $inkluaUser) {
+            $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
+            $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
+            $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal())->get()->count();
+            $data['recrutadores'][$i]['com_cliente'] = $this->filters($request, $inkluaUser->positionsWithClient())->get()->count();
+            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed())->get();
+            $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);
+            $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();
+            $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas'] / $data['recrutadores'][$i]['posicoes'] : '-';
+            $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? number_format($data['recrutadores'][$i]['assertividade'] * 100, 2) . '%' : '-';
+            $i++;
         }
 
-        parent::save($options);
+        return $data;
     }
 
-    public static function inkluaUsers() {
-        return InkluaUser::orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
-    }
+    public function filters(Request $request, $vagas) {
 
-    public function positions() {
-        return Content::where('user_id', $this->user_id);
-    }
 
-    public function positionsTotal() {
-        return $this->positions();
-    }
-    
-    public function positionsSum($positions) {
-        
-        return $positions->each(function($item,$key){
-            $item['carteira'] = $item->carteira();
-            return $item;
-        })->sum('carteira');  
-        
-    
-        
-        }
-    public function positionsClosedSum() {
-        
-        return $this->positionsClosed()->each(function($item,$key){
-            $item['carteira'] = $item->carteira();
-            return $item;
-        })->sum('carteira');  
-        
-    }
-    
-    public function positionsClosed() {
-        return $this->positions()->where('contents.status','fechada');
-    }
-    
-    
-    
-    public function positionsWithClient() {
-        return $this->positions()->
-                whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8 )');
-                
-    }
-
-     public function filters(Request $request, $vagas) {
 
         if ($request->exists('content_id')) {
             $vagas = $vagas->where('contents.id', '=', $request->input('content_id'));
@@ -164,5 +101,5 @@ class InkluaUser extends Model {
 
         return $vagas;
     }
-    
+
 }
