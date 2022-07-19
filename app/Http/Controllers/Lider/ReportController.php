@@ -30,10 +30,10 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
             $i = 0;
             foreach ($office->inkluaUsers()->get() as $inkluaUser) {
-             $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;   
-             $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname().'';   
-             $data['recrutadores'][$i]['posicoes'] = $inkluaUser->positionsTotal();   
-             $data['recrutadores'][$i]['com_cliente'] = $inkluaUser->positionsWithClient();   
+                $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
+                $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
+                $data['recrutadores'][$i]['posicoes'] = $inkluaUser->positionsTotal();
+                $data['recrutadores'][$i]['com_cliente'] = $inkluaUser->positionsWithClient();
             }
         }
 
@@ -57,15 +57,15 @@ class ReportController extends Controller {
 
             $vagas = $this->filters($request, Content::where('office_id', $office->id));
             $vagas = $vagas->where('type', 1);
-            $vagas = $vagas->where('status', 'reposicao');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
+        $vagas = $vagas->where('status', 'reposicao');
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
-        $valo->join('client_condition', 'content_id', '=', 'contents.id');
         $valo->whereRaw('contents_client.content_id = contents.id');
+        $valo->join('client_condition', 'content_id', '=', 'contents.id');
         $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
         $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
         $valo->groupby('status');
@@ -131,7 +131,6 @@ class ReportController extends Controller {
 
             $vagas = $this->filters($request, Content::where('office_id', $office->id));
             $vagas = $vagas->whereIn('status', array('publicada', 'reposicao'));
-            $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id =8)');
         }
 //        dd('va');
         $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
@@ -205,11 +204,12 @@ class ReportController extends Controller {
 
             $vagas = $this->filters($request, Content::where('office_id', $office->id));
             $vagas = $vagas->where('type', 1);
-            $vagas = $vagas->where('status', 'publicada');
+
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
+        $vagas = $vagas->where('status', 'publicada');
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
