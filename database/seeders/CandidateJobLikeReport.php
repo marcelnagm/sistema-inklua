@@ -24,24 +24,31 @@ class CandidateJobLikeReport extends Seeder {
     public function run() {
         //
 
-        $jobs = array(7636,
-            7649,
-            7634,
-            7635);
+        $candi = \App\Models\CandidateHunting::all()->pluck('id');
+        $jobs = \App\Models\ContentClient::all()->pluck('content_id');
 
-//        for ($i = 1; $i < 400; $i++) {
-//            $first_job = random_int(0, 1);
-//            DB::table('job_like')->insert([
-//                
-//            ]);
+        for ($i = 1; $i < count($candi); $i++) {
 
-        for ($j = 0; $j < random_int(1, 16); $j++) {
             DB::table('job_like')->insert([
-                'candidate_id' => random_int(3, 16),
-                'job_id' => $jobs[random_int(1, 3)]
+                'candidate_id' => $candi[random_int(1, count($candi) - 1)],
+                'job_id' => $jobs[random_int(1, count($jobs) - 1)],
             ]);
         }
+
+//      
+//        
+        $status = \App\Models\ReportStatus::all()->pluck('id');
+        $users = \App\Models\InkluaUser::all()->pluck('user_id');
+        for ($j = 0; $j < 4000; $j++) {
+            DB::table('candidate_report')->insert([
+                'report_status_id' => $status[random_int(0, count($status) - 1)],
+                'job_id' => $jobs[random_int(1, count($jobs) - 1)],
+                'hired' => random_int(0, 1),
+                'candidate_id' => $candi[random_int(1, count($candi) - 1)],
+                'user_id' => $users[random_int(1, count($users) - 1)]
+            ]);
 //        }
+        }
     }
 
 }

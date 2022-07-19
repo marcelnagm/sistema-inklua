@@ -88,7 +88,7 @@ class CandidateReportControler extends Controller {
                 $user = User::find($cand->status);
                 return response()->json([
                             'status' => false,
-                            'msg' => "Candidate ja sendo abordado por  $user",
+                            'msg' => "Candidate ja sendo abordado por  $user->fullname()",
                 ]);
             }
         } else {
