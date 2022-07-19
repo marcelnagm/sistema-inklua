@@ -27,6 +27,11 @@ use App\Http\Controllers\TransactionController;
   |
  */
 
+Route::get('/auth/whoami', function(Request $request){
+       $user = auth()->guard('api')->user();
+           return $user;
+});
+
 /* Auth */
 Route::post('/user/register', [RegisterController::class, 'register']);
 Route::post('/user/login', [LoginController::class, 'login']);
@@ -215,5 +220,7 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('/vagas/{id}/substituir', 'App\Http\Controllers\Lider\ContentController@replacement');
     Route::post('/vagas/{id}/selects', 'App\Http\Controllers\Lider\ContentController@selects');
     Route::post('/vagas/{id}/aocliente', 'App\Http\Controllers\Lider\ContentController@sendClient');
+   
+    Route::get('/relatorio/produtividade', 'App\Http\Controllers\Lider\ReportController@index_produtidade');
     
 });
