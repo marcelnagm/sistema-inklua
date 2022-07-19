@@ -65,8 +65,9 @@ class InkluaOffice extends Model {
         return InkluaOffice::where('active',1)->orderby('name','asc')->get();
         
     }
-    public function inkluaUsersActive() {
-        return InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',1);
+    
+    public function inkluaUsersActive($active = true) {
+        return InkluaUser::select('user_id')->where('office_id',$this->id)->where('active',$active);
         
     }
 

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\InkluaOffice;
 use App\Models\User;
 use App\Models\OfficeRole;
+use App\Models\Content;
 use Illuminate\Support\Facades\Auth;
 
 class InkluaUser extends Model {
@@ -17,35 +18,34 @@ class InkluaUser extends Model {
     protected $table = 'inklua_users';
     protected $fillable = ['user_id', 'active', 'start_at', 'end_at', 'office_id', 'role_id'
     ];
-    
-protected $dates = [
+    protected $dates = [
         'created_at',
         'updated_at',
         'start_at',
         'end_at'
     ];
 
-     public static function boot()
-    {
-       parent::boot();
-       static::creating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           $model->created_by = $user->id;
-           $model->updated_by = $user->id;
-       });
-       static::updating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           $model->updated_by = $user->id;
-       });
-   }
+    public static function boot() {
+        parent::boot();
+        static::creating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+            $model->created_by = $user->id;
+            $model->updated_by = $user->id;
+        });
+        static::updating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+            $model->updated_by = $user->id;
+        });
+    }
 
     public function office() {
         return InkluaOffice::find($this->office_id);
     }
+
     public function role() {
         return OfficeRole::find($this->role_id);
     }
@@ -55,10 +55,12 @@ protected $dates = [
     }
 
     public function save(array $options = []) {
-        if (in_array($this->role_id , array(1,2))) {
+        if (in_array($this->role_id, array(1, 2))) {
             $of = $this->office();
-            if ($this->role_id == 1) $of->leader_id =$this->user()->id ;
-            if ($this->role_id == 2) $of->pfl_id =$this->user()->id ;
+            if ($this->role_id == 1)
+                $of->leader_id = $this->user()->id;
+            if ($this->role_id == 2)
+                $of->pfl_id = $this->user()->id;
             $of->save();
         }
 
@@ -68,5 +70,18 @@ protected $dates = [
     public static function inkluaUsers() {
         return InkluaUser::orderBy('active', 'DESC')->orderBy('updated_at', 'DESC');
     }
-   
+
+    public function positions() {
+        return Content::where('user_id', $this->user_id);
+    }
+
+    public function positionsTotal() {
+        return $this->positions()->get()->count();
+    }
+    public function positionsWithClient() {
+        return $this->positions()->
+                whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8 )')->
+                get()->count();
+    }
+
 }

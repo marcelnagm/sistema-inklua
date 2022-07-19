@@ -87,7 +87,10 @@ class JobLike extends Model {
 
       ) ; 
       if($data['status'] == "TAKEN"){
-       $data['recruiter']['name'] = User::find($candidate->status)->fullname(); 
+       $user = User::find($candidate->status);
+       if($user!=null)
+       $data['recruiter']['name'] = $user->fullname(); 
+       else $data['recruiter']['name'] = 'Sem dado';
       }
       return $data;  
         

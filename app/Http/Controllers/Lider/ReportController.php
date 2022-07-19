@@ -18,6 +18,30 @@ class ReportController extends Controller {
         $this->middleware('App\Http\Middleware\checkUserInkluer');
     }
 
+//  Relatorios de produtividade e engajamento
+
+    public function index_produtidade(Request $request) {
+        $data = array();
+        if ($request->user()->admin == 1) {
+            
+        } else {
+
+            $office = $request->user()->office();
+            $data['escritorio'] = $office->name;
+            $i = 0;
+            foreach ($office->inkluaUsers()->get() as $inkluaUser) {
+             $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;   
+             $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname().'';   
+             $data['recrutadores'][$i]['posicoes'] = $inkluaUser->positionsTotal();   
+             $data['recrutadores'][$i]['com_cliente'] = $inkluaUser->positionsWithClient();   
+            }
+        }
+
+
+        return $data;
+    }
+
+//     Listagem para os lideres
     public function index_repos(Request $request) {
 
 
@@ -31,9 +55,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id',$office->id));
-            $vagas = $vagas->where('type',1);
-            $vagas = $vagas->where('status','reposicao');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $vagas->where('type', 1);
+            $vagas = $vagas->where('status', 'reposicao');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -60,7 +84,7 @@ class ReportController extends Controller {
             $data['vagas'][$i]['id'] = $content->id;
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
             if ($contentclient != null) {
-                $data['vagas'][$i]['vagas'] = $contentclient->replaced;                
+                $data['vagas'][$i]['vagas'] = $contentclient->replaced;
             } else {
                 $data['vagas'][$i]['vagas'] = '-';
             }
@@ -105,8 +129,8 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id',$office->id));
-            $vagas = $vagas->whereIn('status',array('publicada','reposicao'));
+            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $vagas->whereIn('status', array('publicada', 'reposicao'));
             $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id =8)');
         }
 //        dd('va');
@@ -179,9 +203,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-             $vagas = $this->filters($request, Content::where('office_id',$office->id));
-            $vagas = $vagas->where('type',1);
-            $vagas = $vagas->where('status','publicada');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $vagas->where('type', 1);
+            $vagas = $vagas->where('status', 'publicada');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -251,9 +275,9 @@ class ReportController extends Controller {
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-              $vagas = $this->filters($request, Content::where('office_id',$office->id));
-            $vagas = $vagas->where('type',1);
-            $vagas = $vagas->where('status','fechada');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $vagas->where('type', 1);
+            $vagas = $vagas->where('status', 'fechada');
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
@@ -308,7 +332,7 @@ class ReportController extends Controller {
                         . '"' . $date_end . '"'
                         . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
-            } 
+            }
             if ($request->exists('title')) {
                 $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');
             }
