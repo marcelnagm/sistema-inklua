@@ -130,10 +130,11 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, Content::where('office_id', $office->id));
+            $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
             $vagas = $vagas->whereIn('status', array('publicada', 'reposicao'));
         }
 //        dd('va');
-        $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
+       
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
