@@ -237,6 +237,7 @@ class CandidateReport extends Model {
         $data = array();
         $data['recruiter'] = $this->owner_formatted();
         $data['date'] = $this->start_at;
+        $data['candidate_id'] = $this->candidate_id;
         $data['hired'] = $this->hired;
         if ($this->report_status_id != null)
             $data['report_status'] = ReportStatus::find($this->report_status_id)->status_front;
