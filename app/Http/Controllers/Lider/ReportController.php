@@ -91,8 +91,7 @@ class ReportController extends Controller {
 
             $data['vagas'][$i]['reabertura']['value'] = $content->updated_at->format('d/m/Y');
             $data['vagas'][$i]['reabertura']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
-             if($content->user()!= null)
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+            $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
             $data['vagas'][$i]['entrega']['value'] = $content->updated_at->addDays(5)->format('d/m/Y');
             $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->updated_at->addDays(5))->timestamp;
             if ($contentclient != null) {
@@ -131,11 +130,10 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
 
             $vagas = $this->filters($request, Content::where('office_id', $office->id));
-            $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
             $vagas = $vagas->whereIn('status', array('publicada', 'reposicao'));
         }
 //        dd('va');
-       
+        $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
         $valo = clone $vagas;
         $valo->join('contents_client', 'content_id', '=', 'contents.id');
         $valo->join('client_condition', 'content_id', '=', 'contents.id');
@@ -166,10 +164,7 @@ class ReportController extends Controller {
 
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
-            
-            if($content->user()!= null)
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
-            
+            $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
             $data['vagas'][$i]['entrega']['value'] = $content->created_at->addDays(5)->format('d/m/Y');
             $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(5))->timestamp;
             if ($contentclient != null) {
@@ -242,8 +237,7 @@ class ReportController extends Controller {
 
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
-             if($content->user()!= null)
-            $data['vagas'][$i]['recrutador'] = $content->user()->first()->fullname();
+           $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
             $data['vagas'][$i]['entrega']['value'] = $content->created_at->addDays(5)->format('d/m/Y');
             $data['vagas'][$i]['entrega']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(5))->timestamp;
             if ($contentclient != null) {
