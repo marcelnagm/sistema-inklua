@@ -35,7 +35,7 @@ class ReportController extends Controller {
                 $data['recrutadores'][$i]['posicoes'] = $inkluaUser->positionsTotal();
                 $data['recrutadores'][$i]['com_cliente'] = $inkluaUser->positionsWithClient();
                 $data['recrutadores'][$i]['fechadas'] = $inkluaUser->positionsClosed()->count();                
-                $data['recrutadores'][$i]['assertividade'] =  $data['recrutadores'][$i]['fechadas']/$data['recrutadores'][$i]['posicoes'];  
+                $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas']/$data['recrutadores'][$i]['posicoes'] : '-' ;  
                 $data['recrutadores'][$i]['assertividade'] = number_format($data['recrutadores'][$i]['assertividade'] *100,2  ).'%';
                 $data['recrutadores'][$i]['total'] = $inkluaUser->positionsClosedSum();
             }
