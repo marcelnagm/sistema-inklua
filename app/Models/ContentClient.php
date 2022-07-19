@@ -32,7 +32,7 @@ class ContentClient extends Model
      *
      * @var array
      */
-    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy','hired',];
+    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy','hired','replacement'];
     
      public static function boot()
     {

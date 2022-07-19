@@ -103,7 +103,10 @@ class Content extends Model {
     public function candidateReport() {
         return CandidateReport::where('job_id', $this->id)->get();
     }
-
+    /**
+     * 
+     * @return ContentClient
+     */
     public function contentclient() {
         return ContentClient::where('content_id', $this->id)->first();
     }
@@ -583,4 +586,10 @@ class Content extends Model {
         return Candidate::whereIn('id', JobLike::where('job_id', $this->id)->orderBy('created_at')->pluck('candidate_id'))->get();
     }
 
+    public function carteira(){
+        $cc = $this->contentclient();
+        $tax = $cc->clientcondition()->first()->tax; 
+        return $cc->vacancy * ($tax / 100) * $this->salary;
+    }
+  
 }

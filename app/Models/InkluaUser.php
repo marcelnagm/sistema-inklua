@@ -78,6 +78,22 @@ class InkluaUser extends Model {
     public function positionsTotal() {
         return $this->positions()->get()->count();
     }
+    
+    public function positionsClosedSum() {
+        
+        return $this->positionsClosed()->each(function($item,$key){
+            $item['carteira'] = $item->carteira();
+            return $item;
+        })->sum('carteira');  
+        
+    }
+    
+    public function positionsClosed() {
+        return $this->positions()->where('contents.status','fechada')->get();
+    }
+    
+    
+    
     public function positionsWithClient() {
         return $this->positions()->
                 whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8 )')->
