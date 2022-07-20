@@ -74,6 +74,7 @@ class CandidateReport extends Model {
         static::creating(function ($model) {
             $user = auth()->guard('api')->user();
             $model->created_by = $user->id;
+            $model->user_id = $user->id; 
             $model->updated_by = $user->id;
         });
         static::updating(function ($model) {
