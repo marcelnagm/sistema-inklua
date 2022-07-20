@@ -126,6 +126,7 @@ class CandidateReport extends Model {
                     }
                 } else {
                     $candidate = $this->candidate();
+//                    dd($this );
                     $candidate->status = NULL;
                     $candidate->save();
                 }

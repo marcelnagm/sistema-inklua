@@ -20,19 +20,20 @@ class CandidateReportControler extends Controller {
     public function index(Request $request) {
         $user = auth()->guard('api')->user();
         if ($user->isInklua()) {
-            return array( 'data' => Candidate::when($request->exists('candidate_id'), function ($query) {
-                        return $query->where('id', request('candidate_id'));
-                    })->when(!$request->exists('candidate_id'), function ($query) {
-                        return $query->where('id', -1);
-                    })->get()                
-                ,'reports' => CandidateReport::when($request->exists('candidate_id'), function ($query) {
-                        return $query->where('candidate_id', request('candidate_id'));
-                    })->when($request->exists('job_id'), function ($query) {
-                        return $query->where('job_id', request('job_id'));
-                    })->orderBy('updated_at', "DESC")->get());
+            return array('data' => Candidate::when($request->exists('candidate_id'), function ($query) {
+                    return $query->where('id', request('candidate_id'));
+                })->when(!$request->exists('candidate_id'), function ($query) {
+                    return $query->where('id', -1);
+                })->get()
+                , 'reports' => CandidateReport::when($request->exists('candidate_id'), function ($query) {
+                    return $query->where('candidate_id', request('candidate_id'));
+                })->when($request->exists('job_id'), function ($query) {
+                    return $query->where('job_id', request('job_id'));
+                })->orderBy('updated_at', "DESC")->get());
         } else {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Função apenas para recrutadores internos',
             ]);
         }
@@ -46,34 +47,45 @@ class CandidateReportControler extends Controller {
     public function store(Request $request) {
         $user = auth()->guard('api')->user();
         $data = $this->validate($request, CandidateReport::$rules);
-        unset($data['user_id']);
-//        $data['user_id'] = $user->id;
+
 //        dd ($data);
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
+        if ($request->exists('id')) {
 
-        $cand = Candidate::find($data['candidate_id']);
+            $report = CandidateReport::find($request->input('id'));
+            $cand = $report->candidate();
+        } else
+            $cand = Candidate::find($data['candidate_id']);
         if ($cand == null) {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Candidato não encontrado!',
             ]);
         }
-        $cont = ContentClient::where('content_id', $data['job_id'])->first();
+        if ($request->exists('id')) {
+            $cont = $report->content()->contentclient();
+        } else
+            $cont = ContentClient::where('content_id', $data['job_id'])->first();
         if ($cont == null) {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Associação com cliente não criada, falta a informação da vaga de que cliente esta associado, posição e condições do cliente!',
             ]);
         }
-        if (!$cont->hasVacancy())
+        if (!$cont->hasVacancy() && $cont == null)
             return response()->json([
-                        'status' => true,
+                        'status' => false,
+                        'error' => true,
                         'msg' => 'Não existem vagas disponiveis[vagas - ' . $cont->vacancy . ',contratados - ' . $cont->vacancy . ',repostos - ' . $cont->replaced . '] para a vaga  escolhida!',
             ]);
         if ($cand->status != -1) {
             if ($cand->status == 0 || $cand->status == null) {
                 $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
-                $cand = new CandidateReport($data);
+//                dd($data);                $request->input('id')
+                $cand = CandidateReport::updateOrCreate(['id' => $request->input('id', null)],
+                                $data);
 
                 $cand = $cand->save($data);
                 $candidate = $cand->candidate();
@@ -81,6 +93,7 @@ class CandidateReportControler extends Controller {
                 $candidate->save();
                 return response()->json([
                             'status' => true,
+                            'error' => false,
                             'msg' => 'Abordagem Iniciada!',
                             'data' => $cand->toArray()
                 ]);
@@ -88,12 +101,14 @@ class CandidateReportControler extends Controller {
                 $user = User::find($cand->status);
                 return response()->json([
                             'status' => false,
-                            'msg' => "Candidate ja sendo abordado por  ".$user->fullname(),
+                            'error' => true,
+                            'msg' => "Candidate ja sendo abordado por  " . $user->fullname(),
                 ]);
             }
         } else {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Candidate cannot be interview, do not engage!',
             ]);
         }

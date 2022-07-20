@@ -25,6 +25,7 @@ class JobLikeControler extends Controller {
         if ($content->user_id != $user->id) {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
         }
@@ -32,35 +33,33 @@ class JobLikeControler extends Controller {
         if ($user->isInklua()) {
             if ($request->exists('key')) {
                 $param = $request->input('key');
-                $cand =  JobLike::where('job_id', $id)->
-                                 whereRaw("candidate_id in (select id from candidate_hunting where "
-                                        . "name like '%$param%'  or "
-                                        . "surname like '%$param%'  or "
-                                        . "cellphone like '%$param%'  or "
-                                        . "id = '$param'  "
-                                        . ") ")->
-                                when($request->exists('order_by'), function ($q) {
-                                    return $q->orderBy(request('order_by'), request('ordering_rule'));
-                                });
+                $cand = JobLike::where('job_id', $id)->
+                        whereRaw("candidate_id in (select id from candidate_hunting where "
+                                . "name like '%$param%'  or "
+                                . "surname like '%$param%'  or "
+                                . "cellphone like '%$param%'  or "
+                                . "id = '$param'  "
+                                . ") ")->
+                        when($request->exists('order_by'), function ($q) {
+                    return $q->orderBy(request('order_by'), request('ordering_rule'));
+                });
             } else
-                $cand =  JobLike::where('job_id', $id);
-            $cand =  $cand->get()->skip(6 * ($request->input('page') - 1))->take(6);
+                $cand = JobLike::where('job_id', $id);
+            $cand = $cand->get()->skip(6 * ($request->input('page') - 1))->take(6);
 //           dd($cand); 
-           $data = array();
-           $data['data']['current_page']=  $request->input('page') ;
-           $data['data']['last_page']= round($cand->count()/2,0); 
-           if($cand->count() ==0)$data['data']['likes'] = array();
-           foreach($cand as $c){
-           $data['data']['likes'][] = $c->toArray();
-           }
+            $data = array();
+            $data['data']['current_page'] = $request->input('page');
+            $data['data']['last_page'] = round($cand->count() / 2, 0);
+            if ($cand->count() == 0)
+                $data['data']['likes'] = array();
+            foreach ($cand as $c) {
+                $data['data']['likes'][] = $c->toArray();
+            }
 //           dd($data);
             return $data;
         } else {
-            return array('likes' =>  JobLike::where('job_id', $id)->orderBy('created_at')->count());            
-            
+            return array('data' => JobLike::where('job_id', $id)->orderBy('created_at')->count());
         }
-        
-        
     }
 
     public function search(Request $request, $id) {
@@ -70,6 +69,7 @@ class JobLikeControler extends Controller {
         if ($content->user_id != $user->id) {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
         }
@@ -89,6 +89,7 @@ class JobLikeControler extends Controller {
         } else {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Esta vaga não é sua ç)!',
             ]);
         }
