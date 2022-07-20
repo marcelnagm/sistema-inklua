@@ -197,9 +197,9 @@ class CandidateReport extends Model {
 
     public function owner_formatted() {
         if ($this->owner != null)
-            return 'INKLUER#' . $this->owner_obj()->id . ' - ' . $this->owner_obj()->fullname();
+            return $this->owner_obj()->fullname();
         else
-            return 'Meu candidato';
+            return $this->user()->fullname();
     }
 
     /**
@@ -236,7 +236,7 @@ class CandidateReport extends Model {
     public function toArray() {
         $data = array();
         $data['recruiter'] = $this->owner_formatted();
-        $data['date'] = $this->start_at;
+        $data['date'] = $this->created_at;
         $data['candidate_id'] = $this->candidate_id;
         $data['hired'] = $this->hired;
         if ($this->report_status_id != null)
