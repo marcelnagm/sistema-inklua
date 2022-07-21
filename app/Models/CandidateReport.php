@@ -74,7 +74,7 @@ class CandidateReport extends Model {
         static::creating(function ($model) {
             $user = auth()->guard('api')->user();
             $model->created_by = $user->id;
-            $model->user_id = $user->id; 
+            $model->user_id = $user->id;
             $model->updated_by = $user->id;
         });
         static::updating(function ($model) {
@@ -200,8 +200,12 @@ class CandidateReport extends Model {
     public function owner_formatted() {
         if ($this->owner != null)
             return $this->owner_obj()->fullname();
-        else
-            return $this->user()->fullname();
+        else {
+            if ($this->user_id != null)
+                return $this->user()->fullname();
+            else
+                return '-';
+        }
     }
 
     /**
