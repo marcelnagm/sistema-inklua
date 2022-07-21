@@ -272,12 +272,20 @@ class ReportController extends Controller {
             $contentclient = $content->contentclient();
             $data['vagas'][$i]['id'] = $content->id;
             $data['vagas'][$i]['titulo_vagas'] = $content->title;
+            $data['vagas'][$i]['recrutador'] = $content->user()->first() != null ? $content->user()->first()->fullname() : '';
             $data['vagas'][$i]['criado_em']['value'] = $content->created_at->format('d/m/Y');
             $data['vagas'][$i]['criado_em']['ref'] = \Carbon\Carbon::parse($content->created_at)->timestamp;
             if ($contentclient != null) {
                 $data['vagas'][$i]['cliente'] = $contentclient->client()->first()->formal_name;
             } else {
                 $data['vagas'][$i]['cliente'] = '-';
+            }
+              if ($contentclient != null) {
+                $data['vagas'][$i]['total'] = $content->carteira();
+                $data['vagas'][$i]['total'] = 'R$' . number_format(floatval($data['vagas'][$i]['total']), 2, '.', '.');
+                
+            } else {
+                $data['vagas'][$i]['total'] = '-';
             }
             $data['vagas'][$i]['descritivo'] = route('vaga.descritivo', array('id' => $data['vagas'][$i]['id']));
             $data['vagas'][$i]['detalhes'] = route('vaga.detalhes', array('id' => $data['vagas'][$i]['id']));
