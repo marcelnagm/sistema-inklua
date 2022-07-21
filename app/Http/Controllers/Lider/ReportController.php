@@ -67,18 +67,8 @@ class ReportController extends Controller {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
-        $vagas = $vagas->where('status', 'reposicao');
-        $valo = clone $vagas;
-        $valo->join('contents_client', 'content_id', '=', 'contents.id');
-        $valo->whereRaw('contents_client.content_id = contents.id');
-        $valo->join('client_condition', 'content_id', '=', 'contents.id');
-        $valo->whereRaw('client_condition.id = contents_client.client_condition_id');
-        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-        $valo->groupby('status');
-        if ($request->exists('debug5')) {
-            dd(Controller::getEloquentSqlWithBindings($valo));
-        }
-        $data['carteira'] = $valo->get();
+        $vagas = $vagas->where('status','reposicao');
+        $counter =  $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -119,7 +109,7 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return $data;
+        return array_merge(array('data'=> $data), $counter);
     }
 
     public function index_cliente(Request $request) {
@@ -142,17 +132,7 @@ class ReportController extends Controller {
         }
 //        dd('va');
         $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
-        $valo = clone $vagas;
-        $valo->join('contents_client', 'content_id', '=', 'contents.id');
-        $valo->join('client_condition', 'content_id', '=', 'contents.id');
-        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, count(contents.status) as amount');        
-        if ($request->exists('debug5')) {
-            dd(Controller::getEloquentSqlWithBindings($valo));
-        }
-        if ($request->exists('debug3')) {
-            dd(Controller::getEloquentSqlWithBindings($vagas));
-        }
-        $data['carteira'] = $valo->get();
+        $counter =  $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -181,9 +161,8 @@ class ReportController extends Controller {
             }
             $data['vagas'][$i]['overview']['value'] = $content->created_at->addDays(3)->format('d/m/Y');
             $data['vagas'][$i]['overview']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(3))->timestamp;
-            if ($contentclient != null) {
-                $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-                $data['vagas'][$i]['faturamento'] = ($data['vagas'][$i]['vagas'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
+            if ($contentclient != null) {                
+                $data['vagas'][$i]['faturamento'] = $content->carteira();;
                 $data['vagas'][$i]['faturamento'] = 'R$' . number_format(floatval($data['vagas'][$i]['faturamento']), 2, '.', '.');
             } else {
                 $data['vagas'][$i]['faturamento'] = '-';
@@ -193,7 +172,7 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return $data;
+        return array_merge(array('data'=> $data), $counter);
     }
 
     public function index(Request $request) {
@@ -216,19 +195,11 @@ class ReportController extends Controller {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
-        $vagas = $vagas->where('status', 'publicada');
-        $valo = clone $vagas;
-        $valo->join('contents_client', 'content_id', '=', 'contents.id');
-        $valo->join('client_condition', 'content_id', '=', 'contents.id');
-        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-        $valo->groupby('status');
-        if ($request->exists('debug5')) {
-            dd(Controller::getEloquentSqlWithBindings($valo));
-        }
-        $data['carteira'] = $valo->get();
+        $vagas = $vagas->whereIn('status',array('reposicao','publicada'));
+        $counter =  $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
-
+        
         $i = 0;
 
         foreach ($vagas as $content) {
@@ -255,9 +226,9 @@ class ReportController extends Controller {
             $data['vagas'][$i]['overview']['value'] = $content->created_at->addDays(3)->format('d/m/Y');
             $data['vagas'][$i]['overview']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(3))->timestamp;
             if ($contentclient != null) {
-                $data['vagas'][$i]['taxa'] = $contentclient->clientcondition()->first()->tax;
-                $data['vagas'][$i]['faturamento'] = ($data['vagas'][$i]['vagas'] * ($data['vagas'][$i]['taxa'] / 100)) * $content->salary;
+                $data['vagas'][$i]['faturamento'] = $content->carteira();
                 $data['vagas'][$i]['faturamento'] = 'R$' . number_format(floatval($data['vagas'][$i]['faturamento']), 2, '.', '.');
+                
             } else {
                 $data['vagas'][$i]['faturamento'] = '-';
             }
@@ -266,11 +237,11 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return $data;
+        return array_merge(array('data'=> $data), $counter) ;
     }
 
     public function index_fechada(Request $request) {
-
+ 
 
 
         $data = array();
@@ -290,15 +261,7 @@ class ReportController extends Controller {
             }
         }
           $vagas = $vagas->where('status', 'fechada');
-        $valo = clone $vagas;
-        $valo->join('contents_client', 'content_id', '=', 'contents.id');
-        $valo->join('client_condition', 'content_id', '=', 'contents.id');
-        $valo = $valo->selectRaw('FORMAT(sum(((contents.salary * (client_condition.tax / 100)) * contents_client.vacancy) ),2) as total, contents.status,count(contents.status) as amount');
-        $valo->groupby('status');
-        if ($request->exists('debug5')) {
-            dd(Controller::getEloquentSqlWithBindings($valo));
-        }
-        $data['carteira'] = $valo->get();
+          $counter =  $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -322,9 +285,26 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return $data;
+        return array_merge(array('data'=> $data), $counter) ;
     }
 
+    public function counter(Request $request,$vagas) {
+        $data = array();
+          $valo = clone $vagas;
+        $valo = $valo->selectRaw('count(contents.status) as amount');
+        $valo->groupby('status');
+        if ($request->exists('debug5')) {
+            dd(Controller::getEloquentSqlWithBindings($valo));
+        }
+            $data['amount'] = $valo->first() != null? $valo->first()['amount']  : 0;;
+         $data['pages']  = array('page' =>$request->input('page') ,
+                'per-page' => 10,
+                'pages' => ceil($vagas->count()/10)
+            );
+        return $data;
+    }
+    
+    
     public function filters(Request $request, $vagas,$status) {
 
 
@@ -339,7 +319,7 @@ class ReportController extends Controller {
                 $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
                         . '" and '
                         . '"' . $date_end . '"'
-                        . ' or (status="publicada" and  contents.created_at  <= "' . $date_start . '")'
+                        . ' or ((status="publicada" or status="reposicao") and  contents.created_at  <= "' . $date_start . '")'
                         . ')');
                 else
                     $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
@@ -373,10 +353,12 @@ class ReportController extends Controller {
                         )
                 );
             }
-            if ($request->exists('status')) {
-                $vagas = $vagas->where('contents.status', $request->input('status'));
-            }
-        }
+            
+        }        
+            $vagas = $vagas->orderby('created_at',$request->input('ordering_rule','ASC'));
+        
+        
+        
         if ($request->exists('debug')) {
             dd(Controller::getEloquentSqlWithBindings($vagas));
         }
