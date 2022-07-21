@@ -100,7 +100,7 @@ class ContentController extends Controller {
     
     public function changeRecruiter(Request $request,$id ) {
           $user = User::findOrFail($request->input('recruiter_id'));
-         $content = Content::where('id', $id)->first();
+         $content = Content::findOrFail($id);
         $contentclient = $content->contentclient();
         $content->user_id = $user->id;
         $contentclient->user_id = $user->id;
