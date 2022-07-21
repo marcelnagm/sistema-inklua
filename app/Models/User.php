@@ -254,4 +254,20 @@ class User extends Authenticatable implements MustVerifyEmail {
                 ; 
     }
 
+    static function lastLogin($request){
+        $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
+        $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
+
+        $query=  User::where('id','<>',-1)->where('id','<>',null);
+                 
+        $query = $query->whereRaw('(last_login_at between "' . $date_start
+                . '" and '
+                . '"' . $date_end . '")');
+        if ($request->exists('debug2')) {
+            dd(Controller::getEloquentSqlWithBindings($query));
+        }
+        
+        return $query;
+    }
+    
 }

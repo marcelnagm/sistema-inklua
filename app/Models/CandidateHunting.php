@@ -275,5 +275,12 @@ class CandidateHunting extends Model {
 
         parent::update($attributes, $options);
     }
-
+    
+    
+    static function byStatus($status){
+        $sub = CandidateReport::whereIn('report_status_id',$status)->pluck('candidate_id');
+        return CandidateHunting::whereIn('id',$sub);
+    }
+    
+    
 }

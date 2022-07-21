@@ -6,8 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class checkUserInkluer
-{
+class checkUserInkluer {
+
     /**
      * Handle an incoming request.
      *
@@ -15,17 +15,19 @@ class checkUserInkluer
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
-    {
-        
+    public function handle(Request $request, Closure $next) {
+
 //        dd('hpa');
         $user = Auth::user();
 //        dd($user->toArray());
-       if (!$user->isInklua() ) {
+        if (!$user->isInklua()) {
             return response()->json([
-                        'error' => 'Usuario precisa ser inkluer',
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Usuario precisa ser inkluer',
                             ], 400);
         }
         return $next($request);
     }
+
 }

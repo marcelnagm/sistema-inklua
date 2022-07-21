@@ -222,5 +222,6 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('/vagas/{id}/aocliente', 'App\Http\Controllers\Lider\ContentController@sendClient');
    
     Route::get('/relatorio/produtividade', 'App\Http\Controllers\Lider\ReportController@index_produtidade');
+    Route::get('/relatorio/engajamento', 'App\Http\Controllers\Diretor\ReportController@index_engajamento');
     
 });

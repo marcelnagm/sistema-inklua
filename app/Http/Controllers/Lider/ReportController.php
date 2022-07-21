@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\checkUserInkluer;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
+use App\Models\CandidateHunting;
 use Carbon;
 
 class ReportController extends Controller {
@@ -18,8 +19,7 @@ class ReportController extends Controller {
         $this->middleware('App\Http\Middleware\checkUserInkluer');
     }
 
-//  Relatorios de produtividade e engajamento
-
+    
     public function index_produtidade(Request $request) {
         $data = array();
         $i = 0;
@@ -34,9 +34,9 @@ class ReportController extends Controller {
         foreach ($users as $inkluaUser) {
             $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
             $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
-            $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal(),null)->get()->count();
-            $data['recrutadores'][$i]['com_cliente'] = $this->filters($request, $inkluaUser->positionsWithClient(),null)->get()->count();
-            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(),null)->get();
+            $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal(), null)->get()->count();
+            $data['recrutadores'][$i]['com_cliente'] = $this->filters($request, $inkluaUser->positionsWithClient(), null)->get()->count();
+            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(), null)->get();
             $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);
             $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();
             $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas'] / $data['recrutadores'][$i]['posicoes'] : '-';
@@ -44,7 +44,7 @@ class ReportController extends Controller {
             $i++;
         }
 
-        return $data;
+        return array('data' => $data);
     }
 
 //     Listagem para os lideres
@@ -55,20 +55,20 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'reposicao');
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(), 'reposicao');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id),'reposicao');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id), 'reposicao');
             $vagas = $vagas->where('type', 1);
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
-        $vagas = $vagas->where('status','reposicao');
-        $counter =  $this->counter($request, $vagas);
+        $vagas = $vagas->where('status', 'reposicao');
+        $counter = $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -109,7 +109,7 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return array_merge(array('data'=> $data), $counter);
+        return array_merge(array('data' => $data), $counter);
     }
 
     public function index_cliente(Request $request) {
@@ -120,19 +120,19 @@ class ReportController extends Controller {
 
         if ($request->user()->admin == 1) {
             $vagas = $this->filters($request, Content::whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)')
-                    ->where('type',1)
-                    ,'com-cliente');
+                            ->where('type', 1)
+                    , 'com-cliente');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-            
-            $vagas = $this->filters($request, Content::where('office_id', $office->id),'com-cliente');            
-            $vagas = $vagas->where('type',1); 
+
+            $vagas = $this->filters($request, Content::where('office_id', $office->id), 'com-cliente');
+            $vagas = $vagas->where('type', 1);
         }
 //        dd('va');
         $vagas = $vagas->whereRaw('contents.id in (select job_id from candidate_report where report_status_id = 8)');
-        $counter =  $this->counter($request, $vagas);
+        $counter = $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -161,8 +161,9 @@ class ReportController extends Controller {
             }
             $data['vagas'][$i]['overview']['value'] = $content->created_at->addDays(3)->format('d/m/Y');
             $data['vagas'][$i]['overview']['ref'] = \Carbon\Carbon::parse($content->created_at->addDays(3))->timestamp;
-            if ($contentclient != null) {                
-                $data['vagas'][$i]['faturamento'] = $content->carteira();;
+            if ($contentclient != null) {
+                $data['vagas'][$i]['faturamento'] = $content->carteira();
+                ;
                 $data['vagas'][$i]['faturamento'] = 'R$' . number_format(floatval($data['vagas'][$i]['faturamento']), 2, '.', '.');
             } else {
                 $data['vagas'][$i]['faturamento'] = '-';
@@ -172,7 +173,7 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return array_merge(array('data'=> $data), $counter);
+        return array_merge(array('data' => $data), $counter);
     }
 
     public function index(Request $request) {
@@ -182,24 +183,24 @@ class ReportController extends Controller {
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'publicada');
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(), 'publicada');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id),'publicada');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id), 'publicada');
             $vagas = $vagas->where('type', 1);
 
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
-        $vagas = $vagas->whereIn('status',array('reposicao','publicada'));
-        $counter =  $this->counter($request, $vagas);
+        $vagas = $vagas->whereIn('status', array('reposicao', 'publicada'));
+        $counter = $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
-        
+
         $i = 0;
 
         foreach ($vagas as $content) {
@@ -228,7 +229,6 @@ class ReportController extends Controller {
             if ($contentclient != null) {
                 $data['vagas'][$i]['faturamento'] = $content->carteira();
                 $data['vagas'][$i]['faturamento'] = 'R$' . number_format(floatval($data['vagas'][$i]['faturamento']), 2, '.', '.');
-                
             } else {
                 $data['vagas'][$i]['faturamento'] = '-';
             }
@@ -237,31 +237,31 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return array_merge(array('data'=> $data), $counter) ;
+        return array_merge(array('data' => $data), $counter);
     }
 
     public function index_fechada(Request $request) {
- 
+
 
 
         $data = array();
 
         if ($request->user()->admin == 1) {
-            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(),'fechada');
+            $vagas = $this->filters($request, \App\Models\Content::inkluaUsersContent(), 'fechada');
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
 
-            $vagas = $this->filters($request, Content::where('office_id', $office->id),'fechada');
+            $vagas = $this->filters($request, Content::where('office_id', $office->id), 'fechada');
             $vagas = $vagas->where('type', 1);
-          
+
             if ($request->exists('debug2')) {
                 dd(Controller::getEloquentSqlWithBindings($vagas));
             }
         }
-          $vagas = $vagas->where('status', 'fechada');
-          $counter =  $this->counter($request, $vagas);
+        $vagas = $vagas->where('status', 'fechada');
+        $counter = $this->counter($request, $vagas);
         $vagas = $vagas->get()->skip(10 * ($request->input('page') - 1))->take(10);
 //        dd($vagas );
 
@@ -280,10 +280,9 @@ class ReportController extends Controller {
             } else {
                 $data['vagas'][$i]['cliente'] = '-';
             }
-              if ($contentclient != null) {
+            if ($contentclient != null) {
                 $data['vagas'][$i]['total'] = $content->carteira();
                 $data['vagas'][$i]['total'] = 'R$' . number_format(floatval($data['vagas'][$i]['total']), 2, '.', '.');
-                
             } else {
                 $data['vagas'][$i]['total'] = '-';
             }
@@ -293,27 +292,27 @@ class ReportController extends Controller {
             $i++;
         }
 //        dd($data);
-        return array_merge(array('data'=> $data), $counter) ;
+        return array_merge(array('data' => $data), $counter);
     }
 
-    public function counter(Request $request,$vagas) {
+    public function counter(Request $request, $vagas) {
         $data = array();
-          $valo = clone $vagas;
+        $valo = clone $vagas;
         $valo = $valo->selectRaw('count(contents.status) as amount');
         $valo->groupby('status');
         if ($request->exists('debug5')) {
             dd(Controller::getEloquentSqlWithBindings($valo));
         }
-            $data['amount'] = $valo->first() != null? $valo->first()['amount']  : 0;;
-         $data['pages']  = array('page' =>$request->input('page') ,
-                'per-page' => 10,
-                'pages' => ceil($vagas->count()/10)
-            );
+        $data['amount'] = $valo->first() != null ? $valo->first()['amount'] : 0;
+        ;
+        $data['pages'] = array('page' => $request->input('page'),
+            'per-page' => 10,
+            'pages' => ceil($vagas->count() / 10)
+        );
         return $data;
     }
-    
-    
-    public function filters(Request $request, $vagas,$status) {
+
+    public function filters(Request $request, $vagas, $status) {
 
 
 
@@ -323,16 +322,16 @@ class ReportController extends Controller {
             if ($request->exists('date_start') && $request->exists('date_end')) {
                 $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
                 $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
-                if($status == 'publicada')
-                $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
-                        . '" and '
-                        . '"' . $date_end . '"'
-                        . ' or ((status="publicada" or status="reposicao") and  contents.created_at  <= "' . $date_start . '")'
-                        . ')');
+                if ($status == 'publicada')
+                    $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
+                            . '" and '
+                            . '"' . $date_end . '"'
+                            . ' or ((status="publicada" or status="reposicao") and  contents.created_at  <= "' . $date_start . '")'
+                            . ')');
                 else
                     $vagas = $vagas->whereRaw('(contents.created_at between "' . $date_start
-                        . '" and '
-                        . '"' . $date_end . '")');
+                            . '" and '
+                            . '"' . $date_end . '")');
             }
             if ($request->exists('title')) {
                 $vagas = $vagas->where('contents.title', 'like', '%' . $request->input('title') . '%');
@@ -361,12 +360,9 @@ class ReportController extends Controller {
                         )
                 );
             }
-            
-        }        
-            $vagas = $vagas->orderby('created_at',$request->input('ordering_rule','ASC'));
-        
-        
-        
+        }
+        $vagas = $vagas->orderby('created_at', $request->input('ordering_rule', 'ASC'));
+
         if ($request->exists('debug')) {
             dd(Controller::getEloquentSqlWithBindings($vagas));
         }

@@ -23,7 +23,9 @@ class checkUserCandidate
    
        if ($user->candidatehunting() == null) {
             return response()->json([
-                        'error' => 'Usuario precisa se cadastrar como candidato para poder utilizar as funções',
+                 'status' => false,
+                            'error' => true,
+                        'msg' => 'Usuario precisa se cadastrar como candidato para poder utilizar as funções',
                             ], 400);
         }
         return $next($request);
