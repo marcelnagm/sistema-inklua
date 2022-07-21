@@ -103,6 +103,7 @@ class Content extends Model {
     public function candidateReport() {
         return CandidateReport::where('job_id', $this->id)->get();
     }
+
     /**
      * 
      * @return ContentClient
@@ -162,7 +163,7 @@ class Content extends Model {
     public static function getCities($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("city as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
-                        ->whereIn('status', array('publicada','reposicao'))                        
+                        ->whereIn('status', array('publicada', 'reposicao'))
                         ->whereNotNull("city")
                         ->where("city", "!=", "")
                         ->when(($search), function ($query) use ($search) {
@@ -182,7 +183,7 @@ class Content extends Model {
     public static function getStates($search = FALSE, $state = FALSE, $city = FALSE) {
         return Content::select("state as name", DB::raw('count(*) as positions'))
                         ->where("type", 1)
-                        ->whereIn('status', array('publicada','reposicao'))                        
+                        ->whereIn('status', array('publicada', 'reposicao'))
                         ->whereNotNull("state")
                         ->where("state", "!=", "")
                         ->when(($search), function ($query) use ($search) {
@@ -213,7 +214,7 @@ class Content extends Model {
 
         if ($contract != 'presencial') {
             $remote = Content::where("type", 1)
-                   ->whereIn('status', array('publicada','reposicao'))                        
+                    ->whereIn('status', array('publicada', 'reposicao'))
                     ->where("city", "")
                     ->when(($search), function ($query) use ($search) {
                         $query->whereRaw('match (title, description) against (? in boolean mode)', [$search]);
@@ -231,7 +232,7 @@ class Content extends Model {
 
         if ($contract != 'remoto') {
             $inPerson = Content::where("type", 1)
-                    ->whereIn('status', array('publicada','reposicao'))                        
+                    ->whereIn('status', array('publicada', 'reposicao'))
                     ->whereNotNull("city")
                     ->where("state", "!=", "")
                     ->when(($search), function ($query) use ($search) {
@@ -279,7 +280,7 @@ class Content extends Model {
 
         $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
                 ->where("type", 1)
-                ->whereIn('status', array('publicada','reposicao'))                        
+                ->whereIn('status', array('publicada', 'reposicao'))
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
                                 + match (description) against ('{$searchEscaped}' in boolean mode)
@@ -412,7 +413,7 @@ class Content extends Model {
 
         return Content::where('id', '!=', $this->id)
                         ->where(function ($query) {
-                            $query->whereIn('status', array('publicada','reposicao'))                        
+                            $query->whereIn('status', array('publicada', 'reposicao'))
                             ->orWhere('status', 'aguardando_pagamento');
                         })
                         ->whereHas('user', function ($q) use ($user) {
@@ -586,10 +587,33 @@ class Content extends Model {
         return Candidate::whereIn('id', JobLike::where('job_id', $this->id)->orderBy('created_at')->pluck('candidate_id'))->get();
     }
 
-    public function carteira(){
+    public function carteira() {
         $cc = $this->contentclient();
-        $tax = $cc->clientcondition()->first()->tax; 
+        $tax = $cc->clientcondition()->first()->tax;
         return $cc->vacancy * ($tax / 100) * $this->salary;
     }
-  
+
+    public function hasPermission($request) {
+        $user = Auth::user();
+        if ($user == null)
+            $user = auth()->guard('api')->user();
+//        se for seu ok
+         if($request->exists('debug')){
+                dd($user->id ,$this->user_id);
+            }
+        if ($user->id == $this->user_id)           
+            return true;
+//        se lider
+        else if ($user->isInkluaLider()) {
+             if($request->exists('debug2')){
+                dd($user->inklua()->office_id , $this->office_id);
+            }
+//            se for lider do seu escritorio ok
+            if ($user->inklua()->office_id == $this->office_id)
+                return true;
+        }
+
+        return false;
+    }
+
 }
