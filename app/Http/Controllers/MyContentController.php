@@ -40,12 +40,7 @@ class MyContentController extends Controller {
         $search = $request->input("q");
         $status = $request->input("status");
 
-        $myContents = $user->getMyContents($search, $status);
-        $myContents->each(function ($item, $key) {
-            $data = $item->toArray();
-            $item->salary = floatval($data['salary']);
-            return $item;
-        });
+        $myContents = $user->getMyContents($search, $status);       
         return response()->json([
                     'myContents' => $myContents,
         ]);
