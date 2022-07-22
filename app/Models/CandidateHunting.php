@@ -282,5 +282,9 @@ class CandidateHunting extends Model {
         return CandidateHunting::whereIn('id',$sub);
     }
     
-    
+    public function toArray() {
+        $data = parent::toArray();
+        $data['age'] = $this->age();
+        return $data;
+    }
 }

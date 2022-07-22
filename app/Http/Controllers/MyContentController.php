@@ -177,8 +177,9 @@ class MyContentController extends Controller {
         $content->status = 'reposicao';
         $content->save();
         return response()->json([
-                    'message' => 'Vaga Reposta',
-                    'content_id' => $content->id
+                        'status' => true,
+                        'error' => false,
+                        'msg' => 'Vaga Reposta'
         ]);
     }
 
@@ -188,8 +189,10 @@ class MyContentController extends Controller {
         $content->status = 'publicada';
         $content->save();
         return response()->json([
-                    'message' => 'Vaga Aprovada',
-                    'content_id' => $content->id
+                        'status' => true,
+                        'error' => false,
+                        'msg' => 'Vaga Aprovada',
+                        
         ]);
     }
 
@@ -198,8 +201,9 @@ class MyContentController extends Controller {
         $content->status = 'fechada';
         $content->save();
         return response()->json([
-                    'message' => 'Vaga Fechada',
-                    'content_id' => $content->id
+                        'status' => true,
+                        'error' => false,
+                        'msg' => 'Vaga Fechada'
         ]);
     }
 
@@ -225,6 +229,7 @@ class MyContentController extends Controller {
         if ($cc == null)
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Associação com cliente não criada, falta a informação da vaga de que cliente esta associado, posição e condições do cliente!',
             ]);
         $cc = $cc->first();
@@ -237,8 +242,9 @@ class MyContentController extends Controller {
         $cancel->save();
 
         return response()->json([
-                    'message' => 'Vaga Cancelada',
-                    'content_id' => $content->id
+                        'status' => true,
+                        'error' => false,
+                        'msg' => 'Vaga Cancelada'
         ]);
     }
 
