@@ -116,7 +116,7 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/admin/hunting/work', 'App\Http\Controllers\Hunting\Recruiter\CandidateExperienceControler@index');
 
-    Route::post('/admin/hunting/report', 'App\Http\Controllers\Hunting\Recruiter\CandidateReportControler@index');
+    Route::get('/admin/hunting/report', 'App\Http\Controllers\Hunting\Recruiter\CandidateReportControler@index');
     Route::post('/admin/hunting/report/store/', 'App\Http\Controllers\Hunting\Recruiter\CandidateReportControler@store');
     Route::post('/admin/hunting/report/{id}/update', 'App\Http\Controllers\Hunting\Recruiter\CandidateReportControler@update');
     Route::delete('/admin/hunting/report/{id}', 'App\Http\Controllers\Hunting\Recruiter\CandidateReportControler@destroy');

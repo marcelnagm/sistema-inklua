@@ -20,7 +20,7 @@ class CandidateReportControler extends Controller {
     public function index(Request $request) {
         $user = auth()->guard('api')->user();
         if ($user->isInklua()) {
-            return array('data' => Candidate::when($request->exists('candidate_id'), function ($query) {
+            return array('data' => [ "candidates" => Candidate::when($request->exists('candidate_id'), function ($query) {
                     return $query->where('id', request('candidate_id'));
                 })->when(!$request->exists('candidate_id'), function ($query) {
                     return $query->where('id', -1);
@@ -29,7 +29,7 @@ class CandidateReportControler extends Controller {
                     return $query->where('candidate_id', request('candidate_id'));
                 })->when($request->exists('job_id'), function ($query) {
                     return $query->where('job_id', request('job_id'));
-                })->orderBy('updated_at', "DESC")->get());
+                })->orderBy('updated_at', "DESC")->get()]) ;
         } else {
             return response()->json([
                         'status' => false,

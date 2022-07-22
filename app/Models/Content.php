@@ -616,4 +616,12 @@ class Content extends Model {
         return false;
     }
 
+    public function toArray() {
+        $data = parent::toArray();
+        $data['salary'] =     floatval($data['salary']);
+        $data['subscribers'] = $this->getLikesCount();
+        return $data;
+        
+    }
+    
 }
