@@ -618,7 +618,7 @@ class Content extends Model {
 
     public function toArray() {
         $data = parent::toArray();
-        $data['salary'] =     floatval($data['salary']);
+        if(isset($data['salary']))$data['salary'] =     floatval($data['salary']);
         $data['subscribers'] = $this->getLikesCount();
         return $data;
         

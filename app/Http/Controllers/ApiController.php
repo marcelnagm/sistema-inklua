@@ -201,7 +201,7 @@ class ApiController extends Controller
 
                     $content["id"] = $content["group_id"];
                     $content["type"] = "group";
-                    $content["title"] = $group->title;
+                    $content["title"] = $group != null ? $group->title : '-';
 
                     unset($content["group_id"]);
                     unset($content["date"]);
@@ -213,7 +213,9 @@ class ApiController extends Controller
                     
 
                     $groupContents = Content::selectRaw("id, type, image, title, date, description,city as 'cidade', state as 'estado', url")
-                                            ->where("group_id", $group->id)
+                                            ->when($group, function($query,$group){
+                                                return $query->where("group_id", $group->id);
+                                            })                                            
                                             ->get();
 
                     $content["positions"] = Content::hideFields($groupContents)->all();
