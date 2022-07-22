@@ -170,7 +170,22 @@ class User extends Authenticatable implements MustVerifyEmail {
 
                 //Filtro por status
                 ->when($status, function ($query) use ($status) {
-                    return $query->where('status', $status);
+                    switch($status){
+                        case 'em-espera':
+                         $query->whereIn('status', array( "aguardando_aprovacao" , "aguardando_pagamento" ));   
+                            break;
+                        case 'ativas':
+                         $query->whereIn('status', array( "publicada" , "reposicao" ));   
+                            break;
+                        case 'nao-ativas':
+                         $query->whereIn('status', array( "reprovada", "expirada", "fechada" , "cancelada"));   
+                            break;
+                        default:
+                            $query->where('status',$status);
+                            break;
+                    }
+                    
+                    return $query;
                 })
                 ->orderBy('score', 'desc')
                 ->orderBy('id', 'desc')
