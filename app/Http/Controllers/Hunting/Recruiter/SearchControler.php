@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use App\Models\Content;
 
 class SearchControler extends Controller {
 
@@ -22,6 +23,26 @@ class SearchControler extends Controller {
     );
     private $candidates;
 
+    
+      public function moreDetails(Request $request, $id) {
+        $content = Content::findOrFail($id);
+        
+        $data = array();
+        $data['title'] = $content->title;
+        $data['city'] = $content->city.'';
+        $data['state'] = $content->state.'';
+        $data['date'] = $content->published_at != null ?  $content->published_at->format('d/m/Y') :  $content->created_at->format('d/m/Y');        
+        $data['total_candidates'] = $content->getLikesCount();
+        
+       
+
+        return array('data' =>
+            array('listing' => $data)
+            );
+    }
+
+    
+    
     public function index_search(Request $request) {
 
         $result = $this->search($request);

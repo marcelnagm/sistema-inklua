@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 namespace App\Http\Controllers;
 
@@ -242,5 +242,5 @@ class MyContentController extends Controller {
                         'msg' => 'Vaga Cancelada'
         ]);
     }
-
+  
 }
