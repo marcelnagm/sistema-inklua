@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Content;
+use App\Models\JobLike;
 
 class SearchControler extends Controller {
 
@@ -23,26 +24,32 @@ class SearchControler extends Controller {
     );
     private $candidates;
 
-    
-      public function moreDetails(Request $request, $id) {
+    public function moreDetails(Request $request, $id) {
         $content = Content::findOrFail($id);
+
+        $cand = JobLike::where('job_id', $id);
+        $cand = $cand->get()->skip(6 * ($request->input('page') - 1))->take(6);
         
         $data = array();
-        $data['title'] = $content->title;
-        $data['city'] = $content->city.'';
-        $data['state'] = $content->state.'';
-        $data['date'] = $content->published_at != null ?  $content->published_at->format('d/m/Y') :  $content->created_at->format('d/m/Y');        
-        $data['total_candidates'] = $content->getLikesCount();
+        $data['current_page'] = $request->input('page');
+        $data['last_page'] = round($cand->count() / 2, 0);
+        $data['listing']['title'] = $content->title;
+        $data['listing']['city'] = $content->city . '';
+        $data['listing']['state'] = $content->state . '';
+        $data['listing']['date'] = $content->published_at != null ? $content->published_at->format('d/m/Y') : $content->created_at->format('d/m/Y');
+        $data['listing']['total_candidates'] = $content->getLikesCount();
         
-       
+        if ($cand->count() == 0)
+            $data['likes'] = array();
+        foreach ($cand as $c) {
+            $data['likes'][] = $c->toArray();
+        }
+        
 
-        return array('data' =>
-            array('listing' => $data)
-            );
+        return array('data' => $data)
+        ;
     }
 
-    
-    
     public function index_search(Request $request) {
 
         $result = $this->search($request);
