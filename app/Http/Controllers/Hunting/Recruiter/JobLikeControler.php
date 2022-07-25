@@ -50,12 +50,6 @@ class JobLikeControler extends Controller {
             $data = array();
             $data['data']['current_page'] = $request->input('page');
             $data['data']['last_page'] = round($cand->count() / 2, 0);
-            $data['data']["listing"]['title'] = $content->title;
-            $data['data']["listing"]['city'] = $content->city . '';
-            $data['data']["listing"]['state'] = $content->state . '';
-            $data['data']["listing"]['date'] = $content->published_at != null ? $content->published_at->format('d/m/Y') : $content->created_at->format('d/m/Y');
-            $data['data']["listing"]['total_candidates'] = $content->getLikesCount();
-
             if ($cand->count() == 0)
                 $data['data']['likes'] = array();
             foreach ($cand as $c) {
