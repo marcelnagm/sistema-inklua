@@ -55,6 +55,13 @@ class Content extends Model {
         'row_n',
         'order_type'
     ];
+    
+     protected $dates = [
+        'created_at',
+        'updated_at',
+        'published_at'
+    ];
+     
     static $status = array(
         "aguardando_aprovacao",
         "aguardando_pagamento",
