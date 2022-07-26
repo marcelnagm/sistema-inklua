@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\TestCaseComplex;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
@@ -14,13 +14,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use App\Models\Content;
 
-class HuntingStateCityTest extends TestCase {
+class HuntingStateCityTest extends TestCaseComplex {
 
-    function display($myvar) {
-
-        fwrite(STDERR, print_r($myvar));
-    }
-
+  
     private $jwt;
 
     public function __construct($name = null, $data = [], $dataName = '') {

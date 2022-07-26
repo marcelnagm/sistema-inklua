@@ -26,7 +26,7 @@ class CandidateData extends Seeder {
 
         for ($i = 1; $i < 400; $i++) {
             $first_job = random_int(0, 1);
-            DB::table('candidate')->insert([
+            DB::table('candidate_hunting')->insert([
                 'gid' => md5(random_int(1, 150) * time() . Str::random(20)),
                 'name' => Str::random(40),
                 'surname' => Str::random(40),
@@ -52,7 +52,7 @@ class CandidateData extends Seeder {
             ]);
 
             for ($j = 0; $j < random_int(1, 6); $j++) {
-                DB::table('candidate_education')->insert([
+                DB::table('candidate_education_hunting')->insert([
                     'candidate_id' => $i,
                     'level_education_id' => random_int(1, 8),
                     'institute' => Str::random(10),
@@ -63,7 +63,7 @@ class CandidateData extends Seeder {
             }
             if ($first_job == 1) {
                 for ($j = 0; $j < random_int(1, 6); $j++) {
-                    DB::table('candidate_experience')->insert([
+                    DB::table('candidate_experience_hunting')->insert([
                         'candidate_id' => $i,
                         'role' => Str::random(10),
                         'company' => Str::random(10),
@@ -72,12 +72,6 @@ class CandidateData extends Seeder {
                         'end_at' => $this->random_date()
                     ]);
                 }
-            }
-            for ($j = 0; $j < random_int(1, 6); $j++) {
-                DB::table('job_like')->insert([
-                    'candidate_id' => $i,
-                    'job_id' => random_int(1, 5),
-                ]);
             }
         }
     }

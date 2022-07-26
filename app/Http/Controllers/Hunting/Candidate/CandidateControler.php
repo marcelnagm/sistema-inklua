@@ -14,7 +14,7 @@ class CandidateControler extends Controller {
 
     public function __construct() {
         $this->middleware('auth:api');
-        $this->middleware('App\Http\Middleware\checkUserCandidate', ['only' => ['update', 'destroy','show']]);
+        $this->middleware('App\Http\Middleware\checkUserCandidate', ['only' => ['update', 'destroy', 'show']]);
     }
 
     public function store(Request $request) {
@@ -43,9 +43,9 @@ class CandidateControler extends Controller {
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
             $cand = new Candidate($data);
-            $cand->save_pcd_report( isset($data['pcd_report']) ? $data['pcd_report'] : null, $request->input('pcd_report_ext',null));
+            $cand->save_pcd_report(isset($data['pcd_report']) ? $data['pcd_report'] : null, $request->input('pcd_report_ext', null));
             unset($data['pcd_report']);
-            $cand->save_cv_path(isset($data['cv_path'])? $data['cv_path'] : null, $request->input('cv_path_ext',null));
+            $cand->save_cv_path(isset($data['cv_path']) ? $data['cv_path'] : null, $request->input('cv_path_ext', null));
             unset($data['cv_path']);
             $user = auth()->guard('api')->user();
             $cand->user_id = $user->id;
@@ -53,6 +53,7 @@ class CandidateControler extends Controller {
 
             return response()->json([
                         'status' => true,
+                        'error' => false,
                         'msg' => 'Candidadte successfully added!',
             ]);
         } else {
@@ -90,6 +91,7 @@ class CandidateControler extends Controller {
 
         return response()->json([
                     'status' => true,
+                    'error' => false,
                     'msg' => 'Candidate successfully updated!',
         ]);
     }

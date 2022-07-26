@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\JobLike;
 
-class HomeTest extends TestCaseComplex {
+class GenerateDataTest extends TestCaseComplex {
 
-    function display($myvar) {
-
-        fwrite(STDERR, print_r($myvar));
-    }
+ 
 
     private $host;
     private $email;
@@ -40,16 +38,9 @@ class HomeTest extends TestCaseComplex {
         $response = $this->get("$this->host/admin/login");
 
         $response->assertStatus(200);
+         JobLike::factory()->create();
     }
     
-    public function test_home_on() {
-
-
-        $response = $this->get("/api/home");
-
-        $response->assertStatus(200);
-        $response->assertJsonFragment(array( "current_page" => 1));
-    }
-
+   
 
 }
