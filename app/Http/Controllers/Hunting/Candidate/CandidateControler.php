@@ -43,9 +43,9 @@ class CandidateControler extends Controller {
 //	$validator = Validator::make(Input::all(), $rules,$messsages);
 
             $cand = new Candidate($data);
-            $cand->save_pcd_report($data['pcd_report'], $request->input('pcd_report_ext'));
+            $cand->save_pcd_report( isset($data['pcd_report']) ? $data['pcd_report'] : null, $request->input('pcd_report_ext',null));
             unset($data['pcd_report']);
-            $cand->save_cv_path($data['cv_path'], $request->input('cv_path_ext'));
+            $cand->save_cv_path(isset($data['cv_path'])? $data['cv_path'] : null, $request->input('cv_path_ext',null));
             unset($data['cv_path']);
             $user = auth()->guard('api')->user();
             $cand->user_id = $user->id;

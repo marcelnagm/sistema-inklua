@@ -32,7 +32,7 @@ class ContentController extends Controller {
                 $j++;
             }
         }
-        return array('status' => true, 'error' => false, 'message' => 'Selecionado ' . $reports->count() . ' candidatos [reposto -' . $j . ', ignorados - ' . $i . ' ]!');
+        return array('status' => true, 'error' => false, 'msg' => 'Selecionado ' . $reports->count() . ' candidatos [reposto -' . $j . ', ignorados - ' . $i . ' ]!');
 //        dd($reports);
     }
 
@@ -42,7 +42,7 @@ class ContentController extends Controller {
             $report->report_status_id = 9;
             $report->save();
         }
-        return array('status' => true, 'error' => false, 'message' => 'Selecionado ' . $reports->count() . ' candidatos!');
+        return array('status' => true, 'error' => false, 'msg' => 'Selecionado ' . $reports->count() . ' candidatos!');
 //        dd($reports);
     }
 
@@ -54,7 +54,7 @@ class ContentController extends Controller {
             $report->report_status_id = 8;
             $report->save();
         }
-        return array('status' => true, 'error' => false, 'message' => 'Enviado ' . $reports->count() . ' candidatos ao cliente!');
+        return array('status' => true, 'error' => false, 'msg' => 'Enviado ' . $reports->count() . ' candidatos ao cliente!');
 //        dd($reports);
     }
 
@@ -98,14 +98,18 @@ class ContentController extends Controller {
     }
 
     public function changeRecruiter(Request $request, $id) {
-        $user = User::findOrFail($request->input('recruiter_id'));
-        $content = Content::findOrFail($id);
+        $user = User::find($request->input('recruiter_id'));
+        if($user == null ) return array('status' => false, 'error' => true, 'msg' => 'Recrutador não encontrado');
+        $content = Content::find($id);
+        if($content == null ) return array('status' => false, 'error' => true, 'msg' => 'Vaga não encontrada');
+        
+        
         $contentclient = $content->contentclient();
         $content->user_id = $user->id;
         $contentclient->user_id = $user->id;
         $content->save();
         $contentclient->save();
-        return array('status' => true, 'error' => false, 'message' => 'Recrutador trocado com sucesso!');
+        return array('status' => true, 'error' => false, 'msg' => 'Recrutador trocado com sucesso!');
     }
 
 }

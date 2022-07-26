@@ -40,7 +40,7 @@ class MyContentController extends Controller {
         $search = $request->input("q");
         $status = $request->input("status");
 
-        $myContents = $user->getMyContents($search, $status);       
+        $myContents = $user->getMyContents($search, $status);
         return response()->json([
                     'myContents' => $myContents,
         ]);
@@ -123,12 +123,6 @@ class MyContentController extends Controller {
                         'error' => 'Vaga nao pode ser editada',
                             ], 400);
         }
-
-        $data = $request->only(MyContentController::$visible);
-
-        $data['user_id'] = $user->id;
-        $data['status'] = 'aguardando_aprovacao';
-        $data['type'] = 1;
         if ($user->isInklua()) {
 
             $contentclient = ContentClient::where('content_id', $id)->first();
@@ -143,6 +137,12 @@ class MyContentController extends Controller {
 
             $contentclient->update($data);
         }
+        $data = $request->only(MyContentController::$visible);
+
+        $data['user_id'] = $user->id;
+        $data['status'] = 'aguardando_aprovacao';
+        $data['type'] = 1;
+
         $content->update($data);
         $content['application_type'] = $content->getApplicationType();
         $content['salary'] = round($content['salary'], 2);
@@ -172,9 +172,9 @@ class MyContentController extends Controller {
         $content->status = 'reposicao';
         $content->save();
         return response()->json([
-                        'status' => true,
-                        'error' => false,
-                        'msg' => 'Vaga Reposta'
+                    'status' => true,
+                    'error' => false,
+                    'msg' => 'Vaga Reposta'
         ]);
     }
 
@@ -184,10 +184,9 @@ class MyContentController extends Controller {
         $content->status = 'publicada';
         $content->save();
         return response()->json([
-                        'status' => true,
-                        'error' => false,
-                        'msg' => 'Vaga Aprovada',
-                        
+                    'status' => true,
+                    'error' => false,
+                    'msg' => 'Vaga Aprovada',
         ]);
     }
 
@@ -196,9 +195,9 @@ class MyContentController extends Controller {
         $content->status = 'fechada';
         $content->save();
         return response()->json([
-                        'status' => true,
-                        'error' => false,
-                        'msg' => 'Vaga Fechada'
+                    'status' => true,
+                    'error' => false,
+                    'msg' => 'Vaga Fechada'
         ]);
     }
 
@@ -228,6 +227,12 @@ class MyContentController extends Controller {
                         'msg' => 'Associação com cliente não criada, falta a informação da vaga de que cliente esta associado, posição e condições do cliente!',
             ]);
         $cc = $cc->first();
+        if (!$request->exists('reason'))
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Necessário o envio do motivo de cancelamento',
+            ]);
 
         $cancel = new ContentCancel();
         $cancel->content_id = $cc->content_id;
@@ -237,10 +242,10 @@ class MyContentController extends Controller {
         $cancel->save();
 
         return response()->json([
-                        'status' => true,
-                        'error' => false,
-                        'msg' => 'Vaga Cancelada'
+                    'status' => true,
+                    'error' => false,
+                    'msg' => 'Vaga Cancelada'
         ]);
     }
-  
+
 }

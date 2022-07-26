@@ -168,7 +168,8 @@ class CandidateHunting extends Model {
     public function pcd_typo() {
         return $this->pcd_type_id != null ? PcdType::find($this->pcd_type_id) : "Nenhum";
     }
- /**
+
+    /**
      * 
      * @return \Illuminate\Support\Collection;
      */
@@ -188,13 +189,14 @@ class CandidateHunting extends Model {
         return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at', 'DESC')->get();
     }
 
-     /**
+    /**
      * 
      * @return \Illuminate\Support\Collection;
      */
     public function experience() {
         return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get();
     }
+
     /**
      * 
      * @return CandidateExperience
@@ -205,20 +207,24 @@ class CandidateHunting extends Model {
 
     public function save_pcd_report($pcd_report, $ext) {
 
-        if (Storage::exists("docs/$this->gid"))
-            Storage::makeDirectory("docs/$this->gid");
+        if ($pcd_report != null) {
+            if (Storage::exists("docs/$this->gid"))
+                Storage::makeDirectory("docs/$this->gid");
 
-        Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
-        $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
+            Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
+            $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
+        }
     }
 
     public function save_cv_path($cv_path, $ext) {
 
-        if (Storage::exists("docs/$this->gid"))
-            Storage::makeDirectory("docs/$this->gid");
+        if ($cv_path != null) {
+            if (Storage::exists("docs/$this->gid"))
+                Storage::makeDirectory("docs/$this->gid");
 
-        Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
-        $this->cv_path = "docs/$this->gid/cv.$ext";
+            Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
+            $this->cv_path = "docs/$this->gid/cv.$ext";
+        }
     }
 
     public function compact() {
@@ -234,7 +240,7 @@ class CandidateHunting extends Model {
         $data['gid'] = $this->gid;
         $data['recruitment']['status'] = $this->status_name();
         if ($data['recruitment']['status'] == "TAKEN") {
-            $data['recruitment']['recruiterName']= User::find($this->status)->fullname();
+            $data['recruitment']['recruiterName'] = User::find($this->status)->fullname();
         }
         $data['education'] = $this->education()->toArray();
         $data['experience'] = $this->experience()->toArray();
@@ -257,7 +263,7 @@ class CandidateHunting extends Model {
             if (str_contains($attributes['payment'], '.'))
                 $attributes['payment'] = $attributes['payment'] * 1000;
         }
-         if (isset($attributes['birth_date'])) {
+        if (isset($attributes['birth_date'])) {
             $attributes['birth_date'] = Carbon\Carbon::createFromFormat('d/m/Y', $attributes['birth_date']);
         }
         parent::save($attributes, $options);
@@ -275,16 +281,16 @@ class CandidateHunting extends Model {
 
         parent::update($attributes, $options);
     }
-    
-    
-    static function byStatus($status){
-        $sub = CandidateReport::whereIn('report_status_id',$status)->pluck('candidate_id');
-        return CandidateHunting::whereIn('id',$sub);
+
+    static function byStatus($status) {
+        $sub = CandidateReport::whereIn('report_status_id', $status)->pluck('candidate_id');
+        return CandidateHunting::whereIn('id', $sub);
     }
-    
+
     public function toArray() {
         $data = parent::toArray();
         $data['age'] = $this->age();
         return $data;
     }
+
 }
