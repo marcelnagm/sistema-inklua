@@ -211,7 +211,8 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     public function office() {
-        return $this->inklua()->office();
+        $inklua = $this->inklua();
+        return $inklua != null?$inklua->office() : null;
     }
 
     public function isInkluaLider() {
