@@ -31,11 +31,16 @@ class ReportController extends Controller {
             $data['escritorio'] = $office->name;
             $users = $office->inkluaUsers()->get();
         }
+        $data['amount'] = 0;
         foreach ($users as $inkluaUser) {
             $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
             $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
+             if ($request->user()->admin == 1) {
+                $data['recrutadores'][$i]['office']  = $inkluaUser->office().'';
+             }
             $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal(), null)->get()->count();
-            $data['recrutadores'][$i]['com_cliente'] = $this->filters($request, $inkluaUser->positionsWithClient(), null)->get()->count();
+            $data['amount'] += $data['recrutadores'][$i]['posicoes'] ;   
+            $data['recrutadores'][$i]['produzidas'] = $this->filters($request, $inkluaUser->positionsWithClient(), null)->get()->count();
             $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(), null)->get();
             $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);
             $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();

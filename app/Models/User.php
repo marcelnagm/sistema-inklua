@@ -269,12 +269,13 @@ class User extends Authenticatable implements MustVerifyEmail {
                 ; 
     }
 
-    static function lastLogin($request){
+    static function lastLogin($request,$pcd = false){
         $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
         $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
 
         $query=  User::where('id','<>',-1)->where('id','<>',null);
-                 
+        if ($pcd == true )$query = $query->whereRaw('id in (select user_id from candidate_hunting where pcd=1)' );        
+        
         $query = $query->whereRaw('(last_login_at between "' . $date_start
                 . '" and '
                 . '"' . $date_end . '")');
