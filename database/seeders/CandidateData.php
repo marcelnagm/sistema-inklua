@@ -29,7 +29,7 @@ class CandidateData extends Seeder {
      */
     public function run() {
      
-//           Content::factory()->count(500)->create();
+           Content::factory()->count(500)->create();
            CandidateHunting::factory()->count(500)->create();
            JobLike::factory()->count(500)->create();
            CandidateReport::factory()->count(500)->create();
