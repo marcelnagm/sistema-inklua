@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call([CandidateEnglishLevelSeeder::class]);
 //        $this->call([CandidatePCDSeeder::class]);
         $this->call([CandidateData::class]);
-        $this->call([CandidateJobLikeReport::class]);
+//        $this->call([CandidateJobLikeReport::class]);
     }
 }

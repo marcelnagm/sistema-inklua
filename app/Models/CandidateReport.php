@@ -20,9 +20,13 @@ use Auth;
 use Carbon;
 use App\Models\ReportStatus;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+       
 
 class CandidateReport extends Model {
 
+      use HasFactory;
+       
     protected $table = 'candidate_report';
     protected $fillable = [
         'candidate_id',

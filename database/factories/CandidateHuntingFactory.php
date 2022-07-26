@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\CandidateHunting;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CandidateHuntingFactory extends Factory
 {
@@ -25,7 +26,7 @@ class CandidateHuntingFactory extends Factory
             'name' => $this->faker->name,
               'gid' => md5(Str::random(15)),
         'surname' => $this->faker->name,
-        'birth_date' => $this->faker->date,
+        'birth_date' => $this->faker->date('d/m/Y'),
         'cellphone' => $this->faker->phoneNumber,
         'email' => $this->faker->email,
         'payment' => $this->faker->randomFloat(2),
@@ -33,12 +34,12 @@ class CandidateHuntingFactory extends Factory
         'linkedin_url' => $this->faker->url,
         'pcd' => random_int(0, 1),
         'status' => null,
-        'pcd_type_id' => random_int(0,6),
+        'pcd_type_id' => random_int(1,6),
         'pcd_details' => Str::random(35),
         'pcd_report' => null,
         'first_job' => random_int(0, 1),
-        'state_id' => random_int(0, 25),
-        'city_id' => random_int(0, 5200),
+        'state_id' => random_int(1, 25),
+        'city_id' => random_int(1, 5200),
         'remote' => random_int(0, 1)
             , 'move_out'=> random_int(0, 1)
         , 'race_id' => random_int(1, 4),

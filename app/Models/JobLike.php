@@ -18,9 +18,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Mail\NotifyMail;
 use App\Models\Content;
 use App\Models\CandidateHunting;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+       
 class JobLike extends Model {
     
+      use HasFactory;
+       
     protected $table = 'job_like';
     protected $fillable = [
         'candidate_id',        

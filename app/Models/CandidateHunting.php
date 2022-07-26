@@ -20,11 +20,14 @@ use App\Models\CandidateReport;
 use App\Models\CandidateGender;
 use App\Models\CandidateRace;
 use Carbon;
+use \Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 class CandidateHunting extends Model {
 
+       use HasFactory;
+       
     protected $table = 'candidate_hunting';
     protected $fillable = [
         'gid',
