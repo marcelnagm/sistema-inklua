@@ -30,11 +30,11 @@ class CandidateReportFactory extends Factory
         return [
            'candidate_id' => $this->faker->randomElement(CandidateHunting::all()->pluck('id')),
             'job_id' => $this->faker->randomElement(Content::where('type', 1)->pluck('id')),
-        'hired' => random(0,1),
+        'hired' => random_int(0,1),
         'start_at' => $this->faker->date('d/m/Y'),
         'owner' => null,
         'obs' => $this->faker->paragraph,
-        'report_status_id' => random(1,9),
+        'report_status_id' => $this->faker->randomElement(\App\Models\ReportStatus::all()->pluck('id')),
         'user_id' => $this->faker->randomElement(InkluaUser::all()->pluck('user_id')),
         ];
     }

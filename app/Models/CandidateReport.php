@@ -77,13 +77,17 @@ class CandidateReport extends Model {
         parent::boot();
         static::creating(function ($model) {
             $user = auth()->guard('api')->user();
+               if ($user != null){
             $model->created_by = $user->id;
             $model->user_id = $user->id;
             $model->updated_by = $user->id;
+               }
         });
         static::updating(function ($model) {
             $user = auth()->guard('api')->user();
+            if ($user != null){
             $model->updated_by = $user->id;
+            }
         });
     }
 
