@@ -29,7 +29,7 @@ class CandidateHuntingFactory extends Factory
         'birth_date' => $this->faker->date('d/m/Y'),
         'cellphone' => $this->faker->phoneNumber,
         'email' => $this->faker->email,
-        'payment' => $this->faker->randomFloat(2),
+        'payment' => random_int(2000, 20000),
         'portifolio_url' => $this->faker->url,
         'linkedin_url' => $this->faker->url,
         'pcd' => random_int(0, 1),
