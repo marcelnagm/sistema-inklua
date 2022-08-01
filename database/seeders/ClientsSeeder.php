@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Client;
+use App\Models\ClientCondition;
+
 class ClientsSeeder extends Seeder {
 
     /**
