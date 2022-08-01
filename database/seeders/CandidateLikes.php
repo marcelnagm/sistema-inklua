@@ -15,7 +15,7 @@ use App\Models\ContentClient;
 use App\Models\CandidateReport;
 use Database\Factories\CandidateHuntingFactory;
 
-class CandidateData extends Seeder {
+class CandidateLikes extends Seeder {
 
     public function random_date() {
         return random_int(1999, 2022) . '-' . random_int(01, 12) . '-' . random_int(01, 28);
