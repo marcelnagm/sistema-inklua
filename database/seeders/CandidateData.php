@@ -66,8 +66,6 @@ class CandidateData extends Seeder {
         }
         
 
-        JobLike::factory()->count(500)->create();
-        CandidateReport::factory()->count(500)->create();
     }
 
 }
