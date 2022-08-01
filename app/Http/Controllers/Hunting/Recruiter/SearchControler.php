@@ -28,8 +28,28 @@ class SearchControler extends Controller {
         $content = Content::findOrFail($id);
 
         $cand = JobLike::where('job_id', $id);
+
+        $cand = JobLike::selectRaw('distinct job_like.id,job_like.*')->
+                     where('job_id', $id)
+                ->join('candidate_hunting', 'candidate_hunting.id', '=', 'candidate_id')->
+                when($request->exists('key'), function ($q) {
+                    $param = request('key');
+                    return $q->
+                            whereRaw("("
+                                . "name like '%$param%'  or "
+                                . "surname like '%$param%'  or "
+                                . "cellphone like '%$param%'  or "
+                                . "candidate_hunting.id = '$param'  "
+                                . ") ");
+                })->
+                when($request->exists('order_by'), function ($q) {
+            return $q->orderBy(request('order_by'), request('ordering_rule'));
+        });
+
+        if ($request->exists('debug'))
+            dd($this->getEloquentSqlWithBindings($cand));
         $cand = $cand->get()->skip(6 * ($request->input('page') - 1))->take(6);
-        
+
         $data = array();
         $data['current_page'] = $request->input('page');
         $data['last_page'] = round($cand->count() / 2, 0);
@@ -38,13 +58,13 @@ class SearchControler extends Controller {
         $data['listing']['state'] = $content->state . '';
         $data['listing']['date'] = $content->published_at != null ? $content->published_at->format('d/m/Y') : $content->created_at->format('d/m/Y');
         $data['listing']['total_candidates'] = $content->getLikesCount();
-        
+
         if ($cand->count() == 0)
             $data['likes'] = array();
         foreach ($cand as $c) {
             $data['likes'][] = $c->toArray();
         }
-        
+
 
         return array('data' => $data)
         ;

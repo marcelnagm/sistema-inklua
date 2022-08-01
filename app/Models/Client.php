@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ClientCondition;
 use Illuminate\Support\Facades\Auth;
+use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Client
@@ -25,30 +26,30 @@ use Illuminate\Support\Facades\Auth;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Client extends Model
-{
-    
+class Client extends Model {
+
+    use HasFactory;
+
     static $rules = [
-		'cnpj' => 'required',
-		'formal_name' => 'required',
-		'fantasy_name' => 'required',
-		'sector' => 'required',
-		'local_label' => 'required',
-		'active' => 'required',
-		'state_id' => 'required',
-		'obs' => 'nullable',
+        'cnpj' => 'required',
+        'formal_name' => 'required',
+        'fantasy_name' => 'required',
+        'sector' => 'required',
+        'local_label' => 'required',
+        'active' => 'required',
+        'state_id' => 'required',
+        'obs' => 'nullable',
     ];
     static $rules_create = [
-		'cnpj' => 'required|unique:clients,cnpj',
-		'formal_name' => 'required',
-		'fantasy_name' => 'required',
-		'sector' => 'required',
-		'local_label' => 'required',
-		'active' => 'required',
-		'state_id' => 'required',
-		'obs' => 'nullable',
+        'cnpj' => 'required|unique:clients,cnpj',
+        'formal_name' => 'required',
+        'fantasy_name' => 'required',
+        'sector' => 'required',
+        'local_label' => 'required',
+        'active' => 'required',
+        'state_id' => 'required',
+        'obs' => 'nullable',
     ];
-
     protected $perPage = 20;
 
     /**
@@ -56,52 +57,49 @@ class Client extends Model
      *
      * @var array
      */
-    protected $fillable = ['cnpj','formal_name','fantasy_name','sector','local_label','active','state_id', 'obs'];
+    protected $fillable = ['cnpj', 'formal_name', 'fantasy_name', 'sector', 'local_label', 'active', 'state_id', 'obs'];
 
-     public static function boot()
-    {
-       parent::boot();
-       static::creating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           $model->created_by = $user->id;
-           $model->updated_by = $user->id;
-       });
-       static::updating(function($model)
-       {
-           $user = Auth::user();
-           if($user == null)    $user = auth()->guard('api')->user();
-           $model->updated_by = $user->id;
-       });
-   }
-    
-    
+    public static function boot() {
+        parent::boot();
+        static::creating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+            if ($user != null) {
+                $model->created_by = $user->id;
+                $model->updated_by = $user->id;
+            }
+        });
+        static::updating(function ($model) {
+            $user = Auth::user();
+            if ($user == null)
+                $user = auth()->guard('api')->user();
+
+            if ($user != null)
+                $model->updated_by = $user->id;
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function state()
-    {
+    public function state() {
         return $this->hasOne('App\Models\State', 'id', 'state_id');
     }
-    
-    public function conditions()
-    {
-      return ClientCondition::where('client_id', $this->id)->
-              where('active',1)
-              ->get();
+
+    public function conditions() {
+        return ClientCondition::where('client_id', $this->id)->
+                        where('active', 1)
+                        ->get();
     }
-    
-    
-    public function contents()
-    {
-      return ContentClient::select('content_id')->where('client_id', $this->id)              
-              ->get();
+
+    public function contents() {
+        return ContentClient::select('content_id')->where('client_id', $this->id)
+                        ->get();
     }
-    
-       public function __toString() {       
-            return $this->formal_name . ' - '.$this->fantasy_name;
-       
+
+    public function __toString() {
+        return $this->formal_name . ' - ' . $this->fantasy_name;
     }
 
 }

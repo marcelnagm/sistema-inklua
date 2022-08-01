@@ -82,7 +82,7 @@ class JobLike extends Model {
           'salary' => $candidate->payment,
           'education_level' => LevelEducation::find($candidate->education_max()).'' ,
           'disability' => $candidate->pcd_typo().'' ,
-          'last_experience' => array('title' => $last_experience ? $last_experience->role : 'Nenhum' ) ,
+          'last_experience' =>  $last_experience ? $last_experience: 'Nenhum'  ,
           'state' => $candidate->state()->UF,
           'city' => $candidate->city()->name,
           'status' => $candidate->status_name(),

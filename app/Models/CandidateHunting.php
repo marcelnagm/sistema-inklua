@@ -205,7 +205,8 @@ class CandidateHunting extends Model {
      * @return CandidateExperience
      */
     public function last_experience() {
-        return CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get()->last();
+        $last =CandidateExperience::where('candidate_id', $this->id)->orderBy('end_at', 'ASC')->get()->last(); 
+        return $last != null ? $last->role : 'Nenhum';
     }
 
     public function save_pcd_report($pcd_report, $ext) {
@@ -245,8 +246,8 @@ class CandidateHunting extends Model {
         if ($data['recruitment']['status'] == "TAKEN") {
             $data['recruitment']['recruiterName'] = User::find($this->status)->fullname();
         }
-        $data['education'] = $this->education()->toArray();
-        $data['experience'] = $this->experience()->toArray();
+        $data['education'] = $this->education()->count() != 0 ?$this->education()->toArray() : 'Nenhum';
+        $data['experience'] = $this->experience()->count() != 0 ? $this->experience()->toArray() : 'Nenhum';
         $data['report'] = $this->report()->toArray();
 
         return $data;

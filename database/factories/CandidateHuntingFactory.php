@@ -5,6 +5,8 @@ namespace Database\Factories;
 use App\Models\CandidateHunting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\InkluaUser;
+//use App\Models\CandidateHunting;
 
 class CandidateHuntingFactory extends Factory
 {
@@ -33,7 +35,7 @@ class CandidateHuntingFactory extends Factory
         'portifolio_url' => $this->faker->url,
         'linkedin_url' => $this->faker->url,
         'pcd' => random_int(0, 1),
-        'status' => null,
+        'status' => $this->faker->randomDigit() > 5 ?  $this->faker->randomElement(InkluaUser::all()->pluck('user_id')) : null,
         'pcd_type_id' => random_int(1,6),
         'pcd_details' => Str::random(35),
         'pcd_report' => null,

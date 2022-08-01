@@ -39,7 +39,7 @@ class ContentFactory extends Factory
         'application' => $this->faker->url(),
         'application_type' => 'url',
         'remote' => random_int(0,1),
-        'status' => null,
+        'status' =>  $this->faker->randomElement(Content::$status),
         'in_compleo' => 1,
         'published_at' => $this->faker->dateTime(),
         'observation' => $this->faker->paragraph(),

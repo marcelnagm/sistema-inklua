@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ClientCondition
@@ -26,6 +27,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class ClientCondition extends Model {
 
+    
+    use HasFactory;
+    
     protected $table = 'client_condition';
     static $rules = [
         'condition_id' => 'required',
@@ -51,13 +55,16 @@ class ClientCondition extends Model {
        {
            $user = Auth::user();
            if($user == null)    $user = auth()->guard('api')->user();
+           if($user != null) {
            $model->created_by = $user->id;
            $model->updated_by = $user->id;
+           }
        });
        static::updating(function($model)
        {
            $user = Auth::user();
            if($user == null)    $user = auth()->guard('api')->user();
+           if($user != null) 
            $model->updated_by = $user->id;
        });
    }

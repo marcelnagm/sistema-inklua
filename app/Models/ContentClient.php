@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
 use App\Models\ClientCondition;
 use Illuminate\Support\Facades\Auth;
+use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ContentClient
@@ -15,16 +16,16 @@ use Illuminate\Support\Facades\Auth;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class ContentClient extends Model
-{
-     protected $table = 'contents_client';
-    
-    static $rules = [
-		'client_condition_id' => 'required',
-		'client_id' => 'required',	
-		'vacancy' => 'required',		
-    ];
+class ContentClient extends Model {
 
+    use HasFactory;
+
+    protected $table = 'contents_client';
+    static $rules = [
+        'client_condition_id' => 'required',
+        'client_id' => 'required',
+        'vacancy' => 'required',
+    ];
     protected $perPage = 20;
 
     /**
@@ -32,45 +33,45 @@ class ContentClient extends Model
      *
      * @var array
      */
-    protected $fillable = ['content_id','client_condition_id','client_id','user_id','vacancy','hired','replacement'];
-    
-     public static function boot()
-    {
-       parent::boot();
-       static::creating(function($model)
-       {
+    protected $fillable = ['content_id', 'client_condition_id', 'client_id', 'user_id', 'vacancy', 'hired', 'replacement'];
+
+    public static function boot() {
+        parent::boot();
+        static::creating(function ($model) {
             $user = auth()->guard('api')->user();
-           $model->created_by = $user->id;
-           $model->updated_by = $user->id;
-       });
-       static::updating(function($model)
-       {
+            if ($user != null) {
+                $model->created_by = $user->id;
+                $model->updated_by = $user->id;
+            }
+        });
+        static::updating(function ($model) {
+
             $user = auth()->guard('api')->user();
-           $model->updated_by = $user->id;
-       });
-   }
+            if ($user != null) {
+                $model->updated_by = $user->id;
+            }
+        });
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function client()
-    {
+    public function client() {
         return $this->hasOne('App\Models\Client', 'id', 'client_id');
     }
-    
-      public function user() {
+
+    public function user() {
         return User::find($this->user_id);
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function clientcondition()
-    {
+    public function clientcondition() {
         return $this->hasOne('App\Models\ClientCondition', 'id', 'client_condition_id');
     }
-    
-    public function hasVacancy(){
+
+    public function hasVacancy() {
         return $this->vacancy > ($this->hired - $this->replaced);
     }
 
