@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Content;
 use App\Models\ContentClient;
 use App\Models\ClientCondition;
+use App\Models\Client;
 use App\Models\User;
 use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
