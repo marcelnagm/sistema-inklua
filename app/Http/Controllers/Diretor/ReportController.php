@@ -45,8 +45,8 @@ class ReportController extends Controller {
         $data_pcd['em_processo']['value'] = $cand_pcd->where('status','<>',-1)->where('status','<>',null)->count();
         $data_pcd['em_processo']['perc'] = number_format($data_pcd['em_processo']['value'] / $data_pcd['total_usuarios'] *100,2);
         $data_pcd['total_login']['value'] = User::lastLogin($request,true)->count();
-        $data_pcd['total_login']['perc'] = number_format($data_pcd['total_login']['value'] / $data_pcd['total_usuarios'] *100,2);
-        $data_pcd['total_likes'] = $this->filter_date($request, JobLike::where('id','<>',null))->count();
+        $data_pcd['total_login']['perc'] = number_format($data_pcd['total_login']['value'] / $data_pcd['total_usuarios'] *100,2);        
+        $data_pcd['total_likes'] = $this->filter_date($request, JobLike::whereIn('candidate_id',$cand_pcd->select('id')))->count();
 
 //      dd($data_pcd);
         return array('data' => array(

@@ -27,12 +27,12 @@ class ContentClientFactory extends Factory {
      */
     public function definition() {
         $def = [
-        'user_id' => $this->faker->randomElement(User::where('type', 'PJ')->pluck('id')),
-        'content_id' => $this->faker->randomElement(Content::WhereNotIn('id', ContentClient::all()->pluck('content_id'))->get()->pluck('id')),
+         'user_id' => $this->faker->randomElement(InkluaUser::where('active','1')->pluck('user_id')),
+        'content_id' => $this->faker->randomElement(Content::WhereNotIn('id', ContentClient::select('content_id'))->get()->pluck('id')),
         'client_id' => $this->faker->randomElement(Client::all()->pluck('id')),
 //        'client_condition_id' => 1,
         'vacancy' => $this->faker->randomDigitNotNull()];
-        $def['client_condition_id'] = $this->faker->randomElement(ClientCondition::where('client_id', $def['client_id'])->pluck('id'));
+      $def['client_condition_id'] =  $this->faker->randomElement(ClientCondition::where('client_id', $def['client_id'])->pluck('id'));
        return $def;
     }
 

@@ -28,7 +28,7 @@ class ClientConditionFactory extends Factory {
     public function definition() {
         return [
             'condition_id' => $this->faker->randomElement(Condition::all()->pluck('id')),
-            'client_id' => $this->faker->randomElement(Client::all()->pluck('id')),
+            'client_id' => $this->faker->randomElement(Client::whereNotIn('id',ClientCondition::select('client_id'))->pluck('id')),
             'brute' => random_int(0, 1),
             'tax' => $this->faker->randomFloat(2, 100, 175),
             'guarantee' => random_int(30, 180),

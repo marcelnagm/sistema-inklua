@@ -25,7 +25,7 @@ class ContentFactory extends Factory
     {
         return [
             
-      'user_id' => $this->faker->randomElement(User::where('type','PJ')->pluck('id')),
+      'user_id' => $this->faker->randomElement(InkluaUser::where('active','1')->pluck('user_id')),
         'title' => $this->faker->jobTitle(),
         'contract_type' => 'presencial',
         'salary' => $this->faker->randomFloat(2000,20000),

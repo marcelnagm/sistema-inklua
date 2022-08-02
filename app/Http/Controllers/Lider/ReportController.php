@@ -8,6 +8,8 @@ use App\Http\Middleware\checkUserInkluer;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
 use App\Models\CandidateHunting;
+use App\Models\InkluaUser;
+use App\Models\InkluaOffice;
 use Carbon;
 
 class ReportController extends Controller {
@@ -22,16 +24,25 @@ class ReportController extends Controller {
     
     public function index_produtidade(Request $request) {
         $data = array();
-        $i = 0;
+        $i = 1;
         if ($request->user()->admin == 1) {
-            $users = \App\Models\InkluaUser::all();
+            $users = $this->filtersUsers($request, InkluaUser::where('id','<>',0)->selectRaw('distinct user_id,office_id'));
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-            $users = $office->inkluaUsers()->get();
-        }
-        $data['amount'] = 0;
+            $users = $this->filtersUsers($office->inkluaUsers());
+        }   
+    
+        $data['offices']= InkluaOffice::select('id','name')->get();
+        $data['amount']['total'] = 0;
+        $data['amount']['produzidas']= 0;
+        $data['amount']['fechadas'] = 0;
+        $data['amount']['assertividade'] = 0;
+//        dd($users);
+       if($request->exists('debug2')) self::displayQuery($users);
+       
+            $users = $users->get();
         foreach ($users as $inkluaUser) {
             $data['recrutadores'][$i]['id'] = $inkluaUser->user()->id;
             $data['recrutadores'][$i]['name'] = $inkluaUser->user()->fullname() . '';
@@ -39,16 +50,20 @@ class ReportController extends Controller {
                 $data['recrutadores'][$i]['office']  = $inkluaUser->office().'';
              }
             $data['recrutadores'][$i]['posicoes'] = $this->filters($request, $inkluaUser->positionsTotal(), null)->get()->count();
-            $data['amount'] += $data['recrutadores'][$i]['posicoes'] ;   
+            $data['amount']['total'] += $data['recrutadores'][$i]['posicoes'] ;   
             $data['recrutadores'][$i]['produzidas'] = $this->filters($request, $inkluaUser->positionsWithClient(), null)->get()->count();
-            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(), null)->get();
-            $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);
+            $data['amount']['produzidas'] +=$data['recrutadores'][$i]['produzidas'];
+            $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(), null)->get();            
+            $data['recrutadores'][$i]['total'] = number_format($inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']),2);
             $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();
+            $data['amount']['fechadas'] +=$data['recrutadores'][$i]['fechadas'];
             $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas'] / $data['recrutadores'][$i]['posicoes'] : '-';
+            $data['amount']['assertividade'] += $data['recrutadores'][$i]['assertividade'] != '-' ?              $data['recrutadores'][$i]['assertividade'] : 0;
             $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? number_format($data['recrutadores'][$i]['assertividade'] * 100, 2) . '%' : '-';
             $i++;
         }
-
+         $data['amount']['assertividade'] /=  $i;
+         $data['amount']['assertividade'] = number_format($data['amount']['assertividade'] *100,2).'%';
         return array('data' => $data);
     }
 
@@ -317,6 +332,26 @@ class ReportController extends Controller {
         return $data;
     }
 
+    public function filtersUsers(Request $request, $vagas) {
+
+            if ($request->exists('recruiter')) {
+                $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('recruiter') . '%', '%' . $request->input('recruiter') . '%'));
+            }         
+            if ($request->exists('office')) {
+                $vagas = $vagas->whereRaw('user_id in (select user_id as id from inklua_users where office_id = ?)', array($request->input('office')));
+            }
+        
+        $vagas = $vagas->orderby('created_at', $request->input('ordering_rule', 'ASC'));
+
+        if ($request->exists('debug')) {
+            dd(Controller::getEloquentSqlWithBindings($vagas));
+        }
+
+
+
+        return $vagas;
+    }
+    
     public function filters(Request $request, $vagas, $status) {
 
 
@@ -345,8 +380,11 @@ class ReportController extends Controller {
                 $vagas = $vagas->whereRaw('contents.id in (select content_id as id from contents_client,clients where contents_client.client_id = clients.id and clients.formal_name like ? )', '%' . $request->input('client') . '%');
             }
             if ($request->exists('recruiter')) {
-                $vagas = $vagas->whereRaw('contents.user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('client') . '%', '%' . $request->input('client') . '%'));
-            }
+                $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('recruiter') . '%', '%' . $request->input('recruiter') . '%'));
+            }            
+//            if ($request->exists('recruiter_name')) {
+//                $vagas = $vagas->whereRaw('contents.user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('recruiter_name') . '%', '%' . $request->input('recruiter_name') . '%'));
+//            }            
             if ($request->exists('office')) {
                 $vagas = $vagas->whereRaw('contents.user_id in (select user_id as id from inklua_users where office_id = ?)', array($request->input('office')));
             }

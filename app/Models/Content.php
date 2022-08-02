@@ -55,13 +55,11 @@ class Content extends Model {
         'row_n',
         'order_type'
     ];
-    
-     protected $dates = [
+    protected $dates = [
         'created_at',
         'updated_at',
         'published_at'
     ];
-     
     static $status = array(
         "aguardando_aprovacao",
         "aguardando_pagamento",
@@ -596,6 +594,8 @@ class Content extends Model {
 
     public function carteira() {
         $cc = $this->contentclient();
+        if ($cc == null)
+            return '-';
         $tax = $cc->clientcondition()->first()->tax;
         return $cc->vacancy * ($tax / 100) * $this->salary;
     }
@@ -605,15 +605,15 @@ class Content extends Model {
         if ($user == null)
             $user = auth()->guard('api')->user();
 //        se for seu ok
-         if($request->exists('debug')){
-                dd($user->id ,$this->user_id);
-            }
-        if ($user->id == $this->user_id)           
+        if ($request->exists('debug')) {
+            dd($user->id, $this->user_id);
+        }
+        if ($user->id == $this->user_id)
             return true;
 //        se lider
         else if ($user->isInkluaLider()) {
-             if($request->exists('debug2')){
-                dd($user->inklua()->office_id , $this->office_id);
+            if ($request->exists('debug2')) {
+                dd($user->inklua()->office_id, $this->office_id);
             }
 //            se for lider do seu escritorio ok
             if ($user->inklua()->office_id == $this->office_id)
@@ -625,10 +625,10 @@ class Content extends Model {
 
     public function toArray() {
         $data = parent::toArray();
-        if(isset($data['salary']))$data['salary'] =     floatval($data['salary']);
+        if (isset($data['salary']))
+            $data['salary'] = floatval($data['salary']);
         $data['subscribers'] = $this->getLikesCount();
         return $data;
-        
     }
-    
+
 }
