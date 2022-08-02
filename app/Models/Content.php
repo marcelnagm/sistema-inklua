@@ -11,6 +11,7 @@ use App\Models\ContentClient;
 use App\Models\JobLike;
 use App\Models\InkluaOffice;
 use App\Models\CandidateReport;
+use Illuminate\Support\Facades\Mail;
 
 class Content extends Model {
 
