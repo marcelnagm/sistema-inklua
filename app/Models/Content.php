@@ -12,6 +12,9 @@ use App\Models\JobLike;
 use App\Models\InkluaOffice;
 use App\Models\CandidateReport;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\PositionApproved;
+use App\Mail\PositionPublished;
+use App\Mail\PositionCreated;
 
 class Content extends Model {
 
