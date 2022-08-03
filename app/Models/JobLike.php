@@ -50,6 +50,11 @@ class JobLike extends Model {
         return CandidateHunting::find($this->candidate_id);
     }
     
+    
+    public function report(){
+        $report = CandidateReport::where('candidate_id', $this->candidate_id)->where('job_id', $this->job_id)->first();
+        return $report;
+    }
     public function content(){
         return Content::find($this->job_id);
     }
@@ -76,7 +81,7 @@ class JobLike extends Model {
        
 //       dd($last_experience);
       $data = array(
-          'id' => $this->id,
+          'report_id' => $this->report(),
           'gid' => $candidate->gid,
           'age' => $candidate->age(),
           'salary' => $candidate->payment,
@@ -98,5 +103,7 @@ class JobLike extends Model {
       return $data;  
         
     }
+    
+    
     
 }

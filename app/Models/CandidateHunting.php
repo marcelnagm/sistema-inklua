@@ -188,8 +188,10 @@ class CandidateHunting extends Model {
      * 
      * @return \Illuminate\Support\Collection;
      */
-    public function report() {
+    public function report($job_id = null) {
+        if($job_id == null)
         return CandidateReport::where('candidate_id', $this->id)->orderBy('updated_at', 'DESC')->get();
+        else return CandidateReport::where('candidate_id', $this->id)->where('job_id', $job_id)->first();
     }
 
     /**
