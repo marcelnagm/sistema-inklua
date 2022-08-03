@@ -26,12 +26,12 @@ class ReportController extends Controller {
         $data = array();
         $i = 1;
         if ($request->user()->admin == 1) {
-            $users = $this->filtersUsers($request, InkluaUser::where('id','<>',0)->selectRaw('distinct user_id,office_id'));
+            $users = $this->filtersUsers($request, InkluaUser::where('active',1)->selectRaw('distinct user_id,office_id'));
         } else {
 
             $office = $request->user()->office();
             $data['escritorio'] = $office->name;
-            $users = $this->filtersUsers($office->inkluaUsers());
+            $users = $this->filtersUsers($request,$office->inkluaUsersActive());
         }   
     
         $data['offices']= InkluaOffice::select('id','name')->get();
@@ -54,7 +54,8 @@ class ReportController extends Controller {
             $data['recrutadores'][$i]['produzidas'] = $this->filters($request, $inkluaUser->positionsWithClient(), null)->get()->count();
             $data['amount']['produzidas'] +=$data['recrutadores'][$i]['produzidas'];
             $data['recrutadores'][$i]['fechadas'] = $this->filters($request, $inkluaUser->positionsClosed(), null)->get();            
-            $data['recrutadores'][$i]['total'] = number_format($inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']),2);
+            $data['recrutadores'][$i]['total'] = $inkluaUser->positionsSum($data['recrutadores'][$i]['fechadas']);            
+            $data['recrutadores'][$i]['total'] = is_numeric($data['recrutadores'][$i]['total']) ? number_format($data['recrutadores'][$i]['total'], 2) : $data['recrutadores'][$i]['total'];            
             $data['recrutadores'][$i]['fechadas'] = $data['recrutadores'][$i]['fechadas']->count();
             $data['amount']['fechadas'] +=$data['recrutadores'][$i]['fechadas'];
             $data['recrutadores'][$i]['assertividade'] = $data['recrutadores'][$i]['posicoes'] > 0 ? $data['recrutadores'][$i]['fechadas'] / $data['recrutadores'][$i]['posicoes'] : '-';
