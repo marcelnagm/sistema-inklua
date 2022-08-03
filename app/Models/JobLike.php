@@ -81,6 +81,7 @@ class JobLike extends Model {
        
 //       dd($last_experience);
       $data = array(
+          'joblike_id' => $this->id,
           'report_id' => $this->report(),
           'gid' => $candidate->gid,
           'age' => $candidate->age(),
