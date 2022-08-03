@@ -27,6 +27,7 @@ class ReportController extends Controller {
         $i = 1;
         if ($request->user()->admin == 1) {
             $users = $this->filtersUsers($request, InkluaUser::where('active',1)->selectRaw('distinct user_id,office_id'));
+             $data['offices']= InkluaOffice::select('id','name')->get();
         } else {
 
             $office = $request->user()->office();
@@ -34,7 +35,7 @@ class ReportController extends Controller {
             $users = $this->filtersUsers($request,$office->inkluaUsersActive());
         }   
     
-        $data['offices']= InkluaOffice::select('id','name')->get();
+       
         $data['amount']['total'] = 0;
         $data['amount']['produzidas']= 0;
         $data['amount']['fechadas'] = 0;
