@@ -11,6 +11,7 @@ use App\Models\ContentClient;
 use App\Models\JobLike;
 use App\Models\InkluaOffice;
 use App\Models\CandidateReport;
+use App\Models\ExternalLike;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PositionApproved;
 use App\Mail\PositionPublished;
@@ -589,7 +590,9 @@ class Content extends Model {
     }
 
     public function getLikesCount() {
-        return JobLike::where('job_id', $this->id)->orderBy('created_at')->count();
+        $count = JobLike::where('job_id', $this->id)->orderBy('created_at')->count();
+        $count +=  ExternalLike::find($this->id) != null ? ExternalLike::find($this->id)->likes : 0;      
+        return $count ;
     }
 
     public function getLikes() {
