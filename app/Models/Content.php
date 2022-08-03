@@ -599,7 +599,7 @@ class Content extends Model {
     public function carteira() {
         $cc = $this->contentclient();
         if ($cc == null)
-            return '-';
+            return 0;
         $tax = $cc->clientcondition()->first()->tax;
         return $cc->vacancy * ($tax / 100) * $this->salary;
     }
