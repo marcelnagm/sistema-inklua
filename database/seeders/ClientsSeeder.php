@@ -19,11 +19,13 @@ class ClientsSeeder extends Seeder {
     public function run() {
         //
         $faker = Factory::create();
-        Client::factory()->count(500)->create();
+//        Client::factory()->count(500)->create();
         
         $ids = Client::WhereNotIn('id', ClientCondition::select('client_id'))->pluck('id');
-        for ($j = count($ids); $j != 1; $j--) {
-            $i = $ids->pop();
+        print 'QUantos Ids :'. $ids->count() . "\n";
+        
+        for ($i = $ids->pop(); $ids->count() != 0; $i = $ids->pop()) {
+            
             $data = [
                'condition_id' => $faker->randomElement(Condition::all()->pluck('id')),
             'client_id' => $i,

@@ -24,10 +24,11 @@ class ContentsSeeder extends Seeder {
 
         $faker = Factory::create();
       
-        Content::factory()->count(500)->create();//        
+//        Content::factory()->count(500)->create();//        
         $ids = Content::WhereNotIn('id', ContentClient::select('content_id'))->pluck('id');
-        for ($j = count($ids); $j != 1; $j--) {
-            $i = $ids->pop();
+        
+        print 'QUantos Ids :'. $ids->count() . "\n";
+        for ($i = $ids->pop(); $ids->count() == 1; $i = $ids->pop()) {            
             $data = [
                 'user_id' => $faker->randomElement(InkluaUser::where('active', '1')->pluck('user_id')),
                 'content_id' => $i,
