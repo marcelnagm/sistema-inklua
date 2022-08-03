@@ -100,6 +100,7 @@ Route::group(['middleware' => ['api', 'App\Http\Middleware\checkUserInkluer']], 
 use App\Models\PcdType;
 use App\Models\State;
 use App\Models\User;
+use App\Models\ExternalLike;
 use App\Http\Controllers\Hunting\Recruiter\CandidateControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateReportControler;
 use App\Http\Controllers\Hunting\Recruiter\CandidateEducationControler;
@@ -168,6 +169,19 @@ Route::get('/city/name/', 'App\Http\Controllers\MapeamentoTech\CityControler@by_
 
 Route::get('/state', function () use ($router) {
     return State::all();
+});
+
+Route::post('/like/{id}', function ($id) use ($router) {
+    $likes = ExternalLike::find($id);
+    if($likes== null){
+        ExternalLike::create(array('id' => $id , 'likes' => 1));
+    }else{
+     $likes->likes += 1;   
+     $likes->save();   
+    }
+    
+    return array('status'=> true,'error' => false,'msg' => 'Like registrado');
+    
 });
 
 Route::get('/pcd_type', function () use ($router) {

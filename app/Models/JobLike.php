@@ -51,7 +51,7 @@ class JobLike extends Model {
     }
     
     public function content(){
-        return Content::find($this->content_id);
+        return Content::find($this->job_id);
     }
     
     public function toArray() {
