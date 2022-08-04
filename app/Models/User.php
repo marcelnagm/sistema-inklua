@@ -263,9 +263,9 @@ class User extends Authenticatable implements MustVerifyEmail {
     static function searchRecruiter($request){
        return User::
                 whereRaw('id in (select user_id from inklua_users where active=1)')->
-                orWhere('name','like','%'.$request->input('key').'%')->
-                orWhere('lastname','like','%'.$request->input('key').'%')->
-                orWhere('email','like1','%'.$request->input('key').'%')->                
+                whereRaw('(name like "%'.$request->input('key').'%"'.
+                        ' or lastname like "%'.$request->input('key').'%"'.
+                  ' or email like  "%'.$request->input('key').'%") ')->                
                 get()->skip(10 * ($request->input('page') - 1))->take(10)
                 ; 
     }
