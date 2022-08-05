@@ -89,6 +89,7 @@ class ContentController extends Controller {
             $data['candidate'][$i]['status'] = $report->reportstatus() . '';
             $data['candidate'][$i]['start_at'] = $report->start_at ? $report->start_at->format('d/m/Y') : '-';
             $data['candidate'][$i]['owner'] = $report->owner_formatted();
+            $i++;
         }
 
         return array('data' =>  $data);
