@@ -23,7 +23,7 @@ class UserCompanySeeder extends Seeder {
         
         $ids = User::
                 where('fantasy_name',null)->
-                where('cnpj',null)->
+                Orwhere('cnpj',null)->
                 get();
 //        var_dump($ids);
         print 'QUantos Ids :'. $ids->count() . "\n";
