@@ -25,7 +25,7 @@ class ContentController extends Controller {
         $i = 0;
         $j = 0;
         foreach ($reports as $report) {
-            if ($report->report_status_id == 6)
+            if ($report->report_status_id != 6)
                 $i++;
             else {
                 $report->replacement();
