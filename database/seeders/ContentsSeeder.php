@@ -28,7 +28,7 @@ class ContentsSeeder extends Seeder {
         $ids = Content::WhereNotIn('id', ContentClient::select('content_id'))->pluck('id');
         
         print 'QUantos Ids :'. $ids->count() . "\n";
-        for ($i = $ids->pop(); $ids->count() == 1; $i = $ids->pop()) {            
+         for ($i = $ids->pop(); $ids->count() != 0; $i = $ids->pop()) {
             $data = [
                 'user_id' => $faker->randomElement(InkluaUser::where('active', '1')->pluck('user_id')),
                 'content_id' => $i,
