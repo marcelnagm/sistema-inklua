@@ -66,6 +66,7 @@ class CompleoImporter extends Command {
                     [
                         'type' => 1,
                         'in_compleo' => 1,
+                        'user_id' => 1,
                         'title' => trim($apiPosition->titulo),
                         'date' => trim($apiPosition->dataabertura),
                         'url' => trim($apiPosition->url),

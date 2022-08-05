@@ -127,6 +127,10 @@ class Content extends Model {
         return url("/img/{$img}.png");
     }
 
+    /**
+     * 
+     * @return InkluaOffice
+     */
     public function office() {
         if ($this->office_id != null)
             return InkluaOffice::find($this->office_id);
@@ -134,11 +138,37 @@ class Content extends Model {
             return '-';
     }
 
+    public function company() {
+        if ($this->user_id != null) {
+            if ($this->user()->isInklua()) {
+                return 'Inklua';
+            } else {
+                return $this->user()->fantasy_name;
+            }
+        }
+    }
+
+    static function companyName($user_id) {
+
+        if ($user_id != null) {
+            $user = User::find($user_id);
+
+            if ($user != null) {
+//                            dd($user);
+                if ($user->isInklua()) {
+                    return 'Inklua';
+                } else {
+                    return $user->fantasy_name;
+                }
+            }
+        }
+    }
+
     public static function getHomeContent() {
         $type = request()->input("tipo");
         $user = auth()->guard('api')->user();
 
-        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
+        $content = Content::selectRaw("id, type, image, title, category, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at,user_id")
                 ->selectRaw("(
                                 CASE  
                                     WHEN type = 1 AND group_id IS NOT NULL THEN 1
@@ -288,7 +318,7 @@ class Content extends Model {
         $searchEscaped = addslashes($search);
         $city = request()->input("city");
 
-        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at")
+        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', url, source, created_at,user_id")
                 ->where("type", 1)
                 ->whereIn('status', array('publicada', 'reposicao'))
                 ->selectRaw("(
@@ -359,10 +389,18 @@ class Content extends Model {
         return ( filter_var($this->application, FILTER_VALIDATE_EMAIL) ) ? 'email' : 'url';
     }
 
+    /**
+     * 
+     * @return User
+     */
     public function user() {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function notifications() {
         return $this->belongsTo(Notification::class);
     }
@@ -591,8 +629,8 @@ class Content extends Model {
 
     public function getLikesCount() {
         $count = JobLike::where('job_id', $this->id)->orderBy('created_at')->count();
-        $count +=  ExternalLike::find($this->id) != null ? ExternalLike::find($this->id)->likes : 0;      
-        return $count ;
+        $count += ExternalLike::find($this->id) != null ? ExternalLike::find($this->id)->likes : 0;
+        return $count;
     }
 
     public function getLikes() {
@@ -634,7 +672,8 @@ class Content extends Model {
         $data = parent::toArray();
         if (isset($data['salary']))
             $data['salary'] = floatval($data['salary']);
-        if($this->type == 'position')$data['subscribers'] = $this->getLikesCount();
+        if ($this->type == 'position')
+            $data['subscribers'] = $this->getLikesCount();
         return $data;
     }
 

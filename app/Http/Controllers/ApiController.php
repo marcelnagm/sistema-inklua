@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Content;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -72,7 +73,7 @@ class ApiController extends Controller
     public function position(Request $request, $id){
         $user = auth()->guard('api')->user();
 
-        $content = Content::selectRaw("id, type, image, title, date, description,city as 'cidade', state as 'estado', url, source")
+        $content = Content::selectRaw("id, type, image, title, date, description,city as 'cidade', state as 'estado', url, source,user_id")
                             ->where("type", 1)
                             ->where("id", $id)
                             ->when($user && $user->wallet, function ($query) use ($user) {
@@ -100,7 +101,8 @@ class ApiController extends Controller
         }
         unset($result["actions"]);
 
-        $content["company"] = "Inklua";
+        
+        $content["company"] = Content::companyName($content['user_id']);
         $subcontent["type"] = "position";
         $result["location"] = $result["cidade"].' - '.$result["estado"];
         if($result["image"] == ''){
@@ -221,7 +223,7 @@ class ApiController extends Controller
                     $content["positions"] = Content::hideFields($groupContents)->all();
 
                     foreach($content["positions"] as &$subcontent){
-                        $content["company"] = "Inklua";
+                         $content["company"] = Content::companyName($content['user_id']);
                         $subcontent["type"] = "position";
                         $subcontent["location"] = $subcontent["cidade"].' - '.$subcontent["estado"];
                         $subcontent["description"] = $this->clearHtml($subcontent["description"], 300);
@@ -235,7 +237,7 @@ class ApiController extends Controller
                     }
 
                 }else{
-                    $content["company"] = "Inklua";
+                     $content["company"] = Content::companyName($content['user_id']);
                     $content["type"] = "position";
                     $content["location"] = $content["cidade"].' - '.$content["estado"];
                     $content["description"] = $this->clearHtml($content["description"], 300);
