@@ -84,7 +84,8 @@ class ApiController extends Controller
                             ->first();
 
         $result = $content->toArray();
-        
+          
+        $result["company"] = Content::companyName($content['user_id']);
         $result["shares"] = (object) [
             "whatsapp" => false,
             "facebook" => false,
@@ -102,7 +103,7 @@ class ApiController extends Controller
         unset($result["actions"]);
 
         
-        $content["company"] = Content::companyName($content['user_id']);
+      
         $subcontent["type"] = "position";
         $result["location"] = $result["cidade"].' - '.$result["estado"];
         if($result["image"] == ''){
