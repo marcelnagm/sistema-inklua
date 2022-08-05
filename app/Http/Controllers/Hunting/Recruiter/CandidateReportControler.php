@@ -82,6 +82,7 @@ class CandidateReportControler extends Controller {
             ]);
         if ($cand->status != -1) {
             if ($cand->status == 0 || $cand->status == null) {
+                if(isset($data['report_status_id'] ))
                 $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
 //                dd($data);                $request->input('id')
                 $cand = CandidateReport::updateOrCreate(['id' => $request->input('id', null)],
