@@ -27,8 +27,8 @@ class ApiController extends Controller
         // }
 
         $content = Content::getHomeContent();
-        
-
+                
+                
         $cities = Content::getCities();        
         $cities = collect(['cidades' => $cities->all()]);
         $data = $cities->merge($content);
@@ -215,7 +215,7 @@ class ApiController extends Controller
                     unset($content["company"]);
                     
 
-                    $groupContents = Content::selectRaw("id, type, image, title, date, description,city as 'cidade', state as 'estado', url")
+                    $groupContents = Content::selectRaw("id, type, image, title, date, description,city as 'cidade', state as 'estado', url,user_id")
                                             ->when($group, function($query,$group){
                                                 return $query->where("group_id", $group->id);
                                             })                                            
@@ -224,7 +224,7 @@ class ApiController extends Controller
                     $content["positions"] = Content::hideFields($groupContents)->all();
 
                     foreach($content["positions"] as &$subcontent){
-                         $content["company"] = Content::companyName($content['user_id']);
+//                         $subcontent["company"] = Content::companyName($subcontent['user_id']);
                         $subcontent["type"] = "position";
                         $subcontent["location"] = $subcontent["cidade"].' - '.$subcontent["estado"];
                         $subcontent["description"] = $this->clearHtml($subcontent["description"], 300);

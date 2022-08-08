@@ -42,7 +42,9 @@ class CandidateHuntingFactory extends Factory
         'first_job' => random_int(0, 1),
         'state_id' => random_int(1, 25),
         'city_id' => random_int(1, 5200),
-        'remote' => random_int(0, 1)
+        'remote' => random_int(0, 1),
+        'presential' => random_int(0, 1),
+        'hybrid' => random_int(0, 1),
             , 'move_out'=> random_int(0, 1)
         , 'race_id' => random_int(1, 4),
             'gender_id' => random_int(1, 4),

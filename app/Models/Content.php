@@ -139,13 +139,14 @@ class Content extends Model {
     }
 
     public function company() {
-        if ($this->user_id != null) {
-            if ($this->user()->isInklua()) {
+        if ($this->user_obj() != null) {
+            if ($this->user_obj()->isInklua()) {
                 return 'Inklua';
             } else {
-                return $this->user()->fantasy_name;
+                return $this->user_obj()->fantasy_name;
             }
         }
+        return $this->user_id;
     }
 
     static function companyName($user_id) {
@@ -189,11 +190,13 @@ class Content extends Model {
                 ->orderBy('row_n')
                 ->orderBy('order_type')
                 ->orderBy('ordenation')
-                ->paginate(12)
+               
         ;
-
+if( request()->exists('debug'))
+    \App\Http\Controllers\Controller::displayQuery($content);
+        
 // $content->data = Content::hideFields($content);
-        return $content;
+        return $content ->paginate(12);
     }
 
     public static function hideFields($data) {
@@ -395,6 +398,14 @@ class Content extends Model {
      */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 
+     * @return User
+     */
+    public function user_obj() {
+        return User::find($this->user_id);
     }
 
     /**
@@ -672,8 +683,10 @@ class Content extends Model {
         $data = parent::toArray();
         if (isset($data['salary']))
             $data['salary'] = floatval($data['salary']);
-        if ($this->type == 'position')
+    if ($this->type == 1 || $this->type == 'position'){
             $data['subscribers'] = $this->getLikesCount();
+            $data['company'] = $this->company();
+    }
         return $data;
     }
 
