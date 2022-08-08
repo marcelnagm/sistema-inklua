@@ -90,8 +90,18 @@
                         
                     </div>
                     <div class="form-group">
-                        <strong>Aceita trabalhar remoto?:</strong>
+                        <strong>Modalidade Remoto</strong>
                          @include('layouts.partials.yesno',array('param' => $candidateHunting->remote))                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <strong>Modalidade Presencial</strong>
+                         @include('layouts.partials.yesno',array('param' => $candidateHunting->presential))                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <strong>Modalidade Híbrido</strong>
+                         @include('layouts.partials.yesno',array('param' => $candidateHunting->hybrid))                        
                         
                     </div>
                     <div class="form-group">

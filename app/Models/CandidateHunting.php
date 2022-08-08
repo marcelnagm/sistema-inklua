@@ -48,7 +48,8 @@ class CandidateHunting extends Model {
         'first_job',
         'state_id',
         'city_id',
-        'remote', 'move_out'
+        'remote','presential','hybrid',
+        'move_out'
         , 'race_id', 'gender_id',
         'english_level'
     ];
@@ -83,6 +84,8 @@ class CandidateHunting extends Model {
         'city_id' => 'required|max:255',
         'english_level' => 'required|max:1',
         'remote' => 'required|max:1',
+        'presential' => 'required|max:1',
+        'hybrid' => 'required|max:1',
         'move_out' => 'required|max:1',
         'race_id' => 'required|max:2',
         'gender_id' => 'required|max:2'

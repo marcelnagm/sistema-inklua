@@ -126,10 +126,26 @@
         </div>
         <div class="form-row mb-3">
             <div class="form-group ">
-                {{ Form::label('Deseja trabalhar remoto?') }}
+                {{ Form::label('Modalidade Remoto') }}
                 <input type="hidden" name="remote" value="0">
                 <input name="remote" type="checkbox" class="" @if($candidateHunting->remote==1) checked @endif value="1">                        
                 {!! $errors->first('remote', '<div class="invalid-feedback">:message</div>') !!}
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <div class="form-group ">
+                {{ Form::label('Modalidade Presencial')}}
+                <input type="hidden" name="presential" value="0">
+                <input name="presential" type="checkbox" class="" @if($candidateHunting->presential==1) checked @endif value="1">                        
+                {!! $errors->first('presential', '<div class="invalid-feedback">:message</div>') !!}
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <div class="form-group ">
+                {{ Form::label('Modalidade Híbrida') }}
+                <input type="hidden" name="hybrid" value="0">
+                <input name="hybrid" type="checkbox" class="" @if($candidateHunting->hybrid==1) checked @endif value="1">                        
+                {!! $errors->first('hybrid', '<div class="invalid-feedback">:message</div>') !!}
             </div>
         </div>
         <div class="form-row mb-3">
