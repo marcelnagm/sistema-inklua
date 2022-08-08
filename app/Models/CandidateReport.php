@@ -21,12 +21,11 @@ use Carbon;
 use App\Models\ReportStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-       
 
 class CandidateReport extends Model {
 
-      use HasFactory;
-       
+    use HasFactory;
+
     protected $table = 'candidate_report';
     protected $fillable = [
         'candidate_id',
@@ -77,16 +76,16 @@ class CandidateReport extends Model {
         parent::boot();
         static::creating(function ($model) {
             $user = auth()->guard('api')->user();
-               if ($user != null){
-            $model->created_by = $user->id;
-            $model->user_id = $user->id;
-            $model->updated_by = $user->id;
-               }
+            if ($user != null) {
+                $model->created_by = $user->id;
+                $model->user_id = $user->id;
+                $model->updated_by = $user->id;
+            }         
         });
         static::updating(function ($model) {
             $user = auth()->guard('api')->user();
-            if ($user != null){
-            $model->updated_by = $user->id;
+            if ($user != null) {
+                $model->updated_by = $user->id;
             }
         });
     }
@@ -143,7 +142,8 @@ class CandidateReport extends Model {
         parent::save($attributes, $options);
         return $this;
     }
-
+    
+    
     public function update(array $attributes = [], array $options = []) {
 //        dd($attributes);        
         if (isset($attributes['start_at'])) {
@@ -193,7 +193,7 @@ class CandidateReport extends Model {
                 }
             }
         }
-//         parent::update($attributes, $options);
+         parent::update($attributes, $options);
         return $this;
     }
 

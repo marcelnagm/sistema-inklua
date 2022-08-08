@@ -85,13 +85,21 @@ class CandidateReportControler extends Controller {
                 if(isset($data['report_status_id'] ))
                 $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
 //                dd($data);                $request->input('id')
-                $cand = CandidateReport::updateOrCreate(['id' => $request->input('id', null)],
-                                $data);
+                
+                if($request->exists('id')){
+                 $cand = CandidateReport::find($request->input('id'));
+                 $cand->update($data);
+                }
+                else{ 
+                $cand = new CandidateReport($data);
 
                 $cand = $cand->save($data);
                 $candidate = $cand->candidate();
                 $candidate->status = $user->id;
                 $candidate->save();
+                
+                }
+              
                 return response()->json([
                             'status' => true,
                             'error' => false,
