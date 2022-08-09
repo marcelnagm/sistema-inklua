@@ -28,6 +28,10 @@ class MyContentController extends Controller {
         'hours',
         'english_level',
         'observation',
+        'remote',
+        'hybrid',
+        'presential'
+       
     ];
 
     public function __construct() {

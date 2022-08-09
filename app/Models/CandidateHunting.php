@@ -83,9 +83,9 @@ class CandidateHunting extends Model {
         'state_id' => 'required|max:255',
         'city_id' => 'required|max:255',
         'english_level' => 'required|max:1',
-        'remote' => 'required|max:1',
-        'presential' => 'required|max:1',
-        'hybrid' => 'required|max:1',
+        'remote' => 'nullable|max:1',
+        'presential' => 'nullable|max:1',
+        'hybrid' => 'nullable|max:1',
         'move_out' => 'required|max:1',
         'race_id' => 'required|max:2',
         'gender_id' => 'required|max:2'

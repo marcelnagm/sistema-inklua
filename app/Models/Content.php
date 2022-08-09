@@ -31,6 +31,8 @@ class Content extends Model {
         'application',
         'application_type',
         'remote',
+        'presential',
+        'hybrid',
         'status',
         'published_at',
         'observation',

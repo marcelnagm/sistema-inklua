@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Content;
 use App\Jobs\BoletoVerify;
+use App\Models\Transaction;
+use Carbon\Carbon;
 
 class PagarMeChecker extends Command {
 
@@ -39,7 +41,20 @@ class PagarMeChecker extends Command {
     public function handle() {
         $time_start = microtime(true);
         $this->info("Iniciando a checagem");
-        BoletoVerify::dispatch();
+        $due_date = Carbon::now()->subDays(4)->format('Y-m-d');
+        $transactions = Transaction::where('payment_method', 'boleto')->where('status', 'pending')->whereDate('due_date', '>=', $due_date)->get();
+        foreach ($transactions as $transaction) {
+            $pagarme = json_decode($transaction->getOrder());
+             var_dump($pagarme);
+            if ($pagarme->status == 'paid') {
+                $transaction->content->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
+                $transaction->content->notifyPositionPublished();
+                $transaction->update(['status' => 'paid', 'charge_status' => 'paid']);
+               $this->info('Updated');  
+            }
+        }
+
+       $this->info('not updated');
 
         $time_elapsed_secs = microtime(true) - $time_start;
         $this->info("Execução:</b> '.$time_elapsed_secs.' segundos");

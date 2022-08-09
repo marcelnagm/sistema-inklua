@@ -85,10 +85,12 @@ class HomeMyContentExtTest extends TestCaseComplex {
             'Authorization' => 'Bearer ' . env('APP_JWT_RECRUTADOR_EXTERNO')
         ];
         $data_vaga_ok = array_merge($this->data_vaga, array('client_condition_id' => 1, 'client_id' => 1, 'vacancy' => 3));
-//        $request = new Request('POST', url('/api/minhas-vagas/new'), $headers);
-        $response = $this->post(url('/api/minhas-vagas/new'), $data_vaga_ok, $headers);
+        $request = new Request('POST', url('/api/minhas-vagas/new'), $headers);
+//         $request = new Request('GET', url('/api/minhas-vagas'), $headers);
+         $response = $client->sendAsync($request)->wait();
+//        $response = $this->post(url('/api/minhas-vagas/new'), $data_vaga_ok, $headers);
 //        $response = $client->sendAsync($request, $this->data_vaga)->wait();
-        $data = $response->json();
+      $data = json_decode($response->getBody(), true);
 //        $this->display($data);
         $this->assertArrayHasKey('id', $data);
         $this->atualizar_vaga($data['id']);

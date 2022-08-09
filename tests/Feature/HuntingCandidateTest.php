@@ -74,6 +74,8 @@ class HuntingCandidateTest extends TestCaseComplex {
             "state_id" => random_int(1, 27),
             "city_id" => random_int(1, 5507),
             "remote" => random_int(0,1),
+            "hybrid" => random_int(0,1),
+            "presential" => random_int(0,1),
             "move_out" => random_int(0,1),
             "gender_id" => 1,
             "race_id" => 1,
