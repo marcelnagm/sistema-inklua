@@ -12,27 +12,7 @@ use App\Models\ContentCancel;
 
 class MyContentController extends Controller {
 
-    static $visible = [
-        'title',
-        'salary',
-        'contract_type',
-        'image',
-        'state',
-        'city',
-        'description',
-        'application',
-        'application_type',
-        'district',
-        'benefits',
-        'requirements',
-        'hours',
-        'english_level',
-        'observation',
-        'remote',
-        'hybrid',
-        'presential'
-       
-    ];
+  
 
     public function __construct() {
         $this->middleware('auth:api');
@@ -53,7 +33,7 @@ class MyContentController extends Controller {
     public function store(Request $request) {
         $user = $request->user();
 
-        $data = $request->only(MyContentController::$visible);
+        $data = $request->only(Content::$sendable);
 
         $data['user_id'] = $user->id;
         $data['status'] = 'aguardando_aprovacao';
@@ -141,7 +121,7 @@ class MyContentController extends Controller {
 
             $contentclient->update($data);
         }
-        $data = $request->only(MyContentController::$visible);
+        $data = $request->only(Content::$sendable);
 
         $data['user_id'] = $user->id;
         $data['status'] = 'aguardando_aprovacao';

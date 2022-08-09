@@ -45,7 +45,7 @@ class PagarMeChecker extends Command {
         $transactions = Transaction::where('payment_method', 'boleto')->where('status', 'pending')->whereDate('due_date', '>=', $due_date)->get();
         foreach ($transactions as $transaction) {
             $pagarme = json_decode($transaction->getOrder());
-             var_dump($pagarme);
+//             var_dump($pagarme);
             if ($pagarme->status == 'paid') {
                 $transaction->content->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
                 $transaction->content->notifyPositionPublished();

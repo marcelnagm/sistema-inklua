@@ -77,6 +77,28 @@ class Content extends Model {
         "fechada",
         "cancelada"
     );
+    
+     static $sendable = [
+        'title',
+        'salary',
+        'contract_type',
+        'image',
+        'state',
+        'city',
+        'description',
+        'application',
+        'application_type',
+        'district',
+        'benefits',
+        'requirements',
+        'hours',
+        'english_level',
+        'observation',
+        'remote',
+        'hybrid',
+        'presential'
+       
+    ];
 
     public static function boot() {
         parent::boot();

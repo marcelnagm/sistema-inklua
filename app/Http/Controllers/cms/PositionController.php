@@ -147,24 +147,7 @@ class PositionController extends Controller {
             return redirect()->back()->with("error", "vaga não encontrada.");
         }
 
-        $data = $request->only([
-            'image',
-            'ordenation',
-            'group_id',
-            'salary',
-            'hours',
-            'title',
-            'remote',
-            'state',
-            'city',
-            'district',
-            'city',
-            'benefits',
-            'requirements',
-            'description',
-            'english_level',
-            'observation',
-        ]);
+        $data = $request->only(Content::$sendable);
 
         if ($request->input('remove_imagem')) {
             Storage::delete('public/positions/' . $position->image);

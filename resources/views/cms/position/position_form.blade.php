@@ -97,29 +97,43 @@
 
                     {{-- Fim upload de imagem--}}
                     <div class="form-row mb-3">
-                        <div class="col-lg-6">
-                            <div class="form-row">
-                                <label for="remote" class="form-label">{{ __('A vaga será') }}</label>
-                                <div class="col-lg-3 custom-control custom-switch">
-                                    <input name="remote" type="radio" class="form-control-sm" @if($position->remote==0) checked @endif value="0">  Presencial                      
-                                </div>
-
-                                <div class="col-lg-3 custom-control custom-switch">
-                                    <input name="remote" type="radio" class="form-control-sm" @if($position->remote==1) checked @endif value="1">  Remoto                      
-                                </div>
-
+                        <<div class=" col-lg-3 mb-3">
+                            <div class="form-group ">
+                                {{ Form::label('Modalidade Remoto') }}
+                                <input type="hidden" name="remote" value="0">
+                                <input name="remote" type="checkbox" class="" @if($position->remote==1) checked @endif value="1">                        
+                                {!! $errors->first('remote', '<div class="invalid-feedback">:message</div>') !!}
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="hours" class="form-label">{{ __('Horário') }}</label>
-                                <input id="hours" type="text" class="form-control @error('hours') is-invalid @enderror" name="hours" value="{{ isset( $position->hours ) && ( $position->hours ) ? $position->hours : old('hours') }}"  autocomplete="compleo_code" >
-                                @error('hours')
-                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                                @enderror
+                        <div class="col-lg-3  mb-3">
+                            <div class="form-group ">
+                                {{ Form::label('Modalidade Presencial')}}
+                                <input type="hidden" name="presential" value="0">
+                                <input name="presential" type="checkbox" class="" @if($position->presential==1) checked @endif value="1">                        
+                                {!! $errors->first('presential', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                        <div class="col-lg-3  mb-3">
+                            <div class="form-group ">
+                                {{ Form::label('Modalidade Híbrida') }}
+                                <input type="hidden" name="hybrid" value="0">
+                                <input name="hybrid" type="checkbox" class="" @if($position->hybrid==1) checked @endif value="1">                        
+                                {!! $errors->first('hybrid', '<div class="invalid-feedback">:message</div>') !!}
                             </div>
                         </div>
                     </div>
+                    <div class="form-row mb-3">                                                                        
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="hours" class="form-label">{{ __('Horário') }}</label>
+                                    <input id="hours" type="text" class="form-control @error('hours') is-invalid @enderror" name="hours" value="{{ isset( $position->hours ) && ( $position->hours ) ? $position->hours : old('hours') }}"  autocomplete="compleo_code" >
+                                    @error('hours')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        
+                        </div>
 
                     <hr>
                     <div class="form-row mb-3">
