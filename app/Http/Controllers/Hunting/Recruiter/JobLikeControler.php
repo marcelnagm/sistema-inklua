@@ -17,8 +17,19 @@ class JobLikeControler extends Controller {
 
     public function index(Request $request, $id) {
         $user = auth()->guard('api')->user();
-
-        $content = Content::findOrFail($id);
+        if ($user == null)
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Usuário não encontrado',
+            ]);
+        $content = Content::find($id);
+        if ($content == null)
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Vaga não encontrada',
+            ]);
         if ($request->exists('debug')) {
             dd('dono do content:' . $content->user_id, 'usuario:' . $user->id);
         }

@@ -149,11 +149,12 @@ class User extends Authenticatable implements MustVerifyEmail {
         });
     }
 
+    
     public function getMyContents($search = FALSE, $status = FALSE) {
 
         $searchEscaped = addslashes($search);
 
-        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,salary,district,benefits, requirements, hours, english_level ,observation,created_at 
+        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,salary,district,benefits, requirements, hours, english_level ,observation,created_at,user_id 
         ")
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
@@ -170,21 +171,21 @@ class User extends Authenticatable implements MustVerifyEmail {
 
                 //Filtro por status
                 ->when($status, function ($query) use ($status) {
-                    switch($status){
+                    switch ($status) {
                         case 'em_espera':
-                         $query->whereIn('status', array( "aguardando_aprovacao" , "aguardando_pagamento" ));   
+                            $query->whereIn('status', array("aguardando_aprovacao", "aguardando_pagamento"));
                             break;
                         case 'ativas':
-                         $query->whereIn('status', array( "publicada" , "reposicao" ));   
+                            $query->whereIn('status', array("publicada", "reposicao"));
                             break;
                         case 'nao_ativas':
-                         $query->whereIn('status', array( "reprovada", "expirada", "fechada" , "cancelada"));   
+                            $query->whereIn('status', array("reprovada", "expirada", "fechada", "cancelada"));
                             break;
                         default:
-                            $query->where('status',$status);
+                            $query->where('status', $status);
                             break;
                     }
-                    
+
                     return $query;
                 })
                 ->orderBy('score', 'desc')
@@ -212,7 +213,7 @@ class User extends Authenticatable implements MustVerifyEmail {
 
     public function office() {
         $inklua = $this->inklua();
-        return $inklua != null?$inklua->office() : null;
+        return $inklua != null ? $inklua->office() : null;
     }
 
     public function isInkluaLider() {
@@ -257,34 +258,35 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     public function candidatehunting() {
-    return CandidateHunting::where('user_id',$this->id)->first();    
-    }
-    
-    static function searchRecruiter($request){
-       return User::
-                whereRaw('id in (select user_id from inklua_users where active=1)')->
-                whereRaw('(name like "%'.$request->input('key').'%"'.
-                        ' or lastname like "%'.$request->input('key').'%"'.
-                  ' or email like  "%'.$request->input('key').'%") ')->                
-                get()->skip(10 * ($request->input('page') - 1))->take(10)
-                ; 
+        return CandidateHunting::where('user_id', $this->id)->first();
     }
 
-    static function lastLogin($request,$pcd = false){
+    static function searchRecruiter($request) {
+        return User::
+                        whereRaw('id in (select user_id from inklua_users where active=1)')->
+                        whereRaw('(name like "%' . $request->input('key') . '%"' .
+                                ' or lastname like "%' . $request->input('key') . '%"' .
+                                ' or email like  "%' . $request->input('key') . '%") ')->
+                        get()->skip(10 * ($request->input('page') - 1))->take(10)
+        ;
+    }
+
+    static function lastLogin($request, $pcd = false) {
         $date_start = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_start'))->format('Y/m/d');
         $date_end = Carbon\Carbon::createFromFormat('d/m/Y', $request->input('date_end'))->format('Y/m/d');
 
-        $query=  User::where('id','<>',-1)->where('id','<>',null);
-        if ($pcd == true )$query = $query->whereRaw('id in (select user_id from candidate_hunting where pcd=1)' );        
-        
+        $query = User::where('id', '<>', -1)->where('id', '<>', null);
+        if ($pcd == true)
+            $query = $query->whereRaw('id in (select user_id from candidate_hunting where pcd=1)');
+
         $query = $query->whereRaw('(last_login_at between "' . $date_start
                 . '" and '
                 . '"' . $date_end . '")');
         if ($request->exists('debug2')) {
             dd(Controller::getEloquentSqlWithBindings($query));
         }
-        
+
         return $query;
     }
-    
+
 }

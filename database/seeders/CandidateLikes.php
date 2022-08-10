@@ -33,7 +33,7 @@ class CandidateLikes extends Seeder {
     public function run() {
    
 //    
-        JobLike::factory()->count(500)->create();
+        JobLike::factory()->count(1500)->create();
         CandidateReport::factory()->count(500)->create();
     }
 

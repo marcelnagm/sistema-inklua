@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CandidateControler extends Controller {
 
-
     /**
      *   Retorna um Json com todos os registos
      * @return Json 
@@ -20,7 +19,6 @@ class CandidateControler extends Controller {
         return Candidate::orderBy('id')->cursorPaginate(10);
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -28,33 +26,55 @@ class CandidateControler extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id) {
-           $user = auth()->guard('api')->user();
+        $user = auth()->guard('api')->user();
+        
+          if ($user == null)
+                return response()->json([
+                            'status' => false,
+                            'error' => true,
+                            'msg' => 'Usuário não encontrado',
+                ]);
         if ($user->isInklua()) {
-          $data = Candidate::where('gid', $id)->first()->compact();
-          $data['cv_path'] = route('hunt.api.cv',$data['id']);
-          $data['pcd_report'] = route('hunt.api.pcd_report',$data['id']);
+            $cand = Candidate::where('gid', $id)->first();
+            if ($cand == null)
+                return response()->json([
+                            'status' => false,
+                            'error' => true,
+                            'msg' => 'Candidato não encontrado',
+                ]);
+            $data = Candidate::where('gid', $id)->first()->compact();
+            $data['cv_path'] = route('hunt.api.cv', $data['id']);
+            $data['pcd_report'] = route('hunt.api.pcd_report', $data['id']);
             return $data;
         } else {
             return response()->json([
                         'status' => false,
+                        'error' => true,
                         'msg' => 'Função apenas para recrutadores internos',
             ]);
         }
     }
 
-    
     public function cv($id) {
         $candidateHunting = CandidateHunting::find($id);
-
+        if ($candidateHunting == null)
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Candidato não encontrado',
+            ]);
         return Storage::download($candidateHunting->cv_path);
     }
 
     public function pcd_report($id) {
         $candidateHunting = CandidateHunting::find($id);
-
+        if ($candidateHunting == null)
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => 'Candidato não encontrado',
+            ]);
         return Storage::download($candidateHunting->pcd_report);
     }
-
-    
 
 }

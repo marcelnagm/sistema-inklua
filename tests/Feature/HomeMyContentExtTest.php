@@ -91,11 +91,48 @@ class HomeMyContentExtTest extends TestCaseComplex {
 //        $response = $this->post(url('/api/minhas-vagas/new'), $data_vaga_ok, $headers);
 //        $response = $client->sendAsync($request, $this->data_vaga)->wait();
       $data = json_decode($response->getBody(), true);
-//        $this->display($data);
+//        $this->display($data['id']);
+        $this->display('');
+        $this->display('Testes Realizados');
         $this->assertArrayHasKey('id', $data);
+        $this->display('Cadastrado Com sucesso --- OK');
+        $this->pagar_vaga($data['id']);
+        $this->display('Vaga Paga com sucesso --- OK');
         $this->atualizar_vaga($data['id']);
+        $this->display('Vaga atualizada com sucesso --- OK');
+        $this->cancelar_vaga_no_reason($data['id']);
+        $this->display('Teste de Cancelamento sem motivo --- OK');
+        $this->cancelar_vaga($data['id']);
+        $this->display('Vaga cancelamento negado com sucesso --- OK');
     }
 
+    /**
+     * @depends test_whoami  
+     * @depends test_cadastrar_vaga
+     */
+    public function pagar_vaga($id) {
+          $client = new Client();
+          
+            $content = Content::find($id);
+        $content->status= 'aguardando_pagamento';
+        $content->save();
+//        echo $this->jwt;
+           $headers = [
+            'Authorization' => 'Bearer ' . env('APP_JWT_RECRUTADOR_EXTERNO')
+        ];
+           $data = [
+               'content_id' => $id,
+               'payment_method' => 'boleto',
+               'customer_document' => '47188087075' 
+           ];
+        $response = $this->post(url('/api/transaction'), $data, $headers);
+        $data_response = $response->json();
+//        $this->display($data_response);
+        $this->assertArrayHasKey('status', $data_response);
+        $this->assertArrayHasKey('url', $data_response);
+        $this->assertEquals('pending', $data_response['status']);
+    }
+    
     /**
      * @depends test_whoami  
      * @depends test_cadastrar_vaga
@@ -161,8 +198,8 @@ class HomeMyContentExtTest extends TestCaseComplex {
         $response = $this->post(url("/api/vaga/cancelar/$this->id"), array('reason' => 'desisti da vaga'), $headers);
         $data = $response->json();
 //        $this->display($data);
-        $this->assertArrayHasKey("status", $data);
-        $this->assertEquals(1, $data["status"]);
+        $this->assertArrayHasKey("error", $data);
+        $this->assertEquals(1, $data["error"]);
     }
 
 }

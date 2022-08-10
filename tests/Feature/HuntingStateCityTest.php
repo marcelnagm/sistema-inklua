@@ -54,6 +54,8 @@ class HuntingStateCityTest extends TestCaseComplex {
         ];
         $response = $this->get(url("/api/state/"), array(), $headers);
         $response->assertStatus(200);
+        $this->display('');
+        $this->display('Listagem de Estados--- ok!');
     }
     
     /**
@@ -68,6 +70,7 @@ class HuntingStateCityTest extends TestCaseComplex {
         ];
         $response = $this->get(url("/api/city/"), array(), $headers);
         $response->assertStatus(200);
+        $this->display('Listagem de Cidades--- ok!');
     }
     
     /**
@@ -87,7 +90,7 @@ class HuntingStateCityTest extends TestCaseComplex {
 //        $this->display($response->json());
         $this->assertArrayHasKey('name',$data['data'][0]);
         $this->assertEquals('Acrelndia', $data['data'][0]['name']);
-                
+        $this->display('Busca de Cidades--- ok!');          
     }
 
 }

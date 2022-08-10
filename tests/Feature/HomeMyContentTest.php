@@ -59,6 +59,8 @@ class HomeMyContentTest extends TestCaseComplex {
         $response = $client->sendAsync($request)->wait();
         $data = json_decode($response->getBody(), true);
         $this->assertArrayHasKey('myContents', $data);
+          $this->display('');
+          $this->display('Listagem de minhas vags--- ok!');
     }
 
     private $data_vaga = [
@@ -94,6 +96,7 @@ class HomeMyContentTest extends TestCaseComplex {
         $response->assertStatus(400);
 
         $this->assertArrayHasKey('errors', $data);
+          $this->display('Teste de erro vaga com falta de dado--- ok!');
     }
 
     /**
@@ -114,6 +117,7 @@ class HomeMyContentTest extends TestCaseComplex {
         $data = $response->json();
 //        $this->display($data);
         $this->assertArrayHasKey('id', $data);
+          $this->display('Cadastro de Vaga--- ok!');
         $this->atualizar_vaga($data['id']);
     }
 
@@ -145,6 +149,7 @@ class HomeMyContentTest extends TestCaseComplex {
         $this->assertArrayHasKey('district', $data);
         $this->assertEquals('teste update', $data['district']);
         $this->id = $id;
+          $this->display('Atualização de Vaga --- ok!');
         $this->aprovar_vaga($id);
         $this->fechar_vaga($id);
         $this->cancelar_vaga_no_reason($id);
@@ -168,6 +173,7 @@ class HomeMyContentTest extends TestCaseComplex {
 //        $this->display($data);
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["status"]);
+        $this->display('Àprovação de Vaga --- ok!');
     }
 
     /**
@@ -187,6 +193,7 @@ class HomeMyContentTest extends TestCaseComplex {
 //        $this->display($data);
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["status"]);
+        $this->display('Fechar Vaga --- ok!');
     }
 
     /**
@@ -206,6 +213,7 @@ class HomeMyContentTest extends TestCaseComplex {
 //        $this->display($data);
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["error"]);
+        $this->display('Teste de cancelamento erroneo --- ok!');
     }
 
     /**
@@ -225,6 +233,7 @@ class HomeMyContentTest extends TestCaseComplex {
 //        $this->display($data);
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["status"]);
+        $this->display('Cancelamento de Vaga --- ok!');
     }
 
 }

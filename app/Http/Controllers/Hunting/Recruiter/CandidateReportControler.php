@@ -20,16 +20,16 @@ class CandidateReportControler extends Controller {
     public function index(Request $request) {
         $user = auth()->guard('api')->user();
         if ($user->isInklua()) {
-            return array('data' => [ "candidates" => Candidate::when($request->exists('candidate_id'), function ($query) {
-                    return $query->where('id', request('candidate_id'));
-                })->when(!$request->exists('candidate_id'), function ($query) {
-                    return $query->where('id', -1);
-                })->get()
-                , 'reports' => CandidateReport::when($request->exists('candidate_id'), function ($query) {
-                    return $query->where('candidate_id', request('candidate_id'));
-                })->when($request->exists('job_id'), function ($query) {
-                    return $query->where('job_id', request('job_id'));
-                })->orderBy('updated_at', "DESC")->get()]) ;
+            return array('data' => ["candidates" => Candidate::when($request->exists('candidate_id'), function ($query) {
+                        return $query->where('id', request('candidate_id'));
+                    })->when(!$request->exists('candidate_id'), function ($query) {
+                        return $query->where('id', -1);
+                    })->get()
+                    , 'reports' => CandidateReport::when($request->exists('candidate_id'), function ($query) {
+                        return $query->where('candidate_id', request('candidate_id'));
+                    })->when($request->exists('job_id'), function ($query) {
+                        return $query->where('job_id', request('job_id'));
+                    })->orderBy('updated_at', "DESC")->get()]);
         } else {
             return response()->json([
                         'status' => false,
@@ -80,40 +80,36 @@ class CandidateReportControler extends Controller {
                         'error' => true,
                         'msg' => 'Não existem vagas disponiveis[vagas - ' . $cont->vacancy . ',contratados - ' . $cont->vacancy . ',repostos - ' . $cont->replaced . '] para a vaga  escolhida!',
             ]);
-        if ($cand->status != -1) {
-            if ($cand->status == 0 || $cand->status == null) {
-                if(isset($data['report_status_id'] ))
+//   
+        if ($cand->status == 0 || $cand->status == null || $cand->status != -1) {
+            if ($cand->status != -1 && $cand->status > 0) {
+                $user = User::find($cand->status);
+                $msg = "Candidate ja sendo abordado por  " . $user->fullname();
+            } else
+                $msg = '';
+            if (isset($data['report_status_id']))
                 $data['report_status_id'] = \App\Models\ReportStatus::byStatusFront($data['report_status_id'])->id;
 //                dd($data);                $request->input('id')
-                
-                if($request->exists('id')){
-                 $cand = CandidateReport::find($request->input('id'));
-                 $cand->update($data);
-                }
-                else{ 
+
+            if ($request->exists('id')) {
+                $cand = CandidateReport::find($request->input('id'));
+                $cand->update($data);
+            } else {
                 $cand = new CandidateReport($data);
 
                 $cand = $cand->save($data);
                 $candidate = $cand->candidate();
                 $candidate->status = $user->id;
                 $candidate->save();
-                
-                }
-              
-                return response()->json([
-                            'status' => true,
-                            'error' => false,
-                            'msg' => 'Abordagem Iniciada!',
-                            'data' => $cand->toArray()
-                ]);
-            } else {
-                $user = User::find($cand->status);
-                return response()->json([
-                            'status' => false,
-                            'error' => true,
-                            'msg' => "Candidate ja sendo abordado por  " . $user->fullname(),
-                ]);
             }
+
+            return response()->json([
+                        'status' => true,
+                        'error' => false,
+                        'msg' => 'Abordagem Iniciada!',
+                        'data' => $cand->toArray(),
+                        'msg' => $msg
+            ]);
         } else {
             return response()->json([
                         'status' => false,

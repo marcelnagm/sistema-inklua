@@ -20,6 +20,7 @@ class TestCaseComplex extends BaseTestCase
      function display($myvar) {
 
         fwrite(STDERR, print_r($myvar));
+        fwrite(STDERR, print_r("\n"));
     }
     
    public function getEloquentSqlWithBindings($query) {
