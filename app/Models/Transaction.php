@@ -83,7 +83,7 @@ class Transaction extends Model
             "items" => [
                 [
                     "code" => 'vaga',
-                    "amount" => 100,
+                    "amount" => 10000,
                     "description" => "Anúncio de vaga Inklua",
                     "quantity" => 1
                 ]
@@ -109,12 +109,12 @@ class Transaction extends Model
 
     public static function getAddress(){
         return [
-            "line_1" => request()->input('customer_address_line_1'),
-            "line_2" => request()->input('customer_address_line_2'),
-            "zip_code" => request()->input('customer_address_zip_code'),
-            "city" => request()->input('customer_address_city'),
-            "state" => request()->input('customer_address_state'),
-            "country" => request()->input('customer_address_country'),
+            "line_1" => request()->input('customer_address_line_1','1400, Av. Gal. Carneiro'),
+            "line_2" => request()->input('customer_address_line_2','18043003'),
+            "zip_code" => request()->input('customer_address_zip_code','18043003'),
+            "city" => request()->input('customer_address_city','São Paulo'),
+            "state" => request()->input('customer_address_state','SP'),
+            "country" => request()->input('customer_address_country','BR'),
         ];
     }
 
@@ -127,9 +127,9 @@ class Transaction extends Model
             "document_type" => request()->input('customer_document_type'),
             "phones" => [
                 "home_phone" => [
-                    "country_code" => request()->input('customer_phone_country_code'),
-                    "area_code" => request()->input('customer_phone_area_code'),
-                    "number" => request()->input('customer_phone_number')
+                    "country_code" => request()->input('customer_phone_country_code','55'),
+                    "area_code" => request()->input('customer_phone_area_code','55'),
+                    "number" => request()->input('customer_phone_number','1155323232')
                 ]
             ],
             "address" => Transaction::getAddress()
