@@ -148,7 +148,7 @@ class Content extends Model {
 
     public static function getRandomImage() {
         $img = random_int(1, 16);
-        return url("/img/{$img}.png");
+        return url(env('APP_URL_IMAGES'). "{$img}.webp");
     }
 
     /**
