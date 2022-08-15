@@ -83,7 +83,7 @@ class Transaction extends Model
             "items" => [
                 [
                     "code" => 'vaga',
-                    "amount" => 10000,
+                    "amount" => env('APP_VALUE_AMOUNT_CONTENT'),
                     "description" => "Anúncio de vaga Inklua",
                     "quantity" => 1
                 ]

@@ -60,7 +60,7 @@ class TransactionController extends Controller
     }
 
     public function order(){
-        BoletoVerify::dispatch();
+         BoletoVerify::dispatch();
         return;
     }
 }

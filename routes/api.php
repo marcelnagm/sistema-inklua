@@ -74,6 +74,7 @@ Route::get('/minhas-vagas', [MyContentController::class, 'index']);
 Route::get('/minhas-vagas/status', [MyContentController::class, 'myContentStatus']);
 Route::post('/minhas-vagas/new', [MyContentController::class, 'store']);
 Route::get('/minhas-vagas/{id}/edit', [MyContentController::class, 'edit']);
+Route::get('/minhas-vagas/{id}', [MyContentController::class, 'show']);
 Route::post('/minhas-vagas/{id}', [MyContentController::class, 'update']);
 Route::get('/minhas-vagas/details/{id}', [MyContentController::class, 'details']);
 

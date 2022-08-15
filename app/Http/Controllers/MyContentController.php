@@ -185,6 +185,14 @@ class MyContentController extends Controller {
         ]);
     }
 
+    public function show($id) {
+        $content = Content::where('id', $id)->first();
+
+        return response()->json([
+                    'content' => [$content->id, $content->toArray()]
+        ]);
+    }
+    
     public function details($id) {
         $content = Content::where('id', $id)->first();
 
