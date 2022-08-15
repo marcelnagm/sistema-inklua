@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Content;
+use App\Models\InkluaUser;
 use Carbon\Carbon;
 
 class PositionExpiredDateVerify implements ShouldQueue
@@ -32,13 +33,16 @@ class PositionExpiredDateVerify implements ShouldQueue
      */
     public function handle()
     {
-        $expiring_date = Carbon::now()->subDays(20)->format('Y-m-d');
+        $expiring_date = Carbon::now()->subDays(env('APP_EXPIRE_DATA_DAYS'))->format('Y-m-d');
         $positions = Content::where('type', 1)
-                                ->whereNotNull('user_id')
+                                ->whereNotIn('user_id',InkluaUser::where('active',1)->select('user_id'))
                                 ->where('status', 'publicada')
-                                ->whereDate('published_at', '<', $expiring_date)
-                                ->update(['status' => 'expirada']);
-
-        return response()->json('updated');
+                                ->whereDate('published_at', '<', $expiring_date);
+                                   
+       
+        $count = $positions->count();
+        $positions->update(['status' => 'expirada']);
+        echo 'updated '.$count.'  positions';
+        return response()->json('updated '.$count.'  positions');
     }
 }

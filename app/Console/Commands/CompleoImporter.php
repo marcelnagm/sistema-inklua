@@ -92,7 +92,11 @@ class CompleoImporter extends Command {
         $this->info("${deleted} vagas removidas");
 
         $time_elapsed_secs = microtime(true) - $time_start;
+        $this->info("Checagem de expiração de data do content");
+        PositionExpiredDateVerify::dispatch();
         $this->info("Execução:</b> '.$time_elapsed_secs.' segundos");
+        
+        
     }
 
 }
