@@ -154,7 +154,7 @@ class User extends Authenticatable implements MustVerifyEmail {
 
         $searchEscaped = addslashes($search);
 
-        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,salary,district,benefits, requirements, hours, english_level ,observation,created_at,user_id 
+        $content = Content::selectRaw("id, type, image, title, group_id, date, description,city as 'cidade', state as 'estado', status, url, source,salary,district,benefits, requirements, hours, english_level ,observation,created_at,user_id,published_at 
         ")
                 ->selectRaw("(
                                 (match (title) against ('{$searchEscaped}' in boolean mode) * 10)
