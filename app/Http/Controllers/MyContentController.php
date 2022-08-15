@@ -144,7 +144,7 @@ class MyContentController extends Controller {
 
     public function validator($data) {
         $response = Validator::make($data, [
-                    'image' => ['starts_with:https://inklua.com.br/']
+                    'image' => ['starts_with:'.env('APP_URL_IMAGES')]
         ]);
 
         return $response;
