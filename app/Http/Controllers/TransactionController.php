@@ -18,16 +18,39 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
         $user = $request->user();
+        
+        $transaction = Transaction::where('content_id', $request->input('content_id'))
+                ->where('status', 'paid');
+        
+        if($transaction->count() > 0)
+             return response()->json([
+                 'error' => true,
+                 'status' => false,
+                 "msg" => 'A vaga já se encontra paga'
+                 ]);
+        
         $position = Content::where('id', $request->input('content_id'))
                                 ->where('type', 1)
-                                ->whereNotNull('user_id')
-                                ->where('status', 'aguardando_pagamento')
+                                ->whereNotNull('user_id')                               
                                 ->with('user')
                                 ->first();
                                 
-        if(!$position){
-            return response()->json(["error" => 'Vaga não encontrada.'], 400);
+        if($position == null){
+            return response()->json([
+                 'error' => true,
+                 'status' => false,
+                "error" => 'Vaga não encontrada.']);
         }
+        
+         if($position->status != 'aguardando_pagamento'){
+
+            return response()->json([
+                "msg" => 'Vaga encontrada mas o status da vaga é: '.$position->status,
+                 'error' => true,
+                 'status' => false
+                ]);
+        }
+        
 
         $transaction = Transaction::create([
             'content_id' => $position->id,            
