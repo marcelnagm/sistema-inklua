@@ -189,7 +189,8 @@ class MyContentController extends Controller {
         $content = Content::where('id', $id)->first();
 
         return response()->json([
-                    'content' => [$content->id, $content->toArray()]
+                    'data' =>
+            ['content' => $content->toArray()]
         ]);
     }
     
