@@ -710,6 +710,7 @@ if( request()->exists('debug'))
     if ($this->type == 1 || $this->type == 'position'){
             $data['subscribers'] = $this->getLikesCount();
             $data['company'] = $this->company();
+            $data['image'] = Content::getRandomImage();
     }
         return $data;
     }
