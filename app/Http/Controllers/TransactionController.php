@@ -61,8 +61,11 @@ class TransactionController extends Controller {
              if (env('PAGARME_DUMP') == 'retorn1')
                 dd($pagarme);
             
-            if (env('PAGARME_LOGGER'))
+            if (env('PAGARME_LOGGER')){
+                logger('Pagame retorno');
                 logger($pagarme);
+            }
+                
             if (!isset($pagarme["id"])) {
                 return response()->json([
                             'status' => false,
@@ -75,8 +78,11 @@ class TransactionController extends Controller {
                 $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
                 $position->notifyPositionPublished();
             }
-            if (env('PAGARME_LOGGER'))
+            if (env('PAGARME_LOGGER')){
+                logger('retorno transcation');
                 logger($transaction);
+            }
+            
           if (env('PAGARME_DUMP') == 'retorn2')
                dd($transaction);
             return response()->json([
