@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\Content;
 use App\Jobs\BoletoVerify;
 use Carbon\Carbon;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class TransactionController extends Controller
 {
@@ -59,6 +60,8 @@ class TransactionController extends Controller
         try {
 
             $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments()), true);
+            if(env('PAGARME_LOGGER'))
+            logger($pagarme);
             if(!isset($pagarme["id"])){
                 return response()->json($pagarme);
             }
@@ -68,7 +71,8 @@ class TransactionController extends Controller
                 $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
                 $position->notifyPositionPublished();
             }
-
+            if(env('PAGARME_LOGGER'))
+            logger($transaction);
             return response()->json($transaction);
 
         }catch(Exception $erros){
