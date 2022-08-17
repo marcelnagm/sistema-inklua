@@ -58,6 +58,9 @@ class TransactionController extends Controller {
         try {
 
             $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments()), true);
+             if (env('PAGARME_DUMP'))
+                dd($pagarme);
+            
             if (env('PAGARME_LOGGER'))
                 logger($pagarme);
             if (!isset($pagarme["id"])) {
@@ -74,8 +77,7 @@ class TransactionController extends Controller {
             }
             if (env('PAGARME_LOGGER'))
                 logger($transaction);
-            if (env('PAGARME_DUMP'))
-                dd($pagarme);
+          
             return response()->json([
                             'status'  => false,
                             'error'  => true,
