@@ -58,14 +58,14 @@ class TransactionController extends Controller {
         try {
 
             $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments()), true);
-             if (env('PAGARME_DUMP') == 'retorn1')
+            if (env('PAGARME_DUMP') == 'retorn1')
                 dd($pagarme);
-            
-            if (env('PAGARME_LOGGER')){
+
+            if (env('PAGARME_LOGGER')) {
                 logger('Pagame retorno');
                 logger($pagarme);
             }
-                
+
             if (!isset($pagarme["id"])) {
                 return response()->json([
                             'status' => false,
@@ -77,18 +77,25 @@ class TransactionController extends Controller {
             if ($transaction->status == 'paid') {
                 $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
                 $position->notifyPositionPublished();
+
+                return response()->json([
+                            'error' => false,
+                            'status' => true,
+                            'data' => [
+                                'content_id' => $position->id,
+                                'status' => $transaction->status
+                            ],
+                            "msg" => 'Vaga paga com sucesso',
+                            
+                ]);
             }
-            if (env('PAGARME_LOGGER')){
+            if (env('PAGARME_LOGGER')) {
                 logger('retorno transcation');
                 logger($transaction);
             }
-            
-          if (env('PAGARME_DUMP') == 'retorn2')
-               dd($transaction);
-            return response()->json([
-                            'status'  => true,
-                            'error'  => false,
-                            'msg'=> $transaction ]);
+
+            if (env('PAGARME_DUMP') == 'retorn2')
+                dd($transaction);
         } catch (Exception $erros) {
             return response()->json(
                             [
