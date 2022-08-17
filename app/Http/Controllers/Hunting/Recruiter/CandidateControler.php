@@ -56,25 +56,25 @@ class CandidateControler extends Controller {
     }
 
     public function cv($id) {
-        $candidateHunting = CandidateHunting::find($id);
+        $candidateHunting = Candidate::find($id);
         if ($candidateHunting == null)
             return response()->json([
                         'status' => false,
                         'error' => true,
                         'msg' => 'Candidato não encontrado',
             ]);
-        return Storage::download($candidateHunting->cv_path);
+        return Storage::disk(env('APP_STORAGE_DOCS'))->download($candidateHunting->cv_path);
     }
 
     public function pcd_report($id) {
-        $candidateHunting = CandidateHunting::find($id);
+        $candidateHunting = Candidate::find($id);
         if ($candidateHunting == null)
             return response()->json([
                         'status' => false,
                         'error' => true,
                         'msg' => 'Candidato não encontrado',
             ]);
-        return Storage::download($candidateHunting->pcd_report);
+        return Storage::disk(env('APP_STORAGE_DOCS'))->download($candidateHunting->pcd_report);
     }
 
 }

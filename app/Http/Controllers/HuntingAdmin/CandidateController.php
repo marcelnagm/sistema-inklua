@@ -9,6 +9,7 @@ use App\Models\CandidateGender;
 use App\Models\CandidateRace;
 use App\Models\CandidateEnglishLevel;
 use App\Models\State;
+use App\Http\Controllers\Hunting\Recruiter\CandidateControler as RecruiterCandidateController;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -140,15 +141,12 @@ class CandidateController extends Controller {
     }
 
     public function cv($id) {
-        $candidateHunting = CandidateHunting::find($id);
 
-        return Storage::download($candidateHunting->cv_path);
+        return (new RecruiterCandidateController())->cv($id);
     }
 
-    public function pcd_report($id) {
-        $candidateHunting = CandidateHunting::find($id);
-
-        return Storage::download($candidateHunting->pcd_report);
+    public function pcd_report($id) {        
+        return (new RecruiterCandidateController())->pcd_report($id);
     }
 
     /**

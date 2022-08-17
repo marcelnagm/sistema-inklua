@@ -66,7 +66,7 @@ class HomeMyContentTest extends TestCaseComplex {
     private $data_vaga = [
         'title' => 'Repositor de mercadorias',
         'salary' => '1850.50',
-        'image' => 'https://inklua.com.br/2DCVQ4jDTGA5rp6uhD0xSi8Zw2q4cz7O1KjbuFp.jpg',
+        'image' => ' https://s3.sa-east-1.amazonaws.com/public.inklua/1.jpg',
         'state' => 'SC',
         'city' => 'Blumenau',
         'district' => 'Centro',
@@ -75,6 +75,9 @@ class HomeMyContentTest extends TestCaseComplex {
         'requirements' => 'Experiência mínima de 3 anos como repositor',
         'hours' => 'Seg à sex, da 08:30 às 17:30 hrs',
         'english_level' => '1',
+        'remote' => 1,
+        'presential' => 1,
+        'hybrid' => 1     ,  
         'observation' => 'O candidato não pode ter limitação de levantar peso.'
     ];
 
@@ -174,6 +177,8 @@ class HomeMyContentTest extends TestCaseComplex {
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["status"]);
         $this->display('Àprovação de Vaga --- ok!');
+        
+        $this->dados_vaga($id);
     }
 
     /**
@@ -234,6 +239,27 @@ class HomeMyContentTest extends TestCaseComplex {
         $this->assertArrayHasKey("status", $data);
         $this->assertEquals(1, $data["status"]);
         $this->display('Cancelamento de Vaga --- ok!');
+        
+        
+    }
+    /**
+     * @depends test_whoami
+     * @depends test_cadastrar_vaga
+     */
+    public function dados_vaga($id) {
+
+        $client = new Client();
+//        echo $this->jwt;
+        $headers = [
+            'Authorization' => 'Bearer ' . env('APP_JWT_RECRUTADOR')
+        ];
+//         $request = new Request('POST', url('/api/vaga/aprovar/'), $headers);
+        $response = $this->get(url("//api/minhas-vagas/$this->id"),[], $headers);
+        $data = $response->json();
+//        $this->display($data);
+        $this->assertArrayHasKey("content", $data['data']);
+        $this->assertEquals($id, $data["data"]['content']['id']);
+        $this->display('Dados de Vaga --- ok!');
     }
 
 }

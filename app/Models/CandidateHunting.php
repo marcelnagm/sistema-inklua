@@ -215,12 +215,15 @@ class CandidateHunting extends Model {
     }
 
     public function save_pcd_report($pcd_report, $ext) {
-
+//Storage::disk(env('APP_STORAGE_DOCS'))->put('avatars/1', $content);
         if ($pcd_report != null) {
-            if (Storage::exists("docs/$this->gid"))
-                Storage::makeDirectory("docs/$this->gid");
+            if (Storage::disk(env('APP_STORAGE_DOCS'))->exists("docs"))
+                Storage::disk(env('APP_STORAGE_DOCS'))->makeDirectory("docs");
+            
+            if (Storage::disk(env('APP_STORAGE_DOCS'))->exists("docs/$this->gid"))
+                Storage::disk(env('APP_STORAGE_DOCS'))->makeDirectory("docs/$this->gid");
 
-            Storage::disk('local')->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
+            Storage::disk(env('APP_STORAGE_DOCS'))->put("docs/$this->gid/pcd_report.$ext", base64_decode($pcd_report));
             $this->pcd_report = "docs/$this->gid/pcd_report.$ext";
         }
     }
@@ -228,10 +231,13 @@ class CandidateHunting extends Model {
     public function save_cv_path($cv_path, $ext) {
 
         if ($cv_path != null) {
-            if (Storage::exists("docs/$this->gid"))
-                Storage::makeDirectory("docs/$this->gid");
+            if (Storage::disk(env('APP_STORAGE_DOCS'))->exists("docs"))
+                Storage::disk(env('APP_STORAGE_DOCS'))->makeDirectory("docs");
+            
+            if (Storage::disk(env('APP_STORAGE_DOCS'))->exists("docs/$this->gid"))
+                Storage::disk(env('APP_STORAGE_DOCS'))->makeDirectory("docs/$this->gid");
 
-            Storage::disk('local')->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
+            Storage::disk(env('APP_STORAGE_DOCS'))->put("docs/$this->gid/cv.$ext", base64_decode($cv_path));
             $this->cv_path = "docs/$this->gid/cv.$ext";
         }
     }

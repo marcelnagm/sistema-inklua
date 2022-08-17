@@ -14,11 +14,6 @@ use App\Models\User;
 
 class HomeTest extends TestCaseComplex {
 
-    function display($myvar) {
-
-        fwrite(STDERR, print_r($myvar));
-    }
-
     private $host;
     private $email;
 
