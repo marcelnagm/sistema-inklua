@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 
 class Transaction extends Model {
 
@@ -89,37 +90,37 @@ class Transaction extends Model {
             "customer" => $customer,
             "payments" => $payments,
         ];
-//        $client = new \GuzzleHttp\Client();
-//
-//        $response = $client->request('POST', 'https://api.pagar.me/core/v5/orders/', [
-//            'body' => json_encode($body),
-//            'headers' => [
-//                'Accept' => 'application/json',
-//                'Authorization' => 'Basic '. base64_encode(env('PAGARME_API_TEST_KEY')),
-//                'Content-Type' => 'application/json',
-//            ],
-//        ]);
+        $client = new Client();
 
-//        echo $response->getBody();
-        $curl = $this->getCurl();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "$this->PUBLIC_URI/orders/",
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($body),
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_CONNECTTIMEOUT => 500,
-            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_SSL_VERIFYHOST => 2
+        $response = $client->request('POST', 'https://api.pagar.me/core/v5/orders/', [
+            'body' => json_encode($body),
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic '. base64_encode(env('PAGARME_API_TEST_KEY')),
+                'Content-Type' => 'application/json',
+            ],
         ]);
 
-//        $response = $response->getBody();
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-          if (env('PAGARME_LOGGER')) {
-                logger('erro CURL !!!!');
-                logger($err);
-            }
-        curl_close($curl);
+//        echo $response->getBody();
+//        $curl = $this->getCurl();
+//        curl_setopt_array($curl, [
+//            CURLOPT_URL => "$this->PUBLIC_URI/orders/",
+//            CURLOPT_CUSTOMREQUEST => "POST",
+//            CURLOPT_POSTFIELDS => json_encode($body),
+//            CURLOPT_RETURNTRANSFER => 1,
+//            CURLOPT_CONNECTTIMEOUT => 500,
+//            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+//            CURLOPT_SSL_VERIFYHOST => 2
+//        ]);
+
+        $response = $response->getBody();
+//        $response = curl_exec($curl);
+//        $err = curl_error($curl);
+//          if (env('PAGARME_LOGGER')) {
+//                logger('erro CURL !!!!');
+//                logger($err);
+//            }
+//        curl_close($curl);
 
         return $response;
     }
