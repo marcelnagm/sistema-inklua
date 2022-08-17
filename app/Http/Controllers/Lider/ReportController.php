@@ -337,10 +337,10 @@ class ReportController extends Controller {
     public function filtersUsers(Request $request, $vagas) {
 
             if ($request->exists('recruiter')) {
-                $vagas = $vagas->whereRaw('user_id in (select id as id from users where users.name like ?  or users.lastname like ?)', array('%' . $request->input('recruiter') . '%', '%' . $request->input('recruiter') . '%'));
+                $vagas = $vagas->whereRaw('user_id in (select user_id as id from inklua_users where  active =? and user_id in (select id as id from users where users.name like ?  or users.lastname like ?))', array($request->input('active',1),'%' . $request->input('recruiter') . '%', '%' . $request->input('recruiter') . '%'));
             }         
             if ($request->exists('office')) {
-                $vagas = $vagas->whereRaw('user_id in (select user_id as id from inklua_users where office_id = ?)', array($request->input('office')));
+                $vagas = $vagas->whereRaw('user_id in (select user_id as id from inklua_users where office_id = ? and active=?)', array($request->input('office'),$request->input('active',1)));
             }
         
         $vagas = $vagas->orderby('created_at', $request->input('ordering_rule', 'ASC'));
