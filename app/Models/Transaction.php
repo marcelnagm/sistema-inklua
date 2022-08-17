@@ -109,7 +109,7 @@ class Transaction extends Model {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_CONNECTTIMEOUT => 500,
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_SSL_VERIFYHOST => 1
+            CURLOPT_SSL_VERIFYHOST => 2
         ]);
 
 //        $response = $response->getBody();
