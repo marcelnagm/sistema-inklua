@@ -74,6 +74,8 @@ class TransactionController extends Controller {
             }
             if (env('PAGARME_LOGGER'))
                 logger($transaction);
+            if (env('PAGARME_DUMP'))
+                dd($pagarme);
             return response()->json([
                             'status'  => false,
                             'error'  => true,
