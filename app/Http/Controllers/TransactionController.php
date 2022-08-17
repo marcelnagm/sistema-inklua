@@ -54,8 +54,8 @@ class TransactionController extends Controller {
         $transaction = Transaction::create([
                     'content_id' => $position->id,
         ]);
-
-        try {
+        
+//        try {
 
             $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments()), true);
             if (env('PAGARME_DUMP') == 'retorn1')
@@ -96,16 +96,16 @@ class TransactionController extends Controller {
 
             if (env('PAGARME_DUMP') == 'retorn2')
                 dd($transaction);
-        } catch (Exception $erros) {
-            return response()->json(
-                            [
-                                'status' => false,
-                                'error' => true,
-                                "code" => "MESSAGE_NOT_SENT",
-                                "errors" => $pagarme
-                            ]
-            );
-        }
+//        } catch (Exception $erros) {
+//            return response()->json(
+//                            [
+//                                'status' => false,
+//                                'error' => true,
+//                                "code" => "MESSAGE_NOT_SENT",
+//                                "errors" => $pagarme
+//                            ]
+//            );
+//        }
     }
 
     public function order() {
