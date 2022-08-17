@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
-class Transaction extends Model
-{
+class Transaction extends Model {
+
     use HasFactory;
-    
+
     protected $fillable = [
         'content_id',
         'order_id',
@@ -28,23 +28,22 @@ class Transaction extends Model
         'due_date',
         'url',
     ];
-
     private $PUBLIC_URI = 'https://api.pagar.me/core/v5';
 
-    public function content(){
+    public function content() {
         return $this->belongsTo(\App\Models\Content::class);
     }
 
-    public function auth(){
+    public function auth() {
         $SECRET_KEY = env('PAGARME_API_TEST_KEY');
 
         return [
-            "Authorization: Basic ". base64_encode("$SECRET_KEY:"),      
+            "Authorization: Basic " . base64_encode("$SECRET_KEY:"),
             "Content-Type: application/json"
         ];
     }
 
-    public function getCurl(){
+    public function getCurl() {
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_RETURNTRANSFER => true,
@@ -53,29 +52,28 @@ class Transaction extends Model
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_HTTPHEADER => $this->auth(),
-            CURLOPT_USERPWD =>  env('PAGARME_API_TEST_KEY') . ":" .  env('PAGARME_API_TEST_PASSWRD'),
+            CURLOPT_USERPWD => env('PAGARME_API_TEST_KEY') . ":" . env('PAGARME_API_TEST_PASSWRD'),
         ]);
 
         return $curl;
     }
 
-    public function getOrder(){
+    public function getOrder() {
         $curl = $this->getCurl();
-        curl_setopt_array($curl,[
+        curl_setopt_array($curl, [
             CURLOPT_URL => "$this->PUBLIC_URI/charges/$this->charges_id",
             CURLOPT_CUSTOMREQUEST => "GET",
         ]);
-        
+
         $response = curl_exec($curl);
         $err = curl_error($curl);
-        
+
         curl_close($curl);
 
         return $response;
     }
 
-
-    public function createOrder($customer, $payments){
+    public function createOrder($customer, $payments) {
 
         $curl = curl_init();
 
@@ -91,38 +89,53 @@ class Transaction extends Model
             "customer" => $customer,
             "payments" => $payments,
         ];
+//        $client = new \GuzzleHttp\Client();
+//
+//        $response = $client->request('POST', 'https://api.pagar.me/core/v5/orders/', [
+//            'body' => json_encode($body),
+//            'headers' => [
+//                'Accept' => 'application/json',
+//                'Authorization' => 'Basic '. base64_encode(env('PAGARME_API_TEST_KEY')),
+//                'Content-Type' => 'application/json',
+//            ],
+//        ]);
 
+//        echo $response->getBody();
         $curl = $this->getCurl();
-        curl_setopt_array($curl,[
+        curl_setopt_array($curl, [
             CURLOPT_URL => "$this->PUBLIC_URI/orders/",
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($body),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_CONNECTTIMEOUT => 500,
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_SSL_VERIFYHOST => 0
+            CURLOPT_SSL_VERIFYHOST => 1
         ]);
-        
+
+//        $response = $response->getBody();
         $response = curl_exec($curl);
         $err = curl_error($curl);
-        
+          if (env('PAGARME_LOGGER')) {
+                logger('erro CURL !!!!');
+                logger($err);
+            }
         curl_close($curl);
 
         return $response;
     }
 
-    public static function getAddress(){
+    public static function getAddress() {
         return [
-            "line_1" => request()->input('customer_address_line_1','1400, Av. Gal. Carneiro'),
-            "line_2" => request()->input('customer_address_line_2','18043003'),
-            "zip_code" => request()->input('customer_address_zip_code','18043003'),
-            "city" => request()->input('customer_address_city','São Paulo'),
-            "state" => request()->input('customer_address_state','SP'),
-            "country" => request()->input('customer_address_country','BR'),
+            "line_1" => request()->input('customer_address_line_1', '1400, Av. Gal. Carneiro'),
+            "line_2" => request()->input('customer_address_line_2', '18043003'),
+            "zip_code" => request()->input('customer_address_zip_code', '18043003'),
+            "city" => request()->input('customer_address_city', 'São Paulo'),
+            "state" => request()->input('customer_address_state', 'SP'),
+            "country" => request()->input('customer_address_country', 'BR'),
         ];
     }
 
-    public static function getCustomer($user){
+    public static function getCustomer($user) {
         return [
             "name" => $user->name,
             "email" => $user->email,
@@ -131,18 +144,17 @@ class Transaction extends Model
             "document_type" => request()->input('customer_document_type'),
             "phones" => [
                 "home_phone" => [
-                    "country_code" => request()->input('customer_phone_country_code','55'),
-                    "area_code" => request()->input('customer_phone_area_code','55'),
-                    "number" => request()->input('customer_phone_number','1155323232')
+                    "country_code" => request()->input('customer_phone_country_code', '55'),
+                    "area_code" => request()->input('customer_phone_area_code', '55'),
+                    "number" => request()->input('customer_phone_number', '1155323232')
                 ]
             ],
             "address" => Transaction::getAddress()
-            
         ];
     }
 
     public static function getPayments() {
-        if(request()->input('payment_method') == 'credit_card') {
+        if (request()->input('payment_method') == 'credit_card') {
             $payment_method = [
                 "recurrence" => false,
                 "installments" => 1,
@@ -153,13 +165,12 @@ class Transaction extends Model
                     "exp_month" => request()->input('card_exp_month'),
                     "exp_year" => request()->input('card_exp_year'),
                     "cvv" => request()->input('card_cvv'),
-                    "billing_address" =>  Transaction::getAddress()
+                    "billing_address" => Transaction::getAddress()
                 ]
             ];
-
-        }else {
+        } else {
             $due_date = Carbon::now()->addDays(5)->toISOString();
-            $payment_method = [ 
+            $payment_method = [
                 "instructions" => "Pagar até o vencimento",
                 "due_at" => $due_date,
                 "document_number" => uniqid(),
@@ -189,11 +200,11 @@ class Transaction extends Model
             'charge_status' => $pagarme['charges'][0]['status'],
         ];
 
-        if($data['payment_method'] == 'credit_card' && isset($pagarme['charges'][0]['paid_at'])) {
+        if ($data['payment_method'] == 'credit_card' && isset($pagarme['charges'][0]['paid_at'])) {
             $data['paid_at'] = $pagarme['charges'][0]['paid_at'];
         }
-        
-        if($data['payment_method'] == 'boleto') {
+
+        if ($data['payment_method'] == 'boleto') {
             $data['document_number'] = $pagarme['charges'][0]['last_transaction']['document_number'];
             $data['due_date'] = Carbon::parse($pagarme['charges'][0]['last_transaction']['due_at']);
             $data['url'] = $pagarme['charges'][0]['last_transaction']['url'];
@@ -201,4 +212,5 @@ class Transaction extends Model
 
         $this->update($data);
     }
+
 }
