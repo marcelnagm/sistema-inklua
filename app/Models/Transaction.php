@@ -39,9 +39,8 @@ class Transaction extends Model
         $SECRET_KEY = env('PAGARME_API_TEST_KEY');
 
         return [
-            "Authorization: Basic ". base64_encode("$SECRET_KEY:"),
-            "Accept: application/json",
-            "Content-Type: text/plain"
+            "Authorization: Basic ". base64_encode("$SECRET_KEY:"),      
+            "Content-Type: application/json"
         ];
     }
 
@@ -54,6 +53,7 @@ class Transaction extends Model
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_HTTPHEADER => $this->auth(),
+            CURLOPT_USERPWD =>  env('PAGARME_API_TEST_KEY') . ":" .  env('PAGARME_API_TEST_PASSWRD'),
         ]);
 
         return $curl;
