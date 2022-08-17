@@ -97,6 +97,10 @@ class Transaction extends Model
             CURLOPT_URL => "$this->PUBLIC_URI/orders/",
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($body),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_CONNECTTIMEOUT => 500,
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_SSL_VERIFYHOST => 0
         ]);
         
         $response = curl_exec($curl);

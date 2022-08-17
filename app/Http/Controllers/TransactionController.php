@@ -76,7 +76,7 @@ class TransactionController extends Controller {
 
             if ($transaction->status == 'paid') {
                 $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
-                $position->notifyPositionPublished();
+//                $position->notifyPositionPublished();
 
                 return response()->json([
                             'error' => false,
