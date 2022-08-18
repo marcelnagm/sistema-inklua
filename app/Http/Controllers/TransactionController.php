@@ -62,7 +62,10 @@ class TransactionController extends Controller {
 
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
         logger('passo6');
-//        $transaction->updateFromGateway($pagarme);
+        
+        $transaction->updateFromGateway($pagarme);
+        logger($pagarme);
+        logger($transaction);
         logger('passo7');
         if ($transaction->status == 'paid') {
             $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
