@@ -23,14 +23,14 @@ class TransactionController extends Controller {
 
         $transaction = Transaction::where('content_id', $request->input('content_id'))
                 ->where('status', 'paid');
-logger('passo1');
+        logger('passo1');
         if ($transaction->count() > 0)
             return response()->json([
                         'error' => true,
                         'status' => false,
                         "msg" => 'A vaga já se encontra paga'
             ]);
-logger('passo2');
+        logger('passo2');
         $position = Content::where('id', $request->input('content_id'))
                 ->where('type', 1)
                 ->whereNotNull('user_id')
@@ -43,9 +43,9 @@ logger('passo2');
                         'status' => false,
                         "error" => 'Vaga não encontrada.']);
         }
-logger('passo3');
+        logger('passo3');
         if ($position->status != 'aguardando_pagamento') {
-logger('passo4');
+            logger('passo4');
             return response()->json([
                         "msg" => 'Vaga encontrada mas o status da vaga é: ' . $position->status,
                         'error' => true,
@@ -57,17 +57,17 @@ logger('passo4');
         $transaction = Transaction::create([
                     'content_id' => $position->id,
         ]);
-logger('passo5');
+        logger('passo5');
 //        try {
 
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
-logger('passo6');      
-        $transaction->updateFromGateway($pagarme);
-logger('passo7');
+        logger('passo6');
+//        $transaction->updateFromGateway($pagarme);
+        logger('passo7');
         if ($transaction->status == 'paid') {
             $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
 //                $position->notifyPositionPublished();
-logger('passo8');
+            logger('passo8');
             return response()->json([
                         'error' => false,
                         'status' => true,
@@ -78,7 +78,7 @@ logger('passo8');
                         "msg" => 'Vaga paga com sucesso',
             ]);
         }
-     
+
         logger('passo9');
         return response()->json([
                     
@@ -91,7 +91,7 @@ logger('passo8');
                     ],
                     "msg" => 'Boleto gerado com sucesso',
         ],200);
-logger('passo10');
+        logger('passo10');
         if (env('PAGARME_DUMP') == 'retorn2')
             dd($transaction);
 //        } catch (Exception $erros) {
