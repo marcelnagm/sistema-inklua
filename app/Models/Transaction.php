@@ -195,7 +195,7 @@ class Transaction extends Model {
             'order_id' => $pagarme['id'],
             'customer_id' => $pagarme['customer']['id'],
             'charges_id' => $pagarme['charges'][0]['id'],
-            'code' => $pagarme['code'],
+            '   code' => $pagarme['code'],
             'payment_method' => $pagarme['charges'][0]['payment_method'],
             'amount' => $pagarme['amount'],
             'customer_delinquent' => $pagarme['customer']['delinquent'],
@@ -214,7 +214,7 @@ class Transaction extends Model {
             $data['url'] = $pagarme['charges'][0]['last_transaction']['url'];
         }
 
-        $this->update($data);
+        $this->updateQuietly($data);
     }
 
 }
