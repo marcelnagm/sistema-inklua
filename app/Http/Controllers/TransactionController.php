@@ -90,7 +90,7 @@ logger('passo8');
                         'pagarme' => $pagarme
                     ],
                     "msg" => 'Boleto gerado com sucesso',
-        ]);
+        ],200);
 logger('passo10');
         if (env('PAGARME_DUMP') == 'retorn2')
             dd($transaction);
