@@ -81,9 +81,7 @@ class TransactionController extends Controller {
         logger('passo9');
         return response()->json([
                     'error' => false,
-                    'data' => [
-                        'content_id' => $position->id,
-                        'status' => $transaction->status,
+                    'data' => [                        
                         'url' => $transaction->url,
                         'pagarme' => $pagarme
                     ],
