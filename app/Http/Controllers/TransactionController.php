@@ -61,23 +61,7 @@ class TransactionController extends Controller {
 //        try {
 
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
-        if (!isset($pagarme["id"])) {
-            return response()->json($pagarme);
-        }
-        if (env('PAGARME_DUMP') == 'retorn1')
-            dd($pagarme);
-
-        if (env('PAGARME_LOGGER')) {
-            logger('Pagame retorno');
-            logger($pagarme);
-        }
-
-        if (!isset($pagarme["id"])) {
-            return response()->json([
-                        'status' => false,
-                        'error' => true,
-                        'msg' => $pagarme]);
-        }
+      
         $transaction->updateFromGateway($pagarme);
 
         if ($transaction->status == 'paid') {
@@ -94,10 +78,7 @@ class TransactionController extends Controller {
                         "msg" => 'Vaga paga com sucesso',
             ]);
         }
-        if (env('PAGARME_LOGGER')) {
-            logger('retorno transcation');
-            logger($transaction);
-        }
+     
 
         return response()->json([
                     'error' => false,
