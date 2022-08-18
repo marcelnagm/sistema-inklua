@@ -82,7 +82,7 @@ class TransactionController extends Controller {
                         "msg" => 'Vaga paga com sucesso',
             ]);
         }
-
+     $transaction->updateFromGateway($pagarme);
         logger('passo9');
         return response()->json([
                     
