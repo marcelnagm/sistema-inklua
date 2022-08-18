@@ -72,10 +72,7 @@ class TransactionController extends Controller {
 //                $position->notifyPositionPublished();
             logger('passo8');
             return response()->json([
-                        'error' => false,
-                        'status' => true,
-                        'content_id' => $position->id,
-                        'status' => $transaction->status,
+                        'error' => false,                       
                         'pagarme' => $pagarme,
                         "msg" => 'pago Com com sucesso',
                             ], 200);
