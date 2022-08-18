@@ -63,11 +63,12 @@ class TransactionController extends Controller {
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
         logger('passo6');
         
-        $transaction->updateFromGateway($pagarme);
+       
         logger($pagarme);
         logger($transaction);
         logger('passo7');
-        if ($transaction->status == 'paid') {
+        if ($pagarme['status'] == 'paid') {
+             $transaction->updateFromGateway($pagarme);
             $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
 //                $position->notifyPositionPublished();
             logger('passo8');
@@ -90,6 +91,7 @@ class TransactionController extends Controller {
                     'data' => [
                         'content_id' => $position->id,
                         'status' => $transaction->status,
+                        'url' => $transaction->url,
                         'pagarme' => $pagarme
                     ],
                     "msg" => 'Boleto gerado com sucesso',
