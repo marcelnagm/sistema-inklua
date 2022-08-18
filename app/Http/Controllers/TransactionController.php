@@ -60,10 +60,10 @@ class TransactionController extends Controller {
 
 //        try {
 
-        $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(),$user,$position), true);
-         if(!isset($pagarme["id"])){
-                return response()->json($pagarme);
-            }
+        $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
+        if (!isset($pagarme["id"])) {
+            return response()->json($pagarme);
+        }
         if (env('PAGARME_DUMP') == 'retorn1')
             dd($pagarme);
 
@@ -99,17 +99,17 @@ class TransactionController extends Controller {
             logger($transaction);
         }
 
-          return response()->json([
-                        'error' => false,
-                        'status' => true,
-                        'data' => [
-                            'content_id' => $position->id,
-                            'status' => $transaction->status,
-                  'pagarme' => $pagarme
-                        ],
-                        "msg" => 'Boleto gerado com sucesso',
-            ]);
-        
+        return response()->json([
+                    'error' => false,
+                    'status' => true,
+                    'data' => [
+                        'content_id' => $position->id,
+                        'status' => $transaction->status,
+                        'pagarme' => $pagarme
+                    ],
+                    "msg" => 'Boleto gerado com sucesso',
+        ]);
+
         if (env('PAGARME_DUMP') == 'retorn2')
             dd($transaction);
 //        } catch (Exception $erros) {
@@ -127,6 +127,27 @@ class TransactionController extends Controller {
     public function order() {
         BoletoVerify::dispatch();
         return;
+    }
+
+    public function paid(Request $request) {
+        $transaction = Transaction::where('content_id', $request->input('content_id'))
+                ->where('status', 'paid');
+
+        if ($transaction->count() > 0) {
+            return response()->json([
+                        'error' => false,
+                        'status' => true,
+                        'paid' => true,
+                        "msg" => 'Vaga Paga'
+            ]);
+        } else {
+            return response()->json([
+                        'error' => true,
+                        'status' => false,
+                        'paid' => false,
+                        "msg" => 'Vaga Pendente'
+            ]);
+        }
     }
 
 }

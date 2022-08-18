@@ -82,6 +82,7 @@ Route::get('/minhas-vagas/details/{id}', [MyContentController::class, 'details']
 Route::post('/contato', [ApiController::class, 'contact']);
 
 Route::post('/transaction', [TransactionController::class, 'create']);
+Route::get('/transaction/order/paid', [TransactionController::class, 'paid']);
 Route::get('/transaction/order', [TransactionController::class, 'order']);
 
 use App\Http\Middleware\checkUserInkluer;
