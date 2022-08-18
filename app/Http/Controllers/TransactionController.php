@@ -63,8 +63,8 @@ class TransactionController extends Controller {
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
         logger('passo6');
 
-        logger($pagarme);
-        logger($transaction);
+//        logger($pagarme);
+//        logger($transaction);
         logger('passo7');
         if ($pagarme['status'] == 'paid') {
             $transaction->updateFromGateway($pagarme);
@@ -74,11 +74,9 @@ class TransactionController extends Controller {
             return response()->json([
                         'error' => false,
                         'status' => true,
-                        'data' => [
-                            'content_id' => $position->id,
-                            'status' => $transaction->status,
-                            'pagarme' => $pagarme
-                        ],
+                        'content_id' => $position->id,
+                        'status' => $transaction->status,
+                        'pagarme' => $pagarme,
                         "msg" => 'pago Com com sucesso',
                             ], 200);
         }
@@ -86,7 +84,6 @@ class TransactionController extends Controller {
         logger('passo9');
         return response()->json([
                     'error' => false,
-                    'status' => true,
                     'data' => [
                         'content_id' => $position->id,
                         'status' => $transaction->status,
