@@ -193,15 +193,15 @@ class Transaction extends Model {
     public function updateFromGateway($pagarme) {
         $data = [
             'order_id' => $pagarme['id'],
-            'customer_id' => $pagarme['customer']['id'],
-            'charges_id' => $pagarme['charges'][0]['id'],
-            '   code' => $pagarme['code'],
+//            'customer_id' => $pagarme['customer']['id'],
+//            'charges_id' => $pagarme['charges'][0]['id'],
+//            '   code' => $pagarme['code'],
             'payment_method' => $pagarme['charges'][0]['payment_method'],
             'amount' => $pagarme['amount'],
-            'customer_delinquent' => $pagarme['customer']['delinquent'],
+//            'customer_delinquent' => $pagarme['customer']['delinquent'],
             'status' => $pagarme['status'],
             'closed' => $pagarme['closed'],
-            'charge_status' => $pagarme['charges'][0]['status'],
+//            'charge_status' => $pagarme['charges'][0]['status'],
         ];
 
         if ($data['payment_method'] == 'credit_card' && isset($pagarme['charges'][0]['paid_at'])) {
