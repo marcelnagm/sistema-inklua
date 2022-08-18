@@ -96,7 +96,7 @@ class Transaction extends Model {
             'body' => json_encode($body),
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic '. base64_encode(env('PAGARME_API_TEST_KEY')),
+                'Authorization' => 'Basic '. base64_encode(env('PAGARME_API_TEST_KEY').":"),
                 'Content-Type' => 'application/json',
             ],
         ]);
