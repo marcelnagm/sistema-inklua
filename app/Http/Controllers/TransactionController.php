@@ -8,6 +8,7 @@ use App\Models\Content;
 use App\Jobs\BoletoVerify;
 use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Log\Logger;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller {
 
@@ -16,7 +17,9 @@ class TransactionController extends Controller {
     }
 
     public function create(Request $request) {
-        $user = $request->user();
+        $user = Auth::user();
+        if ($user == null)
+            $user = auth()->guard('api')->user();
 
         $transaction = Transaction::where('content_id', $request->input('content_id'))
                 ->where('status', 'paid');
@@ -54,48 +57,47 @@ class TransactionController extends Controller {
         $transaction = Transaction::create([
                     'content_id' => $position->id,
         ]);
-        
+
 //        try {
 
-            $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments()), true);
-            if (env('PAGARME_DUMP') == 'retorn1')
-                dd($pagarme);
+        $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(),$user,$position), true);
+        if (env('PAGARME_DUMP') == 'retorn1')
+            dd($pagarme);
 
-            if (env('PAGARME_LOGGER')) {
-                logger('Pagame retorno');
-                logger($pagarme);
-            }
+        if (env('PAGARME_LOGGER')) {
+            logger('Pagame retorno');
+            logger($pagarme);
+        }
 
-            if (!isset($pagarme["id"])) {
-                return response()->json([
-                            'status' => false,
-                            'error' => true,
-                            'msg' => $pagarme]);
-            }
-            $transaction->updateFromGateway($pagarme);
+        if (!isset($pagarme["id"])) {
+            return response()->json([
+                        'status' => false,
+                        'error' => true,
+                        'msg' => $pagarme]);
+        }
+        $transaction->updateFromGateway($pagarme);
 
-            if ($transaction->status == 'paid') {
-                $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
+        if ($transaction->status == 'paid') {
+            $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
 //                $position->notifyPositionPublished();
 
-                return response()->json([
-                            'error' => false,
-                            'status' => true,
-                            'data' => [
-                                'content_id' => $position->id,
-                                'status' => $transaction->status
-                            ],
-                            "msg" => 'Vaga paga com sucesso',
-                            
-                ]);
-            }
-            if (env('PAGARME_LOGGER')) {
-                logger('retorno transcation');
-                logger($transaction);
-            }
+            return response()->json([
+                        'error' => false,
+                        'status' => true,
+                        'data' => [
+                            'content_id' => $position->id,
+                            'status' => $transaction->status
+                        ],
+                        "msg" => 'Vaga paga com sucesso',
+            ]);
+        }
+        if (env('PAGARME_LOGGER')) {
+            logger('retorno transcation');
+            logger($transaction);
+        }
 
-            if (env('PAGARME_DUMP') == 'retorn2')
-                dd($transaction);
+        if (env('PAGARME_DUMP') == 'retorn2')
+            dd($transaction);
 //        } catch (Exception $erros) {
 //            return response()->json(
 //                            [

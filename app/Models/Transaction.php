@@ -74,17 +74,19 @@ class Transaction extends Model {
         return $response;
     }
 
-    public function createOrder($customer, $payments) {
+    public function createOrder($customer, $payments,$user,$position) {
 
         $curl = curl_init();
 
         $body = [
+//            'customer_id' => $user->id,
             "items" => [
                 [
                     "code" => 'vaga',
                     "amount" => env('APP_VALUE_AMOUNT_CONTENT'),
                     "description" => "Anúncio de vaga Inklua",
-                    "quantity" => 1
+                    "quantity" => 1,
+                    "code" => $position->id
                 ]
             ],
             "customer" => $customer,
@@ -161,6 +163,7 @@ class Transaction extends Model {
                 "installments" => 1,
                 "statement_descriptor" => "Inklua",
                 "card" => [
+                    "operation_type" => 'auth_and_capture',
                     "number" => request()->input('card_number'),
                     "holder_name" => request()->input('card_holder_name'),
                     "exp_month" => request()->input('card_exp_month'),
