@@ -61,6 +61,9 @@ class TransactionController extends Controller {
 //        try {
 
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(),$user,$position), true);
+         if(!isset($pagarme["id"])){
+                return response()->json($pagarme);
+            }
         if (env('PAGARME_DUMP') == 'retorn1')
             dd($pagarme);
 
@@ -96,6 +99,17 @@ class TransactionController extends Controller {
             logger($transaction);
         }
 
+          return response()->json([
+                        'error' => false,
+                        'status' => true,
+                        'data' => [
+                            'content_id' => $position->id,
+                            'status' => $transaction->status,
+                  'pagarme' => $pagarme
+                        ],
+                        "msg" => 'Boleto gerado com sucesso',
+            ]);
+        
         if (env('PAGARME_DUMP') == 'retorn2')
             dd($transaction);
 //        } catch (Exception $erros) {
