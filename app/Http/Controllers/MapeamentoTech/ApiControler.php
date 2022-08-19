@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class ApiControler extends Controller {
 
@@ -69,9 +70,13 @@ class ApiControler extends Controller {
         
 //        dd($data);
 
-
+        try{
         $cand->save();
-
+        }catch(QueryException $x){
+          $cand->regenerate();  
+//          dd($cand->gid);
+          $cand->save();
+        }
         return response()->json([
                     'status' => true,
                     'msg' => 'Candidadte successfully added!',

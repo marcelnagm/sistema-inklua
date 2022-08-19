@@ -106,7 +106,7 @@ class Candidate extends Model {
 
     public function __construct($param = null) {
         if ($param == null) {
-            $this->gid = md5(random_int(1, 125) * time() . Str::random(20));
+            $this->gid = md5(random_int(1, 125) * time() . Str::random(20));            
             $this->status_id = 3;
             parent::__construct();
         } else {
@@ -114,6 +114,10 @@ class Candidate extends Model {
         }
     }
 
+    public function regenerate() {
+            $this->gid = md5(random_int(1, 125) * time() . Str::random(20));
+    }
+    
     public function role() {
         return CandidateRole::find($this->role_id);
     }
