@@ -99,6 +99,21 @@ class User extends Authenticatable implements MustVerifyEmail {
         return $this->name . ' ' . $this->lastname;
     }
 
+    public function first_position($debug = false) {
+        if ($debug)
+            dd($this->checkExistenceOfPositionByCnpj(), $this->contents()
+                            ->whereIn('status', array('cancelada', 'expirada', 'publicada', 'fechada', 'reposicao'))
+                            ->count());
+        if ($this->checkExistenceOfPositionByCnpj() &&
+                        $this->contents()
+                        ->whereIn('status', array('cancelada', 'expirada', 'publicada', 'fechada', 'reposicao'))
+                        ->count() <= 1) {
+
+            return true;
+        } else
+            return false;
+    }
+
     public function contents() {
         return $this->hasMany(Content::class);
     }
@@ -149,7 +164,6 @@ class User extends Authenticatable implements MustVerifyEmail {
         });
     }
 
-    
     public function getMyContents($search = FALSE, $status = FALSE) {
 
         $searchEscaped = addslashes($search);

@@ -77,8 +77,7 @@ class Content extends Model {
         "fechada",
         "cancelada"
     );
-    
-     static $sendable = [
+    static $sendable = [
         'title',
         'salary',
         'contract_type',
@@ -97,7 +96,6 @@ class Content extends Model {
         'remote',
         'hybrid',
         'presential'
-       
     ];
 
     public static function boot() {
@@ -148,7 +146,7 @@ class Content extends Model {
 
     public static function getRandomImage() {
         $img = random_int(1, 16);
-        return url(env('APP_URL_IMAGES'). "{$img}.webp");
+        return url(env('APP_URL_IMAGES') . "{$img}.webp");
     }
 
     /**
@@ -214,13 +212,13 @@ class Content extends Model {
                 ->orderBy('row_n')
                 ->orderBy('order_type')
                 ->orderBy('ordenation')
-               
+
         ;
-if( request()->exists('debug'))
-    \App\Http\Controllers\Controller::displayQuery($content);
-        
+        if (request()->exists('debug'))
+            \App\Http\Controllers\Controller::displayQuery($content);
+
 // $content->data = Content::hideFields($content);
-        return $content ->paginate(12);
+        return $content->paginate(12);
     }
 
     public static function hideFields($data) {
@@ -707,11 +705,12 @@ if( request()->exists('debug'))
         $data = parent::toArray();
         if (isset($data['salary']))
             $data['salary'] = floatval($data['salary']);
-    if ($this->type == 1 || $this->type == 'position'){
+        if ($this->type == 1 || $this->type == 'position') {
             $data['subscribers'] = $this->getLikesCount();
             $data['company'] = $this->company();
-            $data['image'] = Content::getRandomImage();
-    }
+            if ($data['image'] == null)
+                $data['image'] = Content::getRandomImage();
+        }   
         return $data;
     }
 

@@ -138,7 +138,8 @@ class MyContentController extends Controller {
 
         return response()->json([
                     'existContentForCNPJ' => $user->checkExistenceOfPositionByCnpj(),
-                    'contentsFromUser' => $user->contents()->count()
+                    'contentsFromUser' => $user->contents()->count(),
+                    'firstContent' => $user->first_position()
         ]);
     }
 
