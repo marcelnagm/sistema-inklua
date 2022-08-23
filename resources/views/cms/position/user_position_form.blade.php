@@ -340,11 +340,50 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-row mb-3">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="recruiter" class="form-label">{{ __('Nome da Empresa') }}</label>
+                                    <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter" value="{{  $position->user() !== null ? $position->user()->first()->fantasy_name : 'Nao definido' }}"  readonly>
+                                    @error('ordenation')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="recruiter" class="form-label">{{ __('CNPJ') }}</label>
+                                    <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter_email" value="{{  $position->user()!== null   ? $position->user()->first()->corporate_name : 'Nao definido' }}"  readonly>
+                                    @error('ordenation')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="recruiter" class="form-label">{{ __('Email do Recrutador') }}</label>
+                                    <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter_email" value="{{  $position->user()!== null   ? $position->user()->first()->cnpj : 'Nao definido' }}"  readonly>
+                                    @error('ordenation')
+                                    <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                              <div class="form-row mb-3">
+ <<div class=" col-lg-7 mb-3">
+                            <div class="form-group ">
+                                {{ Form::label('Já foi encaminhado parta o faturamento') }}
+                                <input type="hidden" name="billed" value="0">
+                                <input name="billed" type="checkbox" class="" @if($position->billed==1) checked @endif value="1">                        
+                                {!! $errors->first('remote', '<div class="invalid-feedback">:message</div>') !!}
+                            </div>
+                        </div>
+                        </div>
+                        
                         <div class="form-row mb-3">
                             <div class="col-lg-9">
                                 <div class="form-group">
-                                    <label for="status" class="form-label">{{ __('Status: ') }}</label>
+                                    <label for="status" class="form-label">{{ __('Status: ') }} @if($position->user_obj()->first_position())Essa é a primeira vaga do CNPJ @endif </label>
                                     {!! $position->getStatusName() !!}
                                     <select name="status" class="form-control"         >
                                         @foreach ($status as $key => $value)

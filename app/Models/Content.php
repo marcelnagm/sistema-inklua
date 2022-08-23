@@ -34,6 +34,7 @@ class Content extends Model {
         'presential',
         'hybrid',
         'status',
+        'billed',
         'published_at',
         'observation',
         'url',
@@ -95,7 +96,8 @@ class Content extends Model {
         'observation',
         'remote',
         'hybrid',
-        'presential'
+        'presential',
+        'billed'
     ];
 
     public static function boot() {

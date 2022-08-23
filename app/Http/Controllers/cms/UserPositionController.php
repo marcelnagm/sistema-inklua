@@ -92,7 +92,7 @@ class UserPositionController extends Controller {
         $data = $request->except([
             'image'
         ]);
-//dd( $data['status']);
+//dd( $data['billed']);
 //        if($position->status == 'aguardando_aprovacao') {
 //            if($request->input('status') == 'publicada') {
 //                $positionOwner = $position->user;
@@ -113,6 +113,7 @@ class UserPositionController extends Controller {
 //        }else {
         $position->update($data);
 //        }
+//        dd($position);
         // Atualiza o ordenation em todos os positions do mesmo grupo
         if ($position->group_id) {
             if ($data['ordenation'] != '') {
