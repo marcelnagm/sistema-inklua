@@ -58,6 +58,7 @@ class RegisterController extends Controller
         $data['cnpj'] = $request->input('cnpj') ? $request->input('cnpj') : '';
         $data['fantasy_name'] = $request->input('fantasy_name') ? $request->input('fantasy_name') : '';
         $data['phone'] = $request->input('phone') ? $request->input('phone') : '';
+        $data[ "corporate_name" ] = $request->input( "corporate_name" ) ? $request->input( "corporate_name" ) : '';
  
         $validator = $this->validator($data);
 
@@ -72,6 +73,7 @@ class RegisterController extends Controller
         $user = User::create([
             'cnpj' => $data['cnpj'],
             'fantasy_name' => $data['fantasy_name'],
+             "corporate_name"  => $data[ "corporate_name" ],
             'name' => $data['name'],
             'lastname' => $data['lastname'],
             'phone' => $data['phone'],

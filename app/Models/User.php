@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     protected $fillable = ['id',
         'cnpj',
         'fantasy_name',
+        'corporate_name',
         'name',
         'lastname',
         'phone',
@@ -66,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     static $rules = array(
         'cnpj' => 'required|max:255',
         'fantasy_name' => 'required|max:255',
+        'corporate_name' => 'required|max:255',
         'name' => 'required|max:255',
         'lastname' => 'required|max:255',
         'phone' => 'required|max:255',
