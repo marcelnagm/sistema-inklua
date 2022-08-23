@@ -78,12 +78,13 @@ class TransactionController extends Controller {
 //                $position->notifyPositionPublished();
 //            logger('passo8');
             return response()->json([
+                        'url' => $transaction->url,
                         'pagarme' => $pagarme['status']
                             ], 200);
         }
         $transaction->updateFromGateway($pagarme);
 
-      if ($request->exists('dump2'))
+        if ($request->exists('dump2'))
             dd($transaction);
 //        } catch (Exception $erros) {
 //          
@@ -92,11 +93,9 @@ class TransactionController extends Controller {
                     'url' => $transaction->url,
                     'pagarme' => $pagarme['status']
                         ], 200);
-      
-        
-        }
+    }
 
-        public function order() {
+    public function order() {
         BoletoVerify::dispatch();
         return;
     }
