@@ -23,14 +23,14 @@ class TransactionController extends Controller {
 
         $transaction = Transaction::where('content_id', $request->input('content_id'))
                 ->where('status', 'paid');
-        logger('passo1');
+
         if ($transaction->count() > 0)
             return response()->json([
                         'error' => true,
                         'status' => false,
                         "msg" => 'A vaga já se encontra paga'
             ]);
-        logger('passo2');
+
         $position = Content::where('id', $request->input('content_id'))
                 ->where('type', 1)
                 ->whereNotNull('user_id')
@@ -43,7 +43,7 @@ class TransactionController extends Controller {
                         'status' => false,
                         "error" => 'Vaga não encontrada.']);
         }
-        logger('passo3');
+
         if ($position->status != 'aguardando_pagamento') {
             logger('passo4');
             return response()->json([
@@ -57,52 +57,46 @@ class TransactionController extends Controller {
         $transaction = Transaction::create([
                     'content_id' => $position->id,
         ]);
-        logger('passo5');
+
 //        try {
 
         $pagarme = json_decode($transaction->createOrder(Transaction::getCustomer($user), Transaction::getPayments(), $user, $position), true);
-        logger('passo6');
 
-//        logger($pagarme);
-//        logger($transaction);
-        logger('passo7');
+        logger('----resposta --- pagarme');
+        logger($pagarme);
+        if ($request->exists('dump1'))
+            dd($$pagarme);
+//        } catch (Exception $erros) {
+//          
+
+        logger('----transaction registrada');
+        logger($transaction);
+
         if ($pagarme['status'] == 'paid') {
             $transaction->updateFromGateway($pagarme);
             $position->update(['status' => 'publicada', 'published_at' => Carbon::now()->format('Y-m-d')]);
 //                $position->notifyPositionPublished();
-            logger('passo8');
+//            logger('passo8');
             return response()->json([
-                        'error' => false,                       
-                        'pagarme' => $pagarme,
-                        "msg" => 'pago Com com sucesso',
+                        'pagarme' => $pagarme['status']
                             ], 200);
         }
         $transaction->updateFromGateway($pagarme);
-        logger('passo9');
-        return response()->json([
-                    'error' => false,
-                    'data' => [                        
-                        'url' => $transaction->url,
-                        'pagarme' => $pagarme
-                    ],
-                    "msg" => 'Boleto gerado com sucesso',
-                        ], 200);
-        logger('passo10');
-        if (env('PAGARME_DUMP') == 'retorn2')
+
+      if ($request->exists('dump2'))
             dd($transaction);
 //        } catch (Exception $erros) {
-//            return response()->json(
-//                            [
-//                                'status' => false,
-//                                'error' => true,
-//                                "code" => "MESSAGE_NOT_SENT",
-//                                "errors" => $pagarme
-//                            ]
-//            );
-//        }
-    }
+//          
 
-    public function order() {
+        return response()->json([
+                    'url' => $transaction->url,
+                    'pagarme' => $pagarme['status']
+                        ], 200);
+      
+        
+        }
+
+        public function order() {
         BoletoVerify::dispatch();
         return;
     }
