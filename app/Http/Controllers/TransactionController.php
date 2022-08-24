@@ -26,9 +26,7 @@ class TransactionController extends Controller {
 
         if ($transaction->count() > 0)
             return response()->json([
-                        'error' => true,
-                        'status' => false,
-                        "msg" => 'A vaga já se encontra paga'
+                        "pagarme" => 'A vaga já se encontra paga'
             ]);
 
         $position = Content::where('id', $request->input('content_id'))
@@ -39,17 +37,14 @@ class TransactionController extends Controller {
 
         if ($position == null) {
             return response()->json([
-                        'error' => true,
-                        'status' => false,
-                        "error" => 'Vaga não encontrada.']);
+                        "pagarme" => 'Vaga não encontrada.']);
         }
 
         if ($position->status != 'aguardando_pagamento') {
             logger('passo4');
             return response()->json([
-                        "msg" => 'Vaga encontrada mas o status da vaga é: ' . $position->status,
-                        'error' => true,
-                        'status' => false
+                        "pagarme" => 'Vaga encontrada mas o status da vaga é: ' . $position->status,
+                        
             ]);
         }
 

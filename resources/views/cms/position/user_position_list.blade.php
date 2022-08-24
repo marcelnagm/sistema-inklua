@@ -61,6 +61,7 @@
                                 <th scope="col" style="width: 100px;">Grupo</th>
                                 <th scope="col" style="width: 200px;">Status</th>
                                 <th scope="col">Título</th>
+                                <th scope="col">Faturado</th>
                                 <th scope="col" style=" width: 220px;
                                 text-align: right;"></th>
                             </tr>
@@ -79,6 +80,7 @@
                                         <td ><a href="{{ url("") }}/admin/usuarios/vagas/{{ $position->id }}/admin/grupo/vagas/{{ $position->group_id }}">{{ $position->group_id }}</a></td>
                                         <td ><a href="{{ url("") }}/admin/usuarios/vagas/{{ $position->id }}/edit">{{ $position->getStatusName() }}</a></td>
                                         <td ><a href="{{ url("") }}/admin/usuarios/vagas/{{ $position->id }}/edit">{{ $position->title }}</a></td>
+                                        <td > @include('layouts.partials.yesno',array('param' => $position->billed ==1) )</td>
                                         
                                         <td class="list-actions">
                                             <a href="{{ url('') }}/admin/usuarios/vagas/{{$position->id}}/edit" class="btn btn-sm btn-circle btn-primary">

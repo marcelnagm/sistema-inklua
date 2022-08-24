@@ -91,8 +91,8 @@
                             @if( isset($position->image) && $position->image != '' )
                             <label for="image-output" class="form-label">Preview de imagem</label>
                             <div class="form-row mb-3">
-                                <div class="col-lg-12">
-                                    <img id="image-output" src="/storage/positions/{{$position->image}}"  alt="" class="show-image">
+                                <div class="col-lg-12" >
+                                    <img id="image-output" src="{{$position->image}}"  alt=""  width="500px"  >
                                 </div>
                             </div>
                             @endif
@@ -271,24 +271,7 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-
-                            <div class="col-lg-6">
-                                {{-- Preview de imagens --}}
-                                <div id="img-preview-wrapper">
-                                    @if( isset($position->image) && $position->image != '' )
-                                    <label for="image-output" class="form-label">Preview de imagem</label>
-                                    <div class="form-row mb-3">
-                                        <div class="col-lg-12">
-                                            <img id="image-output" src="{{$position->image}}"  alt="" class="show-image">
-                                        </div>
-                                    </div>
-                                    @endif
-                                </div>
-                                {{-- Fim Preview de imagem--}}
-                            </div>
-                        </div>
-
+                      
 
 
                         <hr>
