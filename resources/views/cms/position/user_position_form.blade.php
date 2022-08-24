@@ -101,7 +101,7 @@
 
                     {{-- Fim upload de imagem--}}
                     <div class="form-row mb-3">
-                        <<div class=" col-lg-3 mb-3">
+                        <div class=" col-lg-3 mb-3">
                             <div class="form-group ">
                                 {{ Form::label('Modalidade Remoto') }}
                                 <input type="hidden" name="remote" value="0">
@@ -335,7 +335,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="recruiter" class="form-label">{{ __('CNPJ') }}</label>
+                                    <label for="recruiter" class="form-label">{{ __('Razão Social') }}</label>
                                     <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter_email" value="{{  $position->user()!== null   ? $position->user()->first()->corporate_name : 'Nao definido' }}"  readonly>
                                     @error('ordenation')
                                     <div class="invalid-feedback" role="alert">{{ $message }}</div>
@@ -344,7 +344,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="recruiter" class="form-label">{{ __('Email do Recrutador') }}</label>
+                                    <label for="recruiter" class="form-label">{{ __('CNPJ') }}</label>
                                     <input id="recruiter" type="text" class="form-control @error('ordenation') is-invalid @enderror" name="recruiter_email" value="{{  $position->user()!== null   ? $position->user()->first()->cnpj : 'Nao definido' }}"  readonly>
                                     @error('ordenation')
                                     <div class="invalid-feedback" role="alert">{{ $message }}</div>
@@ -353,11 +353,11 @@
                             </div>
                         </div>
                               <div class="form-row mb-3">
- <<div class=" col-lg-7 mb-3">
+ <div class=" col-lg-7 mb-3">
                             <div class="form-group ">
-                                {{ Form::label('Já foi encaminhado parta o faturamento') }}
+                                {{ Form::label("billed",'Já foi encaminhado parta o faturamento') }}
                                 <input type="hidden" name="billed" value="0">
-                                <input name="billed" type="checkbox" class="" @if($position->billed==1) checked @endif value="1">                        
+                                <input name="billed" type="checkbox" class="float-left mr-1" @if($position->billed==1) checked @endif value="1" >                        
                                 {!! $errors->first('remote', '<div class="invalid-feedback">:message</div>') !!}
                             </div>
                         </div>
